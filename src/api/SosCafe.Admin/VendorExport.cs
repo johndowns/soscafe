@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -8,19 +7,17 @@ using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Globalization;
 using CsvHelper;
-using System.Net.Http;
 using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SosCafe.Admin
 {
     public static class VendorExport
     {
         [FunctionName("ExportVendorList")]
-        public static async Task<HttpResponseMessage> ExportVendorList(
+        public static async Task<IActionResult> ExportVendorList(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [Blob("exports/AllVendors-{DateTime}.csv", FileAccess.Write)] Stream outputFile,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
             ILogger log)
         {
@@ -35,23 +32,16 @@ namespace SosCafe.Admin
             } while (token != null);
 
             // Serialize to CSV.
-            using (var writer = new StringWriter())
+            using (var memoryStream = new MemoryStream())
+            using (var writer = new StreamWriter(memoryStream))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(allVendorDetails);
 
-                // Return the CSV to the response stream.
-                var stringToReturn = writer.ToString();
-                var response = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(stringToReturn, Encoding.UTF8, "text/csv")
-                };
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                {
-                    FileName = $"AllVendors-{DateTime.Now:yyyy-MM-dd-HH-mm}.csv"
-                };
-                return response;
-            }            
+                outputFile = memoryStream;
+            }
+
+            return new AcceptedResult();
         }
     }
 }
