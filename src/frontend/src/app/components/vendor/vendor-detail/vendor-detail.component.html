@@ -1,0 +1,54 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="100%">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title>Vendor Details</mat-card-title>
+        <mat-card-subtitle>{{ vendorDetail.id }}</mat-card-subtitle>
+        <form class="vendor-form">
+          <mat-form-field appearance="none">
+            <mat-label>Business Name</mat-label>
+            <input matInput [value]="vendorDetail.businessName" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="none">
+            <mat-label>Registered Date</mat-label>
+            <input matInput [value]="vendorDetail.registeredDate" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="none">
+            <mat-label>Contact Name</mat-label>
+            <input matInput [value]="vendorDetail.contactName" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="none">
+            <mat-label>Email Address</mat-label>
+            <input matInput [value]="vendorDetail.emailAddress" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="none">
+            <mat-label>Phone Number</mat-label>
+            <input matInput [value]="vendorDetail.phoneNumber" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Bank Account Number</mat-label>
+            <input matInput [value]="vendorDetail.bankAccountNumber">
+            <mat-hint>XX-XXXX-XXXXXXX-XXX</mat-hint>
+          </mat-form-field>
+          <p><strong>Terms and conditions</strong></p>
+          <p>
+            <small>
+              By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
+              to assist you in the online provision of vouchers for future products or services that you will offer the
+              purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
+              process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
+              conditions on our website.
+            </small>
+          </p>
+          <p>
+            <mat-checkbox>I agree to the above terms</mat-checkbox>
+          </p>
+          <div class="button-row">
+            <button mat-raised-button color="primary">Submit</button>
+            <button mat-raised-button color="warn">Cancel</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
