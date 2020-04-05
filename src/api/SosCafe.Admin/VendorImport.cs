@@ -56,8 +56,8 @@ namespace SosCafe.Admin.Models
             log.LogInformation("Processing vendor ID {VendorShopifyId}.", vendorToImport.ShopifyId);
 
             // TODO Create AAD B2C user if they don't already exist.
-            var userId = "TODO-user";
-            log.LogInformation("Created user ID {UserId}.", userId);
+            var userId = await UserManagement.EnsureUserCreatedAsync();
+            log.LogInformation("Created user with ID {UserId}.", userId);
 
             // Insert vendor table entity.
             var insertVendorDetailsEntityOperation = TableOperation.Insert(vendorToImport);

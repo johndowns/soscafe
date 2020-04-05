@@ -53,7 +53,6 @@ namespace SosCafe.Admin
         [FunctionName("UpdateVendor")]
         public static async Task<IActionResult> UpdateVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "vendors/{vendorId}")] UpdateVendorDetailsApiModel vendorDetailsApiModel,
-            HttpRequest req,
             [Table("Vendors", "Vendors", "{vendorId}", Connection= "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
             ILogger log)

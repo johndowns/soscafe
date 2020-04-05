@@ -42,5 +42,11 @@ namespace SosCafe.Admin
             // Return the results.
             return new OkObjectResult(mappedResults);
         }
+
+        internal static async Task<string> EnsureUserCreatedAsync()
+        {
+            // TODO implement
+            return "TODO-user";
+        }
     }
 }
