@@ -19,7 +19,7 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            var userId = req.Headers["X-MS-CLIENT-PRINCIPAL-ID"];
+            var userId = "0286c40e-6a78-470e-aeb1-fa13e9f295f6"; //req.Headers["X -MS-CLIENT-PRINCIPAL-ID"];
 
             // Read all records from table storage where the partition key is the user's ID.
             TableContinuationToken token = null;

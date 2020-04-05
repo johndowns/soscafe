@@ -21,7 +21,7 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            var userId = req.Headers["X-MS-CLIENT-PRINCIPAL-ID"];
+            var userId = "0286c40e-6a78-470e-aeb1-fa13e9f295f6"; //req.Headers["X -MS-CLIENT-PRINCIPAL-ID"];
             log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -68,7 +68,7 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            var userId = req.Headers["X-MS-CLIENT-PRINCIPAL-ID"];
+            var userId = "0286c40e-6a78-470e-aeb1-fa13e9f295f6"; //req.Headers["X -MS-CLIENT-PRINCIPAL-ID"];
             log.LogInformation("Received PUT vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
