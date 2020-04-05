@@ -13,16 +13,24 @@ namespace SosCafe.Admin
 {
     public static class VendorManagement
     {
-        // TODO authorisation
-
         [FunctionName("GetVendor")]
         public static async Task<IActionResult> GetVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}")] HttpRequest req,
             string vendorId,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            log.LogInformation("Received GET vendors request from vendor {VendorId}.", vendorId);
+            var userId = req.Headers["X-MS-CLIENT-PRINCIPAL-ID"];
+            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+
+            // Authorise the request.
+            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                return new NotFoundResult();
+            }
 
             // Read the vendor details from table storage.
             var findOperation = TableOperation.Retrieve<VendorDetailsEntity>("Vendors", vendorId);
@@ -53,16 +61,30 @@ namespace SosCafe.Admin
         [FunctionName("UpdateVendor")]
         public static async Task<IActionResult> UpdateVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "vendors/{vendorId}")] UpdateVendorDetailsApiModel vendorDetailsApiModel,
+            HttpRequest req,
+            string vendorId,
             [Table("Vendors", "Vendors", "{vendorId}", Connection= "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
+            var userId = req.Headers["X-MS-CLIENT-PRINCIPAL-ID"];
+            log.LogInformation("Received PUT vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+
+            // Authorise the request.
+            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                return new NotFoundResult();
+            }
+
             // Perform validation on the properties.
             if (vendorDetailsApiModel.DateAcceptedTerms == null)
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted in order to update the vendor.");
             }
-            else if (vendorDetailsApiModel.DateAcceptedTerms <= DateTime.Now)
+            else if (vendorDetailsApiModel.DateAcceptedTerms >= DateTime.Now)
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted with a valid date in order to update the vendor.");
             }

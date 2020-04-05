@@ -19,7 +19,7 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            var userId = "TODO-user";
+            var userId = req.Headers["X-MS-CLIENT-PRINCIPAL-ID"];
 
             // Read all records from table storage where the partition key is the user's ID.
             TableContinuationToken token = null;
@@ -43,9 +43,17 @@ namespace SosCafe.Admin
             return new OkObjectResult(mappedResults);
         }
 
+        internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)
+        {
+            // Check that the user-vendor combination exists.
+            var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(userId, vendorId);
+            var findResult = await vendorUserAssignmentsTable.ExecuteAsync(findOperation);
+            return findResult.Result != null;
+        }
+
         internal static async Task<string> EnsureUserCreatedAsync()
         {
-            // TODO implement
+            // TODO implement and return the object ID, which will become the user ID
             return "TODO-user";
         }
     }
