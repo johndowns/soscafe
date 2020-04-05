@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
 using SosCafe.Admin.ApiModels;
+using System.Web.Http;
+using System;
 
 namespace SosCafe.Admin
 {
@@ -50,12 +52,39 @@ namespace SosCafe.Admin
 
         [FunctionName("UpdateVendor")]
         public static async Task<IActionResult> UpdateVendor(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "vendors/{vendorId}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "vendors/{vendorId}")] UpdateVendorDetailsApiModel vendorDetailsApiModel,
+            HttpRequest req,
+            [Table("Vendors", "Vendors", "{vendorId}", Connection= "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
+            [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
             ILogger log)
         {
-            // TODO implement this
+            // Perform validation on the properties.
+            if (vendorDetailsApiModel.DateAcceptedTerms == null)
+            {
+                return new BadRequestErrorMessageResult("The terms must be accepted in order to update the vendor.");
+            }
+            else if (vendorDetailsApiModel.DateAcceptedTerms <= DateTime.Now)
+            {
+                return new BadRequestErrorMessageResult("The terms must be accepted with a valid date in order to update the vendor.");
+            }
 
-            return new OkResult();
+            // Update entity.
+            vendorDetailsEntity.IsValidated = true;
+            vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms;
+
+            // Submit entity update to table.
+            var replaceVendorDetailsEntityOperation = TableOperation.Replace(vendorDetailsEntity);
+            var replaceVendorDetailsEntityOperationResult = await vendorDetailsTable.ExecuteAsync(replaceVendorDetailsEntityOperation);
+            if (replaceVendorDetailsEntityOperationResult.HttpStatusCode < 200 || replaceVendorDetailsEntityOperationResult.HttpStatusCode > 299)
+            {
+                log.LogError("Failed to replace entity in Vendors table. Status code={InsertStatusCode}, Result={InsertResult}", replaceVendorDetailsEntityOperationResult.HttpStatusCode, replaceVendorDetailsEntityOperationResult.Result);
+                return new InternalServerErrorResult();
+            }
+            else
+            {
+                log.LogInformation("Replaced entity in Vendors table.");
+                return new OkResult();
+            }
         }
     }
 }
