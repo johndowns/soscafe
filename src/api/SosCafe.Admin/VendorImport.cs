@@ -55,10 +55,6 @@ namespace SosCafe.Admin.Models
         {
             log.LogInformation("Processing vendor ID {VendorShopifyId}.", vendorToImport.ShopifyId);
 
-            // Create AAD B2C user if they don't already exist.
-            var userId = await UserManagement.EnsureUserCreatedAsync();
-            log.LogInformation("Created user with ID {UserId}.", userId);
-
             // Insert vendor table entity.
             var insertVendorDetailsEntityOperation = TableOperation.Insert(vendorToImport);
             var insertVendorDetailsEntityOperationResult = await vendorDetailsTable.ExecuteAsync(insertVendorDetailsEntityOperation);
@@ -76,7 +72,7 @@ namespace SosCafe.Admin.Models
             {
                 VendorShopifyId = vendorToImport.ShopifyId,
                 VendorName = vendorToImport.BusinessName,
-                UserId = userId
+                UserId = vendorToImport.EmailAddress
             };
 
             // Insert vendor user assignment entity.

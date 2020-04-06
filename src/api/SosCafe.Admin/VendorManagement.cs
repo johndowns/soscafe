@@ -8,6 +8,8 @@ using Microsoft.WindowsAzure.Storage.Table;
 using SosCafe.Admin.ApiModels;
 using System.Web.Http;
 using System;
+using System.Security.Claims;
+using System.Linq;
 
 namespace SosCafe.Admin
 {
@@ -16,12 +18,14 @@ namespace SosCafe.Admin
         [FunctionName("GetVendor")]
         public static async Task<IActionResult> GetVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            var userId = "0286c40e-6a78-470e-aeb1-fa13e9f295f6"; //req.Headers["X -MS-CLIENT-PRINCIPAL-ID"];
+            // Get the user principal ID.
+            var userId = UserManagement.GetUserId(claimsPrincipal, log);
             log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -62,13 +66,15 @@ namespace SosCafe.Admin
         public static async Task<IActionResult> UpdateVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "vendors/{vendorId}")] UpdateVendorDetailsApiModel vendorDetailsApiModel,
             HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("Vendors", "Vendors", "{vendorId}", Connection= "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            var userId = "0286c40e-6a78-470e-aeb1-fa13e9f295f6"; //req.Headers["X -MS-CLIENT-PRINCIPAL-ID"];
+            // Get the user principal ID.
+            var userId = UserManagement.GetUserId(claimsPrincipal, log);
             log.LogInformation("Received PUT vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -90,6 +96,7 @@ namespace SosCafe.Admin
             }
 
             // Update entity.
+            vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsValidated = true;
             vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms;
 
