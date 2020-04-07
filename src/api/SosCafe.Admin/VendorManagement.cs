@@ -9,6 +9,7 @@ using SosCafe.Admin.ApiModels;
 using System.Web.Http;
 using System;
 using System.Security.Claims;
+using SosCafe.Admin.Entities;
 
 namespace SosCafe.Admin
 {

@@ -1,8 +1,8 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using System;
 
-namespace SosCafe.Admin
+namespace SosCafe.Admin.Entities
 {
-    public class VendorPaymentEntity : TableEntity
+    public class VendorPaymentEntity : SosCafeEntity
     {
         private string vendorId;
         public string VendorId
@@ -28,10 +28,19 @@ namespace SosCafe.Admin
             set
             {
                 paymentId = value;
-                RowKey = PaymentId;
+                var cleanedPaymentId = PaymentId.CleanStringForPartitionKey();
+                RowKey = cleanedPaymentId;
             }
         }
 
-        // TODO other fields here
+        public DateTime PaymentDate { get; set; }
+
+        public string BankAccountNumber { get; set; }
+
+        public decimal GrossPayment { get; set; }
+
+        public decimal Fees { get; set; }
+
+        public decimal NetPayment { get; set; }
     }
 }

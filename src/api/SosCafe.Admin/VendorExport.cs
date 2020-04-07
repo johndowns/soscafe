@@ -9,6 +9,7 @@ using System.Globalization;
 using CsvHelper;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using SosCafe.Admin.Entities;
 
 namespace SosCafe.Admin
 {

@@ -1,9 +1,8 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
-using System;
+﻿using System;
 
-namespace SosCafe.Admin
+namespace SosCafe.Admin.Entities
 {
-    public class VendorVoucherEntity : TableEntity
+    public class VendorVoucherEntity : SosCafeEntity
     {
         private string vendorId;
         public string VendorId

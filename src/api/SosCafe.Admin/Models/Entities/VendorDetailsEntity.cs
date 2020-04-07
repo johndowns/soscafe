@@ -1,9 +1,8 @@
 ﻿using System;
-using Microsoft.WindowsAzure.Storage.Table;
 
-namespace SosCafe.Admin
+namespace SosCafe.Admin.Entities
 {
-    public class VendorDetailsEntity : TableEntity
+    public class VendorDetailsEntity : SosCafeEntity
     {
         public VendorDetailsEntity()
         {

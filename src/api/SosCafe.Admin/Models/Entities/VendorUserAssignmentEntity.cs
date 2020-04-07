@@ -1,8 +1,6 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
-
-namespace SosCafe.Admin
+﻿namespace SosCafe.Admin.Entities
 {
-    public class VendorUserAssignmentEntity : TableEntity
+    public class VendorUserAssignmentEntity : SosCafeEntity
     {
         private string vendorShopifyId;
         public string VendorShopifyId

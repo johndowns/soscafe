@@ -7,6 +7,8 @@ using System.Linq;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
 using SosCafe.Admin.Csv;
+using System;
+using SosCafe.Admin.Entities;
 
 namespace SosCafe.Admin.Models
 {
@@ -89,7 +91,59 @@ namespace SosCafe.Admin.Models
             }
         }
 
-        // TODO allow upserting payment records
+        [FunctionName("VendorPaymentsImport")]
+        public static void VendorPaymentsImport(
+            [BlobTrigger("vendorpaymentsimport/{name}", Connection = "SosCafeStorage")] Stream myBlob, string name,
+            [Queue("importvendorpayment"), StorageAccount("SosCafeStorage")] ICollector<VendorPaymentEntity> outputQueueMessages,
+            ILogger log)
+        {
+            // Read the blob contents (in CSV format), shred into strongly typed model objects,
+            // and add to a queue for processing.
+            log.LogInformation("Processing file {FileName}, length {FileLength}.", name, myBlob.Length);
+
+            using (var reader = new StreamReader(myBlob))
+            using (var csv = new CsvReader(reader, new CultureInfo("en-NZ")))
+            {
+                csv.Configuration.HeaderValidated = null;
+                csv.Configuration.MissingFieldFound = null;
+
+                var records = csv.GetRecords<VendorPaymentCsv>().ToList();
+                log.LogInformation("Found {RecordCount} records.", records.Count);
+
+                // Add the record to the queue using the output binding.
+                records.ForEach(vvCsv => outputQueueMessages.Add(new VendorPaymentEntity
+                {
+                    VendorId = vvCsv.VendorId,
+                    PaymentId = vvCsv.PaymentId,
+                    PaymentDate = vvCsv.PaymentDate,
+                    BankAccountNumber = vvCsv.BankAccountNumber,
+                    GrossPayment = decimal.Parse(vvCsv.GrossPayment, NumberStyles.Currency),
+                    Fees = decimal.Parse(vvCsv.Fees, NumberStyles.Currency),
+                    NetPayment = decimal.Parse(vvCsv.NetPayment, NumberStyles.Currency)
+                }));
+            }
+        }
+
+        [FunctionName("ProcessImportedVendorPayment")]
+        public static async Task ProcessImportedVendorPayment(
+            [QueueTrigger("importvendorpayment", Connection = "SosCafeStorage")] VendorPaymentEntity vendorPaymentToImport,
+            [Table("VendorPayments", Connection = "SosCafeStorage")] CloudTable vendorPaymentsTable,
+            ILogger log)
+        {
+            log.LogInformation("Processing vendor payment with payment ID {PaymentId}.", vendorPaymentToImport.PaymentId);
+
+            // Upsert vendor payment table entity.
+            var upsertVendorPaymentEntityOperation = TableOperation.InsertOrReplace(vendorPaymentToImport);
+            var upsertVendorPaymentEntityOperationResult = await vendorPaymentsTable.ExecuteAsync(upsertVendorPaymentEntityOperation);
+            if (upsertVendorPaymentEntityOperationResult.HttpStatusCode < 200 || upsertVendorPaymentEntityOperationResult.HttpStatusCode > 299)
+            {
+                log.LogError("Failed to upsert entity into VendorPayments table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorPaymentEntityOperationResult.HttpStatusCode, upsertVendorPaymentEntityOperationResult.Result);
+            }
+            else
+            {
+                log.LogInformation("Upserted entity into VendorPayments table.");
+            }
+        }
 
         [FunctionName("VendorVouchersImport")]
         public static void VendorVouchersImport(
