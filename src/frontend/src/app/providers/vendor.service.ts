@@ -9,19 +9,19 @@ import { VendorSummary, VendorDetail, UpdateVendorDetails } from 'src/app/model'
 })
 export class VendorService {
 
-  private vendorsBaseUrl = '/api/vendors';
+  private vendorsBaseUrl = '/api';
 
   constructor(private http: HttpClient) { }
 
   getVendors(): Observable<VendorSummary[]> {
-    return this.http.get<VendorSummary[]>(this.vendorsBaseUrl);
+    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/vendors`);
   }
 
   getVendor(vendorId: string): Observable<VendorDetail> {
-    return this.http.get<VendorDetail>(`${this.vendorsBaseUrl}/${vendorId}`);
+    return this.http.get<VendorDetail>(`${this.vendorsBaseUrl}/vendors/${vendorId}`);
   }
 
   updateVendor(vendorId: string, updateVendorDetails: UpdateVendorDetails): Observable<VendorDetail> {
-    return this.http.put<UpdateVendorDetails>(`${this.vendorsBaseUrl}/${vendorId}`, updateVendorDetails);
+    return this.http.put<UpdateVendorDetails>(`${this.vendorsBaseUrl}/vendors/${vendorId}`, updateVendorDetails);
   }
 }
