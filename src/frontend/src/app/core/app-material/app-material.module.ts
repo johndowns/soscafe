@@ -12,7 +12,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -30,6 +32,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatSelectModule,
     MatRadioModule,
     MatCheckboxModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     MatButtonModule,
@@ -46,6 +50,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatSelectModule,
     MatRadioModule,
     MatCheckboxModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class AppMaterialModule { }

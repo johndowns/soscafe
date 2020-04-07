@@ -3,37 +3,33 @@
     <mat-card>
       <mat-card-header>
         <mat-card-title>Vendors Details</mat-card-title>
-        <div fxFlex></div>
-        <button mat-button color="primary">
-          <mat-icon aria-hidden="false" aria-label="Download">get_app</mat-icon>
-          Download Report
-        </button>
       </mat-card-header>
       <mat-card-content>
-        <form class="vendor-form">
+        <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
           <mat-form-field appearance="none">
             <mat-label>Business Name</mat-label>
-            <input matInput [value]="vendorDetail.businessName" readonly>
+            <input matInput formControlName="businessName" readonly>
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Registered Date</mat-label>
-            <input matInput [value]="vendorDetail.registeredDate | date:'mediumDate'" readonly>
+            <input matInput formControlName="registeredDate" readonly>
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Contact Name</mat-label>
-            <input matInput [value]="vendorDetail.contactName" readonly>
+            <input matInput formControlName="contactName" readonly>
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Email Address</mat-label>
-            <input matInput [value]="vendorDetail.emailAddress" readonly>
+            <input matInput formControlName="emailAddress" readonly>
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Phone Number</mat-label>
-            <input matInput [value]="vendorDetail.phoneNumber" readonly>
+            <input matInput formControlName="phoneNumber" readonly>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Bank Account Number</mat-label>
-            <input matInput [value]="vendorDetail.bankAccountNumber">
+            <input matInput formControlName="bankAccountNumber" required>
+            <!-- <mat-error *ngIf="bankAccountNumber.invalid">{{ getBankAccountErrorMessage() }}</mat-error> -->
             <mat-hint>XX-XXXX-XXXXXXX-XXX</mat-hint>
           </mat-form-field>
           <p><strong>Terms and conditions</strong></p>
@@ -47,14 +43,17 @@
             </small>
           </p>
           <p>
-            <mat-checkbox>I agree to the above terms</mat-checkbox>
+            <mat-checkbox formControlName="termsAccepted" required>I agree to the above terms</mat-checkbox>
           </p>
           <div class="button-row">
-            <button mat-raised-button color="primary">Submit</button>
-            <button mat-raised-button color="warn">Cancel</button>
+            <button mat-raised-button color="primary" [disabled]="!vendorForm.valid || workInProgress" type="submit">Submit</button>
+            <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
           </div>
         </form>
       </mat-card-content>
     </mat-card>
   </div>
+</div>
+<div class="loading-indicator" *ngIf="workInProgress">
+  <mat-spinner></mat-spinner>
 </div>
