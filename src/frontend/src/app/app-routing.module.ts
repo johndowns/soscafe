@@ -1,5 +1,7 @@
-import { NgModule, Component } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { MsalGuard } from '@azure/msal-angular';
+
 import { DefaultLayoutComponent } from './components/layout';
 import { VendorDetailComponent, VendorListComponent } from './components/vendor';
 
@@ -11,14 +13,23 @@ const routes: Routes = [
       {
         path: 'vendors',
         component: VendorListComponent,
+        canActivate: [
+          MsalGuard
+        ],
       },
       {
         path: 'vendors/:id',
         component: VendorDetailComponent,
+        canActivate: [
+          MsalGuard
+        ],
       },
       {
         path: '',
-        component: VendorListComponent
+        component: VendorListComponent,
+        canActivate: [
+          MsalGuard
+        ],
       }
     ],
   },

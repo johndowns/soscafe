@@ -1,14 +1,17 @@
-import { VendorService } from 'src/app/providers';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MsalModule, MsalInterceptor } from '@azure/msal-angular';
+import { LogLevel, Logger, CryptoUtils } from 'msal';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppMaterialModule } from './core';
 import { DefaultLayoutComponent } from './components/layout';
+import { VendorService } from 'src/app/providers';
 import {
   SpinnerComponent,
   HeaderComponent,
@@ -18,8 +21,18 @@ import {
   VendorDetailComponent,
   VendorListComponent,
 } from './components/vendor';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+export function loggerCallback(logLevel, message, piiEnabled) {
+  console.log(message);
+}
+
+export const protectedResourceMap: [string, string[]][] = [
+  [
+    'https://buildtodoservice.azurewebsites.net/api/todolist',
+    ['api://a88bb933-319c-41b5-9f04-eff36d985612/access_as_user'],
+  ],
+  ['https://graph.microsoft.com/v1.0/me', ['user.read']],
+];
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,8 +52,52 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     AppMaterialModule,
     FlexLayoutModule,
+    MsalModule.forRoot(
+      {
+        auth: {
+          clientId: '1cc0426e-f8d7-4ddb-94b5-18185c09a6bd',
+          authority:
+            'https://soscafe.b2clogin.com/tfp/soscafe.onmicrosoft.com/b2c_1_signupsignin',
+          validateAuthority: false,
+          redirectUri: 'http://localhost:4200/',
+          postLogoutRedirectUri: 'http://localhost:4200/',
+          navigateToLoginRequestUrl: true,
+        },
+        cache: {
+          cacheLocation: 'localStorage',
+          storeAuthStateInCookie: true, // set to true for IE 11
+        },
+        framework: {
+          unprotectedResources: ['https://www.microsoft.com/en-us/'],
+          protectedResourceMap: new Map(protectedResourceMap),
+        },
+        system: {
+          logger: new Logger(loggerCallback, {
+              correlationId: CryptoUtils.createNewGuid(),
+              level: LogLevel.Verbose,
+              piiLoggingEnabled: true,
+          })
+        },
+      },
+      {
+        popUp: true,
+        consentScopes: [
+          'openid',
+          'profile',
+          'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
+        ],
+        extraQueryParameters: {},
+      }
+    ),
   ],
-  providers: [VendorService],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MsalInterceptor,
+      multi: true,
+    },
+    VendorService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
