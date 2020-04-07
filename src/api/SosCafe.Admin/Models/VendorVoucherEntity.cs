@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
+using System;
 
 namespace SosCafe.Admin
 {
@@ -18,20 +19,44 @@ namespace SosCafe.Admin
             }
         }
 
-        private string voucherId;
-        public string VoucherId
+        private string orderId;
+        public string OrderId
         {
             get
             {
-                return voucherId;
+                return orderId;
             }
             set
             {
-                voucherId = value;
-                RowKey = VoucherId;
+                orderId = value;
+                RowKey = OrderId;
             }
         }
 
-        // TODO other fields here
+        public string OrderRef { get; set; }
+
+        public DateTime OrderDate { get; set; }
+
+        public string CustomerName { get; set; }
+
+        public string CustomerEmailAddress { get; set; }
+
+        public string CustomerRegion { get; set; }
+
+        public bool CustomerAcceptsMarketing { get; set; }
+
+        public string VoucherDescription { get; set; }
+
+        public int VoucherQuantity { get; set; }
+
+        public bool VoucherIsDonation { get; set; }
+
+        public string VoucherId { get; set; }
+
+        public decimal VoucherGross { get; set; }
+
+        public decimal VoucherFees { get; set; }
+
+        public decimal VoucherNet { get; set; }
     }
 }

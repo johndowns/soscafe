@@ -1,7 +1,7 @@
 ﻿using System;
 using CsvHelper.Configuration.Attributes;
 
-namespace SosCafe.Admin
+namespace SosCafe.Admin.Csv
 {
     public class VendorDetailsCsv
     {

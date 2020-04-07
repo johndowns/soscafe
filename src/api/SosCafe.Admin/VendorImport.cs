@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
+using SosCafe.Admin.Csv;
 
 namespace SosCafe.Admin.Models
 {
@@ -55,18 +56,16 @@ namespace SosCafe.Admin.Models
         {
             log.LogInformation("Processing vendor ID {VendorShopifyId}.", vendorToImport.ShopifyId);
 
-            // TODO do an upsert - replace any existing data with the incoming data
-
-            // Insert vendor table entity.
-            var insertVendorDetailsEntityOperation = TableOperation.Insert(vendorToImport);
-            var insertVendorDetailsEntityOperationResult = await vendorDetailsTable.ExecuteAsync(insertVendorDetailsEntityOperation);
-            if (insertVendorDetailsEntityOperationResult.HttpStatusCode < 200 || insertVendorDetailsEntityOperationResult.HttpStatusCode > 299)
+            // Upsert vendor table entity.
+            var upsertVendorDetailsEntityOperation = TableOperation.InsertOrReplace(vendorToImport);
+            var upsertVendorDetailsEntityOperationResult = await vendorDetailsTable.ExecuteAsync(upsertVendorDetailsEntityOperation);
+            if (upsertVendorDetailsEntityOperationResult.HttpStatusCode < 200 || upsertVendorDetailsEntityOperationResult.HttpStatusCode > 299)
             {
-                log.LogError("Failed to insert entity into Vendors table. Status code={InsertStatusCode}, Result={InsertResult}", insertVendorDetailsEntityOperationResult.HttpStatusCode, insertVendorDetailsEntityOperationResult.Result);
+                log.LogError("Failed to upsert entity into Vendors table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorDetailsEntityOperationResult.HttpStatusCode, upsertVendorDetailsEntityOperationResult.Result);
             }
             else
             {
-                log.LogInformation("Inserted entity into Vendors table.");
+                log.LogInformation("Upserted entity into Vendors table.");
             }
 
             // Create vendor role assignment for this user.
@@ -77,20 +76,81 @@ namespace SosCafe.Admin.Models
                 UserId = vendorToImport.EmailAddress
             };
 
-            // Insert vendor user assignment entity.
-            var insertVendorUserAssignmentEntityOperation = TableOperation.Insert(vendorUserAssignmentEntity);
-            var insertVendorUserAssignmentEntityOperationResult = await vendorUserAssignmentsTable.ExecuteAsync(insertVendorUserAssignmentEntityOperation);
-            if (insertVendorUserAssignmentEntityOperationResult.HttpStatusCode < 200 || insertVendorDetailsEntityOperationResult.HttpStatusCode > 299)
+            // Upsert vendor user assignment entity.
+            var upsertVendorUserAssignmentEntityOperation = TableOperation.InsertOrReplace(vendorUserAssignmentEntity);
+            var upsertVendorUserAssignmentEntityOperationResult = await vendorUserAssignmentsTable.ExecuteAsync(upsertVendorUserAssignmentEntityOperation);
+            if (upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode < 200 || upsertVendorDetailsEntityOperationResult.HttpStatusCode > 299)
             {
-                log.LogError("Failed to insert entity into VendorUserAssignments table. Status code={InsertStatusCode}, Result={InsertResult}", insertVendorDetailsEntityOperationResult.HttpStatusCode, insertVendorDetailsEntityOperationResult.Result);
+                log.LogError("Failed to upsert entity into VendorUserAssignments table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorDetailsEntityOperationResult.HttpStatusCode, upsertVendorDetailsEntityOperationResult.Result);
             }
             else
             {
-                log.LogInformation("Inserted entity into VendorUserAssignments table.");
+                log.LogInformation("Upserted entity into VendorUserAssignments table.");
             }
         }
 
         // TODO allow upserting payment records
-        // TODO allow upserting voucher records
+
+        [FunctionName("VendorVouchersImport")]
+        public static void VendorVouchersImport(
+            [BlobTrigger("vendorvouchersimport/{name}", Connection = "SosCafeStorage")] Stream myBlob, string name,
+            [Queue("importvendorvoucher"), StorageAccount("SosCafeStorage")] ICollector<VendorVoucherEntity> outputQueueMessages,
+            ILogger log)
+        {
+            // Read the blob contents (in CSV format), shred into strongly typed model objects,
+            // and add to a queue for processing.
+            log.LogInformation("Processing file {FileName}, length {FileLength}.", name, myBlob.Length);
+
+            using (var reader = new StreamReader(myBlob))
+            using (var csv = new CsvReader(reader, new CultureInfo("en-NZ")))
+            {
+                csv.Configuration.HeaderValidated = null;
+                csv.Configuration.MissingFieldFound = null;
+
+                var records = csv.GetRecords<VendorVoucherCsv>().ToList();
+                log.LogInformation("Found {RecordCount} records.", records.Count);
+
+                // Add the record to the queue using the output binding.
+                records.ForEach(vvCsv => outputQueueMessages.Add(new VendorVoucherEntity
+                {
+                    VendorId = vvCsv.VendorId,
+                    OrderId = vvCsv.OrderId,
+                    OrderRef = vvCsv.OrderRef,
+                    OrderDate = vvCsv.OrderDate,
+                    CustomerName = vvCsv.CustomerName,
+                    CustomerEmailAddress = vvCsv.CustomerEmailAddress,
+                    CustomerRegion = vvCsv.CustomerRegion,
+                    CustomerAcceptsMarketing = vvCsv.CustomerAcceptsMarketing.Contains("TRUE"),
+                    VoucherDescription = vvCsv.VoucherDescription,
+                    VoucherQuantity = vvCsv.VoucherQuantity,
+                    VoucherIsDonation = vvCsv.VoucherIsDonation.Contains("TRUE"),
+                    VoucherId = vvCsv.VoucherId,
+                    VoucherGross = vvCsv.VoucherGross,
+                    VoucherFees = vvCsv.VoucherFees,
+                    VoucherNet = vvCsv.VoucherNet
+                }));
+            }
+        }
+
+        [FunctionName("ProcessImportedVendorVoucher")]
+        public static async Task ProcessImportedVendorVoucher(
+            [QueueTrigger("importvendorvoucher", Connection = "SosCafeStorage")] VendorVoucherEntity vendorVoucherToImport,
+            [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            ILogger log)
+        {
+            log.LogInformation("Processing vendor voucher with order ID {OrderId}.", vendorVoucherToImport.OrderId);
+
+            // Upsert vendor voucher table entity.
+            var upsertVendorVoucherEntityOperation = TableOperation.InsertOrReplace(vendorVoucherToImport);
+            var upsertVendorVoucherEntityOperationResult = await vendorVouchersTable.ExecuteAsync(upsertVendorVoucherEntityOperation);
+            if (upsertVendorVoucherEntityOperationResult.HttpStatusCode < 200 || upsertVendorVoucherEntityOperationResult.HttpStatusCode > 299)
+            {
+                log.LogError("Failed to upsert entity into VendorVouchers table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorVoucherEntityOperationResult.HttpStatusCode, upsertVendorVoucherEntityOperationResult.Result);
+            }
+            else
+            {
+                log.LogInformation("Upserted entity into VendorVouchers table.");
+            }
+        }
     }
 }
