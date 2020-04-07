@@ -5,11 +5,13 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Table;
-using SosCafe.Admin.ApiModels;
+using SosCafe.Admin.Models.Api;
 using System.Web.Http;
 using System;
 using System.Security.Claims;
 using SosCafe.Admin.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SosCafe.Admin
 {
@@ -136,14 +138,30 @@ namespace SosCafe.Admin
                 return new NotFoundResult();
             }
 
-            // Read the vendor payment list from table storage.
-            // TODO
+            // Read all records from table storage where the partition key is the vendor's ID.
+            TableContinuationToken token = null;
+            var allPaymentsForVendor = new List<VendorPaymentEntity>();
+            var filterToVendorPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, vendorId);
+            do
+            {
+                var queryResult = await vendorPaymentsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorPaymentEntity>().Where(filterToVendorPartition), token);
+                allPaymentsForVendor.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
 
-            // Map to an API response.
-            // TODO
+            // Map the results to a response model.
+            var mappedResults = allPaymentsForVendor.Select(entity => new VendorPaymentApiModel
+            {
+                PaymentId = entity.PaymentId,
+                PaymentDate = entity.PaymentDate,
+                BankAccountNumber = entity.BankAccountNumber,
+                GrossPayment = entity.GrossPayment,
+                Fees = entity.Fees,
+                NetPayment = entity.NetPayment
+            });
 
             // Return the payment list.
-            return new OkObjectResult(null); // TODO
+            return new OkObjectResult(mappedResults);
         }
 
         [FunctionName("GetVendorVouchers")]
@@ -167,14 +185,38 @@ namespace SosCafe.Admin
                 return new NotFoundResult();
             }
 
-            // Read the vendor voucher list from table storage.
-            // TODO
+            // Read all records from table storage where the partition key is the vendor's ID.
+            TableContinuationToken token = null;
+            var allVouchersForVendor = new List<VendorVoucherEntity>();
+            var filterToVendorPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, vendorId);
+            do
+            {
+                var queryResult = await vendorVouchersTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorVoucherEntity>().Where(filterToVendorPartition), token);
+                allVouchersForVendor.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
 
-            // Map to an API response.
-            // TODO
+            // Map the results to a response model.
+            var mappedResults = allVouchersForVendor.Select(entity => new VendorVoucherApiModel
+            {
+                OrderId = entity.OrderId,
+                OrderRef = entity.OrderRef,
+                OrderDate = entity.OrderDate,
+                CustomerName = entity.CustomerName,
+                CustomerRegion = entity.CustomerRegion,
+                CustomerEmailAddress = entity.CustomerEmailAddress,
+                CustomerAcceptsMarketing = entity.CustomerAcceptsMarketing,
+                VoucherId = entity.VoucherId,
+                VoucherDescription = entity.VoucherDescription,
+                VoucherQuantity = entity.VoucherQuantity,
+                VoucherIsDonation = entity.VoucherIsDonation,
+                VoucherGross = entity.VoucherGross,
+                VoucherFees = entity.VoucherFees,
+                VoucherNet = entity.VoucherNet
+            });
 
-            // Return the payment list.
-            return new OkObjectResult(null); // TODO
+            // Return the voucher list.
+            return new OkObjectResult(mappedResults);
         }
     }
 }

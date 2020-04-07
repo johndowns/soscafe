@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SosCafe.Admin.ApiModels
+namespace SosCafe.Admin.Models.Api
 {
     public class UpdateVendorDetailsApiModel : VendorDetailsApiModel
     {
