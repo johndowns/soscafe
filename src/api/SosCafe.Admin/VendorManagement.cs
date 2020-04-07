@@ -120,7 +120,7 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/report")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Blob("vendorreports/{vendorId}.pdf", FileAccess.Read, Connection ="SosCafeStorage")] byte[] blobContents,
+            [Blob("vendorreports/{vendorId}.pdf", FileAccess.Read, Connection = "SosCafeStorage")] byte[] blobContents,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
@@ -135,12 +135,16 @@ namespace SosCafe.Admin
                 log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
                 return new NotFoundResult();
             }
-            
+
             // If there is no report, return a 404.
-            if (blobContents.Length == 0)
+            if (blobContents == null || blobContents.Length == 0)
             {
                 log.LogWarning("Could not find venndor report for vendor {VendorId}.", vendorId);
                 return new NotFoundResult();
+            }
+            else
+            {
+                log.LogInformation(blobContents.Length.ToString());
             }
 
             // Return the blob.
