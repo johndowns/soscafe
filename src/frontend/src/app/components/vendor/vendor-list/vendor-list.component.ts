@@ -16,16 +16,21 @@ export class VendorListComponent implements OnInit {
   paginator: MatPaginator;
   @ViewChild(MatSort, { static: true })
   sort: MatSort;
+  public workInProgress = false;
 
   constructor(private vendorService: VendorService) {}
   ngOnInit() {
+    this.workInProgress = true;
     this.vendorService.getVendors().subscribe(
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      (err) => console.log('HTTP Error', err)
+      (err) => console.log('HTTP Error', err),
+      () => {
+        this.workInProgress = false;
+      }
     );
   }
 

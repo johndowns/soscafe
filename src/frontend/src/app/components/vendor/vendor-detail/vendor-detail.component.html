@@ -46,11 +46,14 @@
             <mat-checkbox formControlName="termsAccepted" required>I agree to the above terms</mat-checkbox>
           </p>
           <div class="button-row">
-            <button mat-raised-button color="primary" [disabled]="!vendorForm.valid" type="submit">Submit</button>
+            <button mat-raised-button color="primary" [disabled]="!vendorForm.valid || workInProgress" type="submit">Submit</button>
             <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
           </div>
         </form>
       </mat-card-content>
     </mat-card>
   </div>
+</div>
+<div class="loading-indicator" *ngIf="workInProgress">
+  <mat-spinner></mat-spinner>
 </div>

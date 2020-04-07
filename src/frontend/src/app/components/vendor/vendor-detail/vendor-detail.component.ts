@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class VendorDetailComponent implements OnInit {
   public termsAndConditionsAccepted = false;
   public bankAccountNumber: FormControl;
-
+  public workInProgress = false;
   private vendorId: string;
 
   public vendorForm = new FormGroup({
@@ -35,6 +35,7 @@ export class VendorDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendor(this.vendorId).subscribe(
       (res) => {
@@ -49,7 +50,10 @@ export class VendorDetailComponent implements OnInit {
           termsAccepted: false,
         });
       },
-      (err) => console.log('HTTP Error', err)
+      (err) => console.log('HTTP Error', err),
+      () => {
+        this.workInProgress = false;
+      }
     );
   }
 
@@ -72,6 +76,7 @@ export class VendorDetailComponent implements OnInit {
   }
 
   onSubmit(vendorDetail: VendorDetail) {
+    this.workInProgress = true;
     const updateVendorDetails: UpdateVendorDetails = {
       ...vendorDetail,
       dateAcceptedTerms: new Date(),
@@ -80,13 +85,16 @@ export class VendorDetailComponent implements OnInit {
     this.vendorService
       .updateVendor(this.vendorId, updateVendorDetails)
       .subscribe(
-        (res) => {
+        () => {
           this.onSubmitConfirmation(true);
           this.goBack();
         },
         (err) => {
           console.error('HTTP Error', err);
           this.onSubmitConfirmation(false);
+        },
+        () => {
+          this.workInProgress = false;
         }
       );
   }
