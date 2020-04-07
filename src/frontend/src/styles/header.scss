@@ -12,11 +12,15 @@ mat-toolbar {
       display: flex;
       line-height: 18px;
       align-items: center;
+      h1 {
+        padding-left: 10px;
+        color: white;
+      }
       b {
         margin-right: 5px;
       }
       .app-logo {
-        max-height: 50px;
+        max-height: 64px;
       }
     }
   }
