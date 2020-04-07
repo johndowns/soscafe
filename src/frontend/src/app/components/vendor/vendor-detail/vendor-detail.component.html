@@ -1,9 +1,15 @@
 <div fxLayout="row">
   <div fxFlex.gt-sm="100%">
     <mat-card>
+      <mat-card-header>
+        <mat-card-title>Vendors Details</mat-card-title>
+        <div fxFlex></div>
+        <button mat-button color="primary">
+          <mat-icon aria-hidden="false" aria-label="Download">get_app</mat-icon>
+          Download Report
+        </button>
+      </mat-card-header>
       <mat-card-content>
-        <mat-card-title>Vendor Details</mat-card-title>
-        <mat-card-subtitle>{{ vendorDetail.id }}</mat-card-subtitle>
         <form class="vendor-form">
           <mat-form-field appearance="none">
             <mat-label>Business Name</mat-label>
@@ -11,7 +17,7 @@
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Registered Date</mat-label>
-            <input matInput [value]="vendorDetail.registeredDate" readonly>
+            <input matInput [value]="vendorDetail.registeredDate | date:'mediumDate'" readonly>
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Contact Name</mat-label>

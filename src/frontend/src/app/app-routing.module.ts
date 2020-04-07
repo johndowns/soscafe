@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DefaultLayoutComponent } from './components/layout';
 import { VendorDetailComponent, VendorListComponent } from './components/vendor';
@@ -18,8 +18,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '',
-        pathMatch: 'full'
+        component: VendorListComponent
       }
     ],
   },

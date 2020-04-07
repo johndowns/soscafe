@@ -10,21 +10,24 @@ import { VendorSummary } from 'src/app/model';
   templateUrl: './vendor-list.component.html',
 })
 export class VendorListComponent implements OnInit {
-
-  displayedColumns: string[] = ['id', 'businessName'];
+  displayedColumns: string[] = ['businessName'];
   dataSource: MatTableDataSource<VendorSummary>;
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   @ViewChild(MatSort, { static: true })
   sort: MatSort;
 
-  constructor(private vendorService: VendorService) { }
+  constructor(private vendorService: VendorService) {}
   ngOnInit() {
-    this.vendorService.getVendors().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    }, (err) => console.log('HTTP Error', err), () => console.log('HTTP request completed.'));
+    this.vendorService.getVendors().subscribe(
+      (res) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      },
+      (err) => console.log('HTTP Error', err),
+      () => console.log('HTTP request completed.')
+    );
   }
 
   applyFilter(event: Event) {
