@@ -50,6 +50,12 @@ namespace SosCafe.Admin
         internal static string GetUserId(ClaimsPrincipal claimsPrincipal, ILogger log)
         {
             var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            foreach (var claim in (claimsPrincipal.Identity as ClaimsIdentity).Claims)
+            {
+                log.LogInformation($"TODO claim {claim.Type} = {claim.Value}");
+            }
+
             log.LogInformation($"TODO user email address is {userEmailAddress}");
             return "0286c40e-6a78-470e-aeb1-fa13e9f295f6"; // TODO
         }
