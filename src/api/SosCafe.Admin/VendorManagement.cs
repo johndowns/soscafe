@@ -135,6 +135,13 @@ namespace SosCafe.Admin
                 log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
                 return new NotFoundResult();
             }
+            
+            // If there is no report, return a 404.
+            if (blobContents.Length == 0)
+            {
+                log.LogWarning("Could not find venndor report for vendor {VendorId}.", vendorId);
+                return new NotFoundResult();
+            }
 
             // Return the blob.
             return new FileContentResult(blobContents, "application/pdf")
