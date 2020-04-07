@@ -9,7 +9,7 @@ using SosCafe.Admin.ApiModels;
 using System.Web.Http;
 using System;
 using System.Security.Claims;
-using System.Linq;
+using System.IO;
 
 namespace SosCafe.Admin
 {
@@ -113,6 +113,34 @@ namespace SosCafe.Admin
                 log.LogInformation("Replaced entity in Vendors table.");
                 return new OkResult();
             }
+        }
+
+        [FunctionName("GetVendorReport")]
+        public static async Task<IActionResult> DownloadVendorReport(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/report")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
+            string vendorId,
+            [Blob("vendorreports/{vendorId}.pdf", FileAccess.Read, Connection ="SosCafeStorage")] byte[] blobContents,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
+            ILogger log)
+        {
+            // Get the user principal ID.
+            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            log.LogInformation("Received GET vendor report request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+
+            // Authorise the request.
+            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                return new NotFoundResult();
+            }
+
+            // Return the blob.
+            return new FileContentResult(blobContents, "application/pdf")
+            {
+                FileDownloadName = "SOSCafe-Report.pdf"
+            };
         }
     }
 }
