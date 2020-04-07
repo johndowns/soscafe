@@ -115,18 +115,18 @@ namespace SosCafe.Admin
             }
         }
 
-        [FunctionName("GetVendorReport")]
-        public static async Task<IActionResult> DownloadVendorReport(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/report")] HttpRequest req,
+        [FunctionName("GetVendorPayments")]
+        public static async Task<IActionResult> GetVendorPayments(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/payments")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Blob("vendorreports/{vendorId}.pdf", FileAccess.Read, Connection = "SosCafeStorage")] byte[] blobContents,
+            [Table("VendorPayments", Connection = "SosCafeStorage")] CloudTable vendorPaymentsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
             // Get the user principal ID.
             var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET vendor report request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
             var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
@@ -136,22 +136,45 @@ namespace SosCafe.Admin
                 return new NotFoundResult();
             }
 
-            // If there is no report, return a 404.
-            if (blobContents == null || blobContents.Length == 0)
+            // Read the vendor payment list from table storage.
+            // TODO
+
+            // Map to an API response.
+            // TODO
+
+            // Return the payment list.
+            return new OkObjectResult(null); // TODO
+        }
+
+        [FunctionName("GetVendorVouchers")]
+        public static async Task<IActionResult> GetVendorVouchers(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
+            string vendorId,
+            [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
+            ILogger log)
+        {
+            // Get the user principal ID.
+            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+
+            // Authorise the request.
+            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
+            if (!isAuthorised)
             {
-                log.LogWarning("Could not find venndor report for vendor {VendorId}.", vendorId);
+                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
                 return new NotFoundResult();
             }
-            else
-            {
-                log.LogInformation(blobContents.Length.ToString());
-            }
 
-            // Return the blob.
-            return new FileContentResult(blobContents, "application/pdf")
-            {
-                FileDownloadName = "SOSCafe-Report.pdf"
-            };
+            // Read the vendor voucher list from table storage.
+            // TODO
+
+            // Map to an API response.
+            // TODO
+
+            // Return the payment list.
+            return new OkObjectResult(null); // TODO
         }
     }
 }

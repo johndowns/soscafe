@@ -55,6 +55,8 @@ namespace SosCafe.Admin.Models
         {
             log.LogInformation("Processing vendor ID {VendorShopifyId}.", vendorToImport.ShopifyId);
 
+            // TODO do an upsert - replace any existing data with the incoming data
+
             // Insert vendor table entity.
             var insertVendorDetailsEntityOperation = TableOperation.Insert(vendorToImport);
             var insertVendorDetailsEntityOperationResult = await vendorDetailsTable.ExecuteAsync(insertVendorDetailsEntityOperation);
@@ -87,5 +89,8 @@ namespace SosCafe.Admin.Models
                 log.LogInformation("Inserted entity into VendorUserAssignments table.");
             }
         }
+
+        // TODO allow upserting payment records
+        // TODO allow upserting voucher records
     }
 }

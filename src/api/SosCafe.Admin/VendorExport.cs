@@ -31,6 +31,8 @@ namespace SosCafe.Admin
                 token = queryResult.ContinuationToken;
             } while (token != null);
 
+            // TODO transform into VendorDetailsCsv objects
+
             // Serialize to CSV.
             using (var memoryStream = new MemoryStream())
             using (var writer = new StreamWriter(memoryStream))
