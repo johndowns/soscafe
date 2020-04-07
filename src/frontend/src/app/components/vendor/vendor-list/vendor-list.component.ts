@@ -25,8 +25,7 @@ export class VendorListComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      (err) => console.log('HTTP Error', err),
-      () => console.log('HTTP request completed.')
+      (err) => console.log('HTTP Error', err)
     );
   }
 

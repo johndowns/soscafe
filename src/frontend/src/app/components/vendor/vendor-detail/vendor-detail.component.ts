@@ -23,12 +23,8 @@ export class VendorDetailComponent implements OnInit {
     contactName: new FormControl(''),
     emailAddress: new FormControl(''),
     phoneNumber: new FormControl(''),
-    bankAccountNumber: new FormControl('', [
-      Validators.required,
-    ]),
-    termsAccepted: new FormControl('', [
-      Validators.required,
-    ]),
+    bankAccountNumber: new FormControl('', [Validators.required]),
+    termsAccepted: new FormControl('', [Validators.required]),
   });
 
   constructor(
@@ -53,8 +49,7 @@ export class VendorDetailComponent implements OnInit {
           termsAccepted: false,
         });
       },
-      (err) => console.log('HTTP Error', err),
-      () => console.log('HTTP request completed.')
+      (err) => console.log('HTTP Error', err)
     );
   }
 
@@ -63,7 +58,9 @@ export class VendorDetailComponent implements OnInit {
       return 'You must provide a bank account number.';
     }
 
-    return this.bankAccountNumber.hasError('email') ? 'Not a valid bank account number' : '';
+    return this.bankAccountNumber.hasError('email')
+      ? 'Not a valid bank account number'
+      : '';
   }
 
   onCancelClick() {
@@ -76,20 +73,22 @@ export class VendorDetailComponent implements OnInit {
 
   onSubmit(vendorDetail: VendorDetail) {
     const updateVendorDetails: UpdateVendorDetails = {
-      ... vendorDetail,
-      dateAcceptedTerms: new Date()
+      ...vendorDetail,
+      dateAcceptedTerms: new Date(),
     };
 
-    this.vendorService.updateVendor(this.vendorId, updateVendorDetails).subscribe(
-      (res) => {
-        this.onSubmitConfirmation(true);
-        this.goBack();
-      },
-      (err) => {
-        console.error('HTTP Error', err);
-        this.onSubmitConfirmation(false);
-      }
-    );
+    this.vendorService
+      .updateVendor(this.vendorId, updateVendorDetails)
+      .subscribe(
+        (res) => {
+          this.onSubmitConfirmation(true);
+          this.goBack();
+        },
+        (err) => {
+          console.error('HTTP Error', err);
+          this.onSubmitConfirmation(false);
+        }
+      );
   }
 
   onSubmitConfirmation(isSucess: boolean) {
