@@ -6,17 +6,10 @@
         <h1>Vendor App</h1>
       </a>
     </div>
-    <button mat-icon-button (click)="snav.toggle()" value="sidebarclosed">
-      <mat-icon>menu</mat-icon>
-    </button>
     <span fxFlex></span>
     <app-header></app-header>
   </mat-toolbar>
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
-    <mat-sidenav #snav id="snav" class="dark-sidebar pl-xs" [mode]="mobileQuery.matches ? 'side' : 'over'"
-      fixedTopGap="0" [opened]="mobileQuery.matches" [disableClose]="mobileQuery.matches">
-      <app-sidebar></app-sidebar>
-    </mat-sidenav>
     <mat-sidenav-content class="page-wrapper">
       <div class="page-content">
         <router-outlet>
