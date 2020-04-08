@@ -11,24 +11,28 @@
             <table mat-table [dataSource]="dataSource" matSort>
               <!-- Business Name Column -->
               <ng-container matColumnDef="paymentId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Payment ID</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Payment Reference</th>
                 <td mat-cell *matCellDef="let row">{{ row.paymentId }}</td>
               </ng-container>
               <ng-container matColumnDef="paymentDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Payment Date</th>
-                <td mat-cell *matCellDef="let row">{{ row.paymentDate }}</td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                <td mat-cell *matCellDef="let row">{{ row.paymentDate | date:'d/MM/yyyy' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="bankAccountNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank Account</th>
+                <td mat-cell *matCellDef="let row">{{ row.bankAccountNumber }}</td>
               </ng-container>
               <ng-container matColumnDef="Gross">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross</th>
-                <td mat-cell *matCellDef="let row">{{ row.grossPayment }}</td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross Payment</th>
+                <td mat-cell *matCellDef="let row">{{ row.grossPayment | currency }}</td>
               </ng-container>
               <ng-container matColumnDef="Fees">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Fees</th>
-                <td mat-cell *matCellDef="let row">{{ row.fees }}</td>
+                <td mat-cell *matCellDef="let row">{{ row.fees | currency }}</td>
               </ng-container>
               <ng-container matColumnDef="Net">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Net</th>
-                <td mat-cell *matCellDef="let row">{{ row.netPayment }}</td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Payment</th>
+                <td mat-cell *matCellDef="let row">{{ row.netPayment | currency }}</td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

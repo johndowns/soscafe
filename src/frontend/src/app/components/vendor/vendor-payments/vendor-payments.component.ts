@@ -11,7 +11,7 @@ import { VendorService } from 'src/app/providers';
   templateUrl: './vendor-payments.component.html',
 })
 export class VendorPaymentsComponent implements OnInit {
-  displayedColumns: string[] = ['paymentId', 'paymentDate', 'Gross', 'Fees', 'Net'];
+  displayedColumns: string[] = ['paymentId', 'paymentDate', 'bankAccountNumber', 'Gross', 'Fees', 'Net'];
   dataSource: MatTableDataSource<VendorPaymentSummary>;
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
