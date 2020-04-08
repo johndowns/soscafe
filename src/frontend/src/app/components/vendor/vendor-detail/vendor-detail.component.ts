@@ -59,16 +59,6 @@ export class VendorDetailComponent implements OnInit {
     );
   }
 
-  getBankAccountErrorMessage(): string {
-    if (this.bankAccountNumber.hasError('required')) {
-      return 'You must provide a bank account number.';
-    }
-
-    return this.bankAccountNumber.hasError('email')
-      ? 'This is not a valid bank account number.'
-      : '';
-  }
-
   onCancelClick() {
     this.goBack();
   }
