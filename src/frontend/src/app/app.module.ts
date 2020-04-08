@@ -26,12 +26,6 @@ export function loggerCallback(logLevel, message, piiEnabled) {
   console.log(message);
 }
 
-export const protectedResourceMap: [string, string[]][] = [
-  [
-    'https://vendorapi.soscafe.nz',
-    ['https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'],
-  ]
-];
 @NgModule({
   declarations: [
     AppComponent,
