@@ -95,10 +95,6 @@ namespace SosCafe.Admin
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted in order to update the vendor.");
             }
-            else if (vendorDetailsApiModel.DateAcceptedTerms >= DateTime.Now)
-            {
-                return new BadRequestErrorMessageResult("The terms must be accepted with a valid date in order to update the vendor.");
-            }
             else if (!BankAccountRegex.IsMatch(vendorDetailsApiModel.BankAccountNumber))
             {
                 return new BadRequestErrorMessageResult("The bank account number is invalid.");
