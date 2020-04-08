@@ -134,7 +134,7 @@ namespace SosCafe.Admin
         {
             // Get the user principal ID.
             var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+            log.LogInformation("Received GET payments request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
             var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
@@ -144,18 +144,8 @@ namespace SosCafe.Admin
                 return new NotFoundResult();
             }
 
-            // Read all records from table storage where the partition key is the vendor's ID.
-            TableContinuationToken token = null;
-            var allPaymentsForVendor = new List<VendorPaymentEntity>();
-            var filterToVendorPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, vendorId);
-            do
-            {
-                var queryResult = await vendorPaymentsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorPaymentEntity>().Where(filterToVendorPartition), token);
-                allPaymentsForVendor.AddRange(queryResult.Results);
-                token = queryResult.ContinuationToken;
-            } while (token != null);
-
-            // Map the results to a response model.
+            // Get the payments and map the results to a response model.
+            var allPaymentsForVendor = await GetPaymentsForVendorAsync(vendorId, vendorPaymentsTable);
             var mappedResults = allPaymentsForVendor.Select(entity => new VendorPaymentApiModel
             {
                 PaymentId = entity.PaymentId,
@@ -170,6 +160,48 @@ namespace SosCafe.Admin
             return new OkObjectResult(mappedResults);
         }
 
+        [FunctionName("ExportVendorPayments")]
+        public static async Task<IActionResult> ExportVendorPayments(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "vendors/{vendorId}/payments/csv")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
+            string vendorId,
+            [Table("VendorPayments", Connection = "SosCafeStorage")] CloudTable vendorPaymentsTable,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
+            ILogger log)
+        {
+            // Get the user principal ID.
+            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            log.LogInformation("Received GET payments CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+
+            // Authorise the request.
+            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                return new NotFoundResult();
+            }
+
+            // Get the payments and map the results to a response model.
+            var allPaymentsForVendor = await GetPaymentsForVendorAsync(vendorId, vendorPaymentsTable);
+            var mappedResults = allPaymentsForVendor.Select(entity => new VendorPaymentCsv
+            {
+                VendorId = entity.VendorId,
+                PaymentId = entity.PaymentId,
+                PaymentDate = entity.PaymentDate,
+                BankAccountNumber = entity.BankAccountNumber,
+                GrossPayment = entity.GrossPayment.ToString(),
+                Fees = entity.Fees.ToString(),
+                NetPayment = entity.NetPayment.ToString()
+            });
+
+            // Serialize to CSV.
+            var fileBytes = CreateCsvFile(mappedResults);
+            return new FileContentResult(fileBytes, "text/csv")
+            {
+                FileDownloadName = "SOSCafe-Payments.csv"
+            };
+        }
+
         [FunctionName("GetVendorVouchers")]
         public static async Task<IActionResult> GetVendorVouchers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers")] HttpRequest req,
@@ -181,7 +213,7 @@ namespace SosCafe.Admin
         {
             // Get the user principal ID.
             var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+            log.LogInformation("Received GET vouchers request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
             var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
@@ -226,7 +258,7 @@ namespace SosCafe.Admin
         {
             // Get the user principal ID.
             var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+            log.LogInformation("Received GET vouchers CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
             var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
@@ -258,19 +290,27 @@ namespace SosCafe.Admin
             });
 
             // Serialize to CSV.
-            using (var stream = new MemoryStream())
-            using (var writer = new StreamWriter(stream))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            var fileBytes = CreateCsvFile(mappedResults);
+            return new FileContentResult(fileBytes, "text/csv")
             {
-                csv.WriteRecords(mappedResults);
+                FileDownloadName = "SOSCafe-Vouchers.csv"
+            };
+        }
 
-                var fileBytes = stream.ToArray();
+        private static async Task<List<VendorPaymentEntity>> GetPaymentsForVendorAsync(string vendorId, CloudTable vendorPaymentsTable)
+        {
+            // Read all records from table storage where the partition key is the vendor's ID.
+            TableContinuationToken token = null;
+            var allPaymentsForVendor = new List<VendorPaymentEntity>();
+            var filterToVendorPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, vendorId);
+            do
+            {
+                var queryResult = await vendorPaymentsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorPaymentEntity>().Where(filterToVendorPartition), token);
+                allPaymentsForVendor.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
 
-                return new FileContentResult(fileBytes, "text/csv")
-                {
-                    FileDownloadName = "SOSCafe-Vouchers.csv"
-                };
-            }
+            return allPaymentsForVendor;
         }
 
         private static async Task<List<VendorVoucherEntity>> GetVouchersForVendorAsync(string vendorId, CloudTable vendorVouchersTable)
@@ -287,6 +327,20 @@ namespace SosCafe.Admin
             } while (token != null);
 
             return allVouchersForVendor;
+        }
+
+        private static byte[] CreateCsvFile<T>(IEnumerable<T> recordsToWrite)
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new StreamWriter(stream))
+                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    csv.WriteRecords(recordsToWrite);
+                }
+
+                return stream.ToArray();
+            }
         }
     }
 }
