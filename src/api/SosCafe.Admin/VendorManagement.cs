@@ -13,6 +13,10 @@ using SosCafe.Admin.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.IO;
+using CsvHelper;
+using System.Globalization;
+using SosCafe.Admin.Csv;
 
 namespace SosCafe.Admin
 {
@@ -187,18 +191,8 @@ namespace SosCafe.Admin
                 return new NotFoundResult();
             }
 
-            // Read all records from table storage where the partition key is the vendor's ID.
-            TableContinuationToken token = null;
-            var allVouchersForVendor = new List<VendorVoucherEntity>();
-            var filterToVendorPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, vendorId);
-            do
-            {
-                var queryResult = await vendorVouchersTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorVoucherEntity>().Where(filterToVendorPartition), token);
-                allVouchersForVendor.AddRange(queryResult.Results);
-                token = queryResult.ContinuationToken;
-            } while (token != null);
-
-            // Map the results to a response model.
+            // Get the vouchers and map the results to a response model.
+            var allVouchersForVendor = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable);
             var mappedResults = allVouchersForVendor.Select(entity => new VendorVoucherApiModel
             {
                 OrderId = entity.OrderId,
@@ -219,6 +213,80 @@ namespace SosCafe.Admin
 
             // Return the voucher list.
             return new OkObjectResult(mappedResults);
+        }
+
+        [FunctionName("ExportVendorVouchers")]
+        public static async Task<IActionResult> ExportVendorVouchers(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "vendors/{vendorId}/vouchers/csv")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
+            string vendorId,
+            [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
+            ILogger log)
+        {
+            // Get the user principal ID.
+            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
+
+            // Authorise the request.
+            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                return new NotFoundResult();
+            }
+
+            // Get the vouchers and map the results to a response model.
+            var allVouchersForVendor = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable);
+            var mappedResults = allVouchersForVendor.Select(entity => new VendorVoucherCsv
+            {
+                VendorId = entity.VendorId,
+                OrderId = entity.OrderId,
+                OrderRef = entity.OrderRef,
+                OrderDate = entity.OrderDate,
+                CustomerName = entity.CustomerName,
+                CustomerRegion = entity.CustomerRegion,
+                CustomerEmailAddress = entity.CustomerEmailAddress,
+                CustomerAcceptsMarketing = entity.CustomerAcceptsMarketing.ToString(),
+                VoucherId = entity.VoucherId,
+                VoucherDescription = entity.VoucherDescription,
+                VoucherQuantity = entity.VoucherQuantity,
+                VoucherIsDonation = entity.VoucherIsDonation.ToString(),
+                VoucherGross = entity.VoucherGross,
+                VoucherFees = entity.VoucherFees,
+                VoucherNet = entity.VoucherNet
+            });
+
+            // Serialize to CSV.
+            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.WriteRecords(mappedResults);
+
+                var fileBytes = stream.ToArray();
+
+                return new FileContentResult(fileBytes, "text/csv")
+                {
+                    FileDownloadName = "SOSCafe-Vouchers.csv"
+                };
+            }
+        }
+
+        private static async Task<List<VendorVoucherEntity>> GetVouchersForVendorAsync(string vendorId, CloudTable vendorVouchersTable)
+        {
+            // Read all records from table storage where the partition key is the vendor's ID.
+            TableContinuationToken token = null;
+            var allVouchersForVendor = new List<VendorVoucherEntity>();
+            var filterToVendorPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, vendorId);
+            do
+            {
+                var queryResult = await vendorVouchersTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorVoucherEntity>().Where(filterToVendorPartition), token);
+                allVouchersForVendor.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
+
+            return allVouchersForVendor;
         }
     }
 }
