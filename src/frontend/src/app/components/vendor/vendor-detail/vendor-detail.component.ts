@@ -81,7 +81,7 @@ export class VendorDetailComponent implements OnInit {
     this.workInProgress = true;
     const updateVendorDetails: UpdateVendorDetails = {
       ...vendorDetail,
-      dateAcceptedTerms: new Date(),
+      dateAcceptedTerms: new Date().toISOString(),
     };
 
     this.vendorService
