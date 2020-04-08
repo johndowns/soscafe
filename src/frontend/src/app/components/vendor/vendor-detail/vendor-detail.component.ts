@@ -42,7 +42,7 @@ export class VendorDetailComponent implements OnInit {
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
-          registeredDate: res.registeredDate,
+          registeredDate: new Date(res.registeredDate).toLocaleDateString('en-NZ'),
           contactName: res.contactName,
           emailAddress: res.emailAddress,
           phoneNumber: res.phoneNumber,
