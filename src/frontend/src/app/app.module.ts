@@ -81,15 +81,7 @@ export function loggerCallback(logLevel, message, piiEnabled) {
         consentScopes: env.msal.consentScopes,
         protectedResourceMap: [
           [
-            'https://vendorapi.soscafe.nz/',
-            [
-              'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
-              'openid',
-              'profile'
-            ],
-          ],
-          [
-            'http://localhost:4200/',
+            env.apiBaseUrl,
             [
               'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
               'openid',
