@@ -20,7 +20,7 @@ namespace SosCafe.Admin
         [FunctionName("ExportVendorList")]
         public static async Task<IActionResult> ExportVendorList(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
-            [Blob("exports/AllVendors-{DateTime}.csv", FileAccess.Write)] Stream outputFile,
+            [Blob("exports/AllVendors-{DateTime}.csv", FileAccess.Write, Connection = "SosCafeStorage")] Stream outputFile,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
             ILogger log)
         {
