@@ -96,6 +96,7 @@ namespace SosCafe.Admin
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted with a valid date in order to update the vendor.");
             }
+            // TODO validate bank account number
 
             // Update entity.
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
