@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-import { VendorSummary, VendorDetail, UpdateVendorDetails } from 'src/app/model';
+import { VendorSummary, VendorDetail, UpdateVendorDetails, VendorPaymentSummary } from 'src/app/model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,10 @@ export class VendorService {
 
   getVendor(vendorId: string): Observable<VendorDetail> {
     return this.http.get<VendorDetail>(`${this.vendorsBaseUrl}/vendors/${vendorId}`);
+  }
+
+  getVendorPayments(vendorId: string): Observable<VendorPaymentSummary[]> {
+    return this.http.get<VendorPaymentSummary[]>(`${this.vendorsBaseUrl}/vendors/${vendorId}/payments`);
   }
 
   updateVendor(vendorId: string, updateVendorDetails: UpdateVendorDetails): Observable<VendorDetail> {
