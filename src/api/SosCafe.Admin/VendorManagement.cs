@@ -12,11 +12,14 @@ using System.Security.Claims;
 using SosCafe.Admin.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SosCafe.Admin
 {
     public static class VendorManagement
     {
+        private static readonly Regex BankAccountRegex = new Regex(@"[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}");
+
         [FunctionName("GetVendor")]
         public static async Task<IActionResult> GetVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}")] HttpRequest req,
@@ -96,7 +99,10 @@ namespace SosCafe.Admin
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted with a valid date in order to update the vendor.");
             }
-            // TODO validate bank account number
+            else if (!BankAccountRegex.IsMatch(vendorDetailsApiModel.BankAccountNumber))
+            {
+                return new BadRequestErrorMessageResult("The bank account number is invalid.");
+            }
 
             // Update entity.
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;

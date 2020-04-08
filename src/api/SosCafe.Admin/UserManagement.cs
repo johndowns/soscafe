@@ -49,7 +49,7 @@ namespace SosCafe.Admin
 
         internal static string GetUserId(ClaimsPrincipal claimsPrincipal, ILogger log)
         {
-            var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "emails").Value;
+            var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
             return userEmailAddress ?? string.Empty;
         }
 
