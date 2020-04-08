@@ -63,7 +63,7 @@ export class VendorDetailComponent implements OnInit {
     }
 
     return this.bankAccountNumber.hasError('email')
-      ? 'Not a valid bank account number'
+      ? 'This is not a valid bank account number.'
       : '';
   }
 
@@ -99,7 +99,7 @@ export class VendorDetailComponent implements OnInit {
   }
 
   onSubmitConfirmation(isSucess: boolean) {
-    const message = isSucess ? 'Record Updated.' : 'Failed to updated.';
+    const message = isSucess ? 'Your details have been updated.' : 'Failed to update.';
     this.snackBar.open(message, 'OK', {
       duration: 3000,
     });
