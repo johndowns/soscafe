@@ -59,8 +59,8 @@ export const protectedResourceMap: [string, string[]][] = [
           authority:
             'https://soscafe.b2clogin.com/tfp/soscafe.onmicrosoft.com/b2c_1_signupsignin',
           validateAuthority: false,
-          redirectUri: 'http://localhost:4200/',
-          postLogoutRedirectUri: 'http://localhost:4200/',
+          redirectUri: window.location.origin,
+          postLogoutRedirectUri: window.location.origin,
           navigateToLoginRequestUrl: true,
         },
         cache: {
@@ -68,8 +68,7 @@ export const protectedResourceMap: [string, string[]][] = [
           storeAuthStateInCookie: true, // set to true for IE 11
         },
         framework: {
-          unprotectedResources: ['https://www.microsoft.com/en-us/'],
-          protectedResourceMap: new Map(protectedResourceMap),
+          isAngular: true,
         },
         system: {
           logger: new Logger(loggerCallback, {
@@ -80,7 +79,7 @@ export const protectedResourceMap: [string, string[]][] = [
         },
       },
       {
-        popUp: true,
+        popUp: false,
         consentScopes: [
           'openid',
           'profile',
