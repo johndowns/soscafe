@@ -25,5 +25,8 @@ namespace SosCafe.Admin.Csv
 
         [Name("Bank Account")]
         public string BankAccountNumber { get; set; }
+
+        [Name("Date Accepted Terms")]
+        public DateTime? DateAcceptedTerms { get; set; }
     }
 }

@@ -100,7 +100,6 @@ namespace SosCafe.Admin
 
             // Update entity.
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
-            vendorDetailsEntity.IsValidated = true;
             vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms;
 
             // Submit entity update to table.

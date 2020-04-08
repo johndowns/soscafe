@@ -57,8 +57,7 @@ namespace SosCafe.Admin.Models
                 EmailAddress = vendorToImport.EmailAddress,
                 PhoneNumber = vendorToImport.PhoneNumber,
                 BankAccountNumber = vendorToImport.BankAccountNumber,
-                IsValidated = false, // TODO remove this
-                DateAcceptedTerms = null // TODO roundtrip this
+                DateAcceptedTerms = vendorToImport.DateAcceptedTerms
             };
 
             // Upsert vendor table entity.

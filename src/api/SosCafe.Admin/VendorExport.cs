@@ -10,6 +10,8 @@ using CsvHelper;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SosCafe.Admin.Entities;
+using System.Linq;
+using SosCafe.Admin.Csv;
 
 namespace SosCafe.Admin
 {
@@ -32,14 +34,24 @@ namespace SosCafe.Admin
                 token = queryResult.ContinuationToken;
             } while (token != null);
 
-            // TODO transform into VendorDetailsCsv objects
+            // TODO Transform into VendorDetailsCsv objects so that we can roundtrip successfully.
+            var allVendorDetailsCsv = allVendorDetails.Select(entity => new VendorDetailsCsv
+            {
+                ShopifyId = entity.ShopifyId,
+                BusinessName = entity.BusinessName,
+                RegisteredDate = entity.RegisteredDate,
+                ContactName = entity.ContactName,
+                PhoneNumber = entity.PhoneNumber,
+                EmailAddress = entity.EmailAddress,
+                BankAccountNumber = entity.BankAccountNumber
+            });
 
             // Serialize to CSV.
             using (var memoryStream = new MemoryStream())
             using (var writer = new StreamWriter(memoryStream))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
-                csv.WriteRecords(allVendorDetails);
+                csv.WriteRecords(allVendorDetailsCsv);
 
                 outputFile = memoryStream;
             }

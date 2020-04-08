@@ -49,22 +49,15 @@ namespace SosCafe.Admin
 
         internal static string GetUserId(ClaimsPrincipal claimsPrincipal, ILogger log)
         {
-            foreach (var claim in (claimsPrincipal.Identity as ClaimsIdentity).Claims)
-            {
-                log.LogInformation($"TODO claim {claim.Type} = {claim.Value}");
-            }
-
-            var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            log.LogInformation($"TODO user email address is {userEmailAddress}");
-            return "0286c40e-6a78-470e-aeb1-fa13e9f295f6"; // TODO
+            var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "emails").Value;
+            log.LogInformation($"TODO user email address claim is {userEmailAddress}");
+            return userEmailAddress;
         }
 
         internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)
         {
-            return true; // TODO
-
             // Check that the user-vendor combination exists.
-            var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(userId, vendorId);
+            var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(userId.CleanStringForPartitionKey(), vendorId);
             var findResult = await vendorUserAssignmentsTable.ExecuteAsync(findOperation);
             return findResult.Result != null;
         }
