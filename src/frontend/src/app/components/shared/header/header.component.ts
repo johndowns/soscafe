@@ -28,8 +28,6 @@ export class HeaderComponent implements OnInit {
     if (this.loggedIn) {
       this.userName = userAccount.name;
     }
-
-    console.log(this.authService.getAccount());
   }
 
   onSignIn() {
