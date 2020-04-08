@@ -28,10 +28,9 @@ export function loggerCallback(logLevel, message, piiEnabled) {
 
 export const protectedResourceMap: [string, string[]][] = [
   [
-    'https://buildtodoservice.azurewebsites.net/api/todolist',
-    ['api://a88bb933-319c-41b5-9f04-eff36d985612/access_as_user'],
-  ],
-  ['https://graph.microsoft.com/v1.0/me', ['user.read']],
+    'https://vendorapi.soscafe.nz',
+    ['https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'],
+  ]
 ];
 @NgModule({
   declarations: [
@@ -84,6 +83,9 @@ export const protectedResourceMap: [string, string[]][] = [
           'openid',
           'profile',
           'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
+        ],
+        protectedResourceMap: [
+          ['https://vendorapi.soscafe.nz/',[ 'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation', 'openid', 'profile'],]
         ],
         extraQueryParameters: {},
       }

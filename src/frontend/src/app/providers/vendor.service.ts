@@ -9,7 +9,7 @@ import { VendorSummary, VendorDetail, UpdateVendorDetails } from 'src/app/model'
 })
 export class VendorService {
 
-  private vendorsBaseUrl = '/api';
+  private vendorsBaseUrl = 'https://vendorapi.soscafe.nz';
 
   constructor(private http: HttpClient) { }
 
