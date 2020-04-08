@@ -50,8 +50,7 @@ namespace SosCafe.Admin
         internal static string GetUserId(ClaimsPrincipal claimsPrincipal, ILogger log)
         {
             var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "emails").Value;
-            log.LogInformation($"TODO user email address claim is {userEmailAddress}");
-            return userEmailAddress;
+            return userEmailAddress ?? string.Empty;
         }
 
         internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)
