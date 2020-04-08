@@ -34,7 +34,7 @@ namespace SosCafe.Admin
                 token = queryResult.ContinuationToken;
             } while (token != null);
 
-            // TODO Transform into VendorDetailsCsv objects so that we can roundtrip successfully.
+            // Transform into VendorDetailsCsv objects so that we can roundtrip successfully.
             var allVendorDetailsCsv = allVendorDetails.Select(entity => new VendorDetailsCsv
             {
                 ShopifyId = entity.ShopifyId,
@@ -47,13 +47,10 @@ namespace SosCafe.Admin
             });
 
             // Serialize to CSV.
-            using (var memoryStream = new MemoryStream())
-            using (var writer = new StreamWriter(memoryStream))
+            using (var writer = new StreamWriter(outputFile))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(allVendorDetailsCsv);
-
-                outputFile = memoryStream;
             }
 
             return new AcceptedResult();
