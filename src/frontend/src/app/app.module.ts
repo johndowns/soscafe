@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MsalModule, MsalInterceptor } from '@azure/msal-angular';
 import { LogLevel, Logger, CryptoUtils } from 'msal';
 
+import { environment as env, environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppMaterialModule } from './core';
@@ -27,15 +28,6 @@ import { HomeComponent } from './components/home/home.component';
 export function loggerCallback(logLevel, message, piiEnabled) {
   console.log(message);
 }
-
-/*export const protectedResourceMap: [string, string[]][] = [
-  [
-    'https://vendorapi.soscafe.nz',
-    [
-      'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'
-    ]
-  ]
-]*/
 
 @NgModule({
   declarations: [
@@ -61,17 +53,16 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     MsalModule.forRoot(
       {
         auth: {
-          clientId: '1cc0426e-f8d7-4ddb-94b5-18185c09a6bd',
-          authority:
-            'https://soscafe.b2clogin.com/tfp/soscafe.onmicrosoft.com/b2c_1_signupsignin',
-          validateAuthority: false,
-          redirectUri: window.location.origin,
-          postLogoutRedirectUri: window.location.origin,
-          navigateToLoginRequestUrl: true,
+          clientId: env.msal.auth.clientId,
+          authority: env.msal.auth.authority,
+          validateAuthority: env.msal.auth.validateAuthority,
+          redirectUri: env.appBaseUrl,
+          postLogoutRedirectUri: env.appBaseUrl,
+          navigateToLoginRequestUrl: env.msal.auth.navigateToLoginRequestUrl,
         },
         cache: {
           cacheLocation: 'localStorage',
-          storeAuthStateInCookie: true, // set to true for IE 11
+          storeAuthStateInCookie: false, // set to true for IE 11
         },
         framework: {
           isAngular: true,
@@ -81,19 +72,24 @@ export function loggerCallback(logLevel, message, piiEnabled) {
               correlationId: CryptoUtils.createNewGuid(),
               level: LogLevel.Verbose,
               piiLoggingEnabled: true,
-          })
+          }),
+          tokenRenewalOffsetSeconds: 300,
         },
       },
       {
         popUp: false,
-        consentScopes: [
-          'openid',
-          'profile',
-          'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
-        ],
+        consentScopes: env.msal.consentScopes,
         protectedResourceMap: [
           [
             'https://vendorapi.soscafe.nz/',
+            [
+              'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
+              'openid',
+              'profile'
+            ],
+          ],
+          [
+            'http://localhost:4200/',
             [
               'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
               'openid',

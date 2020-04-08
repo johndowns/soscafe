@@ -1,3 +1,4 @@
+import { environment as env } from './../../environments/environment.prod';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +10,7 @@ import { VendorSummary, VendorDetail, UpdateVendorDetails, VendorPaymentSummary 
 })
 export class VendorService {
 
-  private vendorsBaseUrl = 'https://vendorapi.soscafe.nz';
+  private vendorsBaseUrl = env.apiBaseUrl;
 
   constructor(private http: HttpClient) { }
 
