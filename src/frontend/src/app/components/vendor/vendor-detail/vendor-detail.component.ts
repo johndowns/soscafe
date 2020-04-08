@@ -16,6 +16,8 @@ export class VendorDetailComponent implements OnInit {
   public workInProgress = false;
   private vendorId: string;
 
+  BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
+
   public vendorForm = new FormGroup({
     id: new FormControl(''),
     businessName: new FormControl(''),
@@ -23,7 +25,7 @@ export class VendorDetailComponent implements OnInit {
     contactName: new FormControl(''),
     emailAddress: new FormControl(''),
     phoneNumber: new FormControl(''),
-    bankAccountNumber: new FormControl('', [Validators.required]),
+    bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
     termsAccepted: new FormControl('', [Validators.required]),
   });
 
