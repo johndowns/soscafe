@@ -87,7 +87,6 @@ export class VendorDetailComponent implements OnInit {
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
-          this.goBack();
         },
         (err) => {
           console.error('HTTP Error', err);
