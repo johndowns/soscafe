@@ -11,7 +11,14 @@ import { VendorService } from 'src/app/providers';
   templateUrl: './vendor-payments.component.html',
 })
 export class VendorPaymentsComponent implements OnInit {
-  displayedColumns: string[] = ['paymentId', 'paymentDate', 'bankAccountNumber', 'Gross', 'Fees', 'Net'];
+  displayedColumns: string[] = [
+    'paymentId',
+    'paymentDate',
+    'bankAccountNumber',
+    'grossPayment',
+    'fees',
+    'netPayment',
+  ];
   dataSource: MatTableDataSource<VendorPaymentSummary>;
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
@@ -20,7 +27,11 @@ export class VendorPaymentsComponent implements OnInit {
   public workInProgress = false;
   private vendorId: string;
 
-  constructor(private vendorService: VendorService, private route: ActivatedRoute) {}
+  constructor(
+    private vendorService: VendorService,
+    private route: ActivatedRoute
+  ) {}
+
   ngOnInit() {
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
@@ -31,7 +42,7 @@ export class VendorPaymentsComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      (err) => console.log('HTTP Error', err),
+      (err) => console.error('HTTP Error', err),
       () => {
         this.workInProgress = false;
       }

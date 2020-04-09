@@ -1,8 +1,8 @@
 export class VendorPaymentSummary {
   paymentId: string;
-  paymentDate: string;
+  paymentDate: Date;
   bankAccountNumber: string;
-  grossPayment: string;
-  fees: string;
-  netPayment: string;
+  grossPayment: number;
+  fees: number;
+  netPayment: number;
 }
