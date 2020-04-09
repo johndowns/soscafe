@@ -11,7 +11,7 @@ import { isIE } from './config';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppMaterialModule } from './core';
-import { YesNoPipe } from './core/YesNoPipe';
+import { YesNoPipe } from './core/yes-nop-pipe';
 import { DefaultLayoutComponent } from './components/layout';
 import { VendorService } from 'src/app/providers';
 import {
