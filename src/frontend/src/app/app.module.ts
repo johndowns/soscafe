@@ -6,11 +6,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MsalModule, MsalInterceptor } from '@azure/msal-angular';
 import { LogLevel, Logger, CryptoUtils } from 'msal';
+import { isIE } from './config';
 
 import { environment as env, environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppMaterialModule } from './core';
+import { YesNoPipe } from './core/yes-nop-pipe';
 import { DefaultLayoutComponent } from './components/layout';
 import { VendorService } from 'src/app/providers';
 import {
@@ -19,9 +21,11 @@ import {
   SidebarComponent,
 } from './components/shared';
 import {
-  VendorDetailComponent,
   VendorListComponent,
+  VendorViewComponent,
+  VendorDetailComponent,
   VendorPaymentsComponent,
+  VendorVouchersComponent,
 } from './components/vendor';
 import { HomeComponent } from './components/home/home.component';
 
@@ -37,9 +41,12 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     HeaderComponent,
     SidebarComponent,
     VendorListComponent,
+    VendorViewComponent,
     VendorDetailComponent,
     VendorPaymentsComponent,
+    VendorVouchersComponent,
     HomeComponent,
+    YesNoPipe,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +69,7 @@ export function loggerCallback(logLevel, message, piiEnabled) {
         },
         cache: {
           cacheLocation: 'localStorage',
-          storeAuthStateInCookie: false, // set to true for IE 11
+          storeAuthStateInCookie: isIE
         },
         framework: {
           isAngular: true,
@@ -72,8 +79,7 @@ export function loggerCallback(logLevel, message, piiEnabled) {
               correlationId: CryptoUtils.createNewGuid(),
               level: LogLevel.Verbose,
               piiLoggingEnabled: true,
-          }),
-          tokenRenewalOffsetSeconds: 300,
+          })
         },
       },
       {
@@ -83,10 +89,8 @@ export function loggerCallback(logLevel, message, piiEnabled) {
           [
             env.apiBaseUrl,
             [
-              'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
-              'openid',
-              'profile'
-            ],
+              'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'
+            ]
           ]
         ],
         extraQueryParameters: {},

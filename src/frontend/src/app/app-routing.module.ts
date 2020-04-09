@@ -1,10 +1,10 @@
-import { HomeComponent } from './components/home/home.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MsalGuard } from '@azure/msal-angular';
 
 import { DefaultLayoutComponent } from './components/layout';
-import { VendorDetailComponent, VendorListComponent, VendorPaymentsComponent } from './components/vendor';
+import { HomeComponent } from './components/home/home.component';
+import { VendorListComponent, VendorViewComponent } from './components/vendor';
 
 const routes: Routes = [
   {
@@ -14,34 +14,23 @@ const routes: Routes = [
       {
         path: 'vendors',
         component: VendorListComponent,
-        canActivate: [
-          MsalGuard
-        ],
+        canActivate: [MsalGuard],
       },
       {
         path: 'vendors/:id',
-        component: VendorDetailComponent,
-        canActivate: [
-          MsalGuard
-        ],
-      },
-      {
-        path: 'vendors/:id/payments',
-        component: VendorPaymentsComponent,
-        canActivate: [
-          MsalGuard
-        ],
+        component: VendorViewComponent,
+        canActivate: [MsalGuard],
       },
       {
         path: '',
         component: HomeComponent,
-      }
+      },
     ],
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

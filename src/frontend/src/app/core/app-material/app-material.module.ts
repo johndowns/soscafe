@@ -15,6 +15,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCheckboxModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatTabsModule,
   ],
   exports: [
     MatButtonModule,
@@ -52,6 +54,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCheckboxModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatTabsModule,
   ]
 })
 export class AppMaterialModule { }

@@ -20,9 +20,16 @@
                   <a matLine [routerLink]="['/vendors', row.id]">{{row.businessName}}</a>
                 </td>
               </ng-container>
+              <!--
+              <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                  No businesses registered.
+                </mat-footer-cell>
+              </ng-container>
+              -->
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-              </tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <!--<mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></mat-footer-row>-->
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
           </div>

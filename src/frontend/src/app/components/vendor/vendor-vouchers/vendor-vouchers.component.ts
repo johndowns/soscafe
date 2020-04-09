@@ -1,26 +1,33 @@
+import { VendorVouchersSummary } from './../../../model/vendor/vendor-vouchers-summary';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { VendorPaymentSummary } from 'src/app/model';
 import { VendorService } from 'src/app/providers';
 import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-vendor-payments',
-  templateUrl: './vendor-payments.component.html',
+  selector: 'app-vendor-vouchers',
+  templateUrl: './vendor-vouchers.component.html',
 })
-export class VendorPaymentsComponent implements OnInit {
+export class VendorVouchersComponent implements OnInit {
   displayedColumns: string[] = [
-    'paymentId',
-    'paymentDate',
-    'bankAccountNumber',
-    'grossPayment',
-    'fees',
-    'netPayment',
+    'orderRef',
+    'orderDate',
+    'customerName',
+    'customerEmailAddress',
+    'customerRegion',
+    'voucherId',
+    'voucherDescription',
+    'voucherQuantity',
+    'voucherGross',
+    'voucherFees',
+    'voucherNet',
+    'customerAcceptsMarketing',
+    'voucherIsDonation',
   ];
-  dataSource: MatTableDataSource<VendorPaymentSummary>;
+  dataSource: MatTableDataSource<VendorVouchersSummary>;
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   @ViewChild(MatSort, { static: true })
@@ -36,7 +43,7 @@ export class VendorPaymentsComponent implements OnInit {
   ngOnInit() {
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
-    this.vendorService.getVendorPayments(this.vendorId).subscribe(
+    this.vendorService.getVendorVouchers(this.vendorId).subscribe(
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -59,9 +66,9 @@ export class VendorPaymentsComponent implements OnInit {
 
   download() {
     this.vendorService
-      .downloadVendorPaymentsCsv(this.vendorId)
+      .downloadVendorVouchersCsv(this.vendorId)
       .subscribe((blob) => {
-        saveAs(blob, 'payments.csv', {
+        saveAs(blob, 'vouchers.csv', {
           type: 'text/csv'
        });
       });
