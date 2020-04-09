@@ -1,6 +1,8 @@
+import { isIE } from '../app/config';
+
 export const environment = {
   production: true,
-  appBaseUrl: 'http://localhost:4200/',
+  appBaseUrl: 'https://vendors.soscafe.nz/',
   apiBaseUrl: 'https://vendorapi.soscafe.nz/',
   msal: {
     auth: {
@@ -11,7 +13,7 @@ export const environment = {
     },
     cache: {
       cacheLocation: 'localStorage',
-      storeAuthStateInCookie: true, // set to true for IE 11
+      storeAuthStateInCookie: isIE
     },
     consentScopes: [
       'openid',
