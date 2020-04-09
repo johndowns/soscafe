@@ -334,7 +334,7 @@ namespace SosCafe.Admin
             using (var stream = new MemoryStream())
             {
                 using (var writer = new StreamWriter(stream))
-                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                using (var csv = new CsvWriter(writer, new CultureInfo("en-NZ")))
                 {
                     csv.WriteRecords(recordsToWrite);
                 }
