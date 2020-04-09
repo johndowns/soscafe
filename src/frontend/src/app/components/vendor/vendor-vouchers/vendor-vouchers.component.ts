@@ -17,14 +17,14 @@ export class VendorVouchersComponent implements OnInit {
     'customerName',
     'customerEmailAddress',
     'customerRegion',
+    'voucherId',
     'voucherDescription',
     'voucherQuantity',
-    'customerAcceptsMarketing',
-    'voucherIsDonation',
-    'voucherId',
     'voucherGross',
     'voucherFees',
     'voucherNet',
+    'customerAcceptsMarketing',
+    'voucherIsDonation',
   ];
   dataSource: MatTableDataSource<VendorVouchersSummary>;
   @ViewChild(MatPaginator, { static: true })
