@@ -39,14 +39,16 @@
                 <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Net Payment</th>
                 <td class="cell-right" mat-cell *matCellDef="let row">{{ row.netPayment | currency }}</td>
               </ng-container>
+              <!--
               <ng-container matColumnDef="noData">
                 <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
                   No payment records.
                 </mat-footer-cell>
               </ng-container>
+              -->
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></mat-footer-row>
+              <!--<mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></mat-footer-row>-->
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
           </div>
