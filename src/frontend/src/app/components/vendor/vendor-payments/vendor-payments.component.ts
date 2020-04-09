@@ -37,7 +37,6 @@ export class VendorPaymentsComponent implements OnInit {
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendorPayments(this.vendorId).subscribe(
       (res) => {
-        console.log(res);
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -55,5 +54,27 @@ export class VendorPaymentsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  download() {
+    this.vendorService
+      .downloadVendorPaymentsCsv(this.vendorId)
+      .subscribe((response) => {
+        // It is necessary to create a new blob object with mime-type explicitly set
+        // otherwise only Chrome works like it should
+        const newBlob = new Blob([response], { type: 'text/csv' });
+
+        // IE doesn't allow using a blob object directly as link href
+        // instead it is necessary to use msSaveOrOpenBlob
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(newBlob);
+          return;
+        }
+
+        // For other browsers:
+        // Create a link pointing to the ObjectURL containing the blob.
+        const downloadURL = URL.createObjectURL(newBlob);
+        window.open(downloadURL);
+      });
   }
 }

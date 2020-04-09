@@ -14,7 +14,6 @@ import {
   providedIn: 'root',
 })
 export class VendorService {
-
   private vendorsBaseUrl = 'https://vendorapi.soscafe.nz';
 
   constructor(private http: HttpClient) {}
@@ -35,9 +34,23 @@ export class VendorService {
     );
   }
 
+  downloadVendorPaymentsCsv(
+    vendorId: string
+  ): Observable<Blob> {
+    return this.http.get<Blob>(
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments/csv`
+    );
+  }
+
   getVendorVouchers(vendorId: string): Observable<VendorVouchersSummary[]> {
     return this.http.get<VendorVouchersSummary[]>(
       `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers`
+    );
+  }
+
+  downloadVendorVouchersCsv(vendorId: string): Observable<Blob> {
+    return this.http.get<Blob>(
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/csv`
     );
   }
 
