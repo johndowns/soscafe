@@ -22,6 +22,7 @@ import {
   VendorDetailComponent,
   VendorListComponent,
   VendorPaymentsComponent,
+  VendorVouchersComponent,
 } from './components/vendor';
 import { HomeComponent } from './components/home/home.component';
 
@@ -40,6 +41,7 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     VendorDetailComponent,
     VendorPaymentsComponent,
     HomeComponent,
+    VendorVouchersComponent,
   ],
   imports: [
     BrowserModule,
