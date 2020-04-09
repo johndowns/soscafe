@@ -162,7 +162,7 @@ namespace SosCafe.Admin
 
         [FunctionName("ExportVendorPayments")]
         public static async Task<IActionResult> ExportVendorPayments(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "vendors/{vendorId}/payments/csv")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/payments/csv")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("VendorPayments", Connection = "SosCafeStorage")] CloudTable vendorPaymentsTable,
@@ -249,7 +249,7 @@ namespace SosCafe.Admin
 
         [FunctionName("ExportVendorVouchers")]
         public static async Task<IActionResult> ExportVendorVouchers(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "vendors/{vendorId}/vouchers/csv")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers/csv")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
