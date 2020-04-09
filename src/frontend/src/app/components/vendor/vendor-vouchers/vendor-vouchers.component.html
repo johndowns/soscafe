@@ -30,37 +30,37 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
                 <td mat-cell *matCellDef="let row">{{ row.customerRegion }}</td>
               </ng-container>
-              <ng-container matColumnDef="customerAcceptsMarketing">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Accepts Marketing</th>
-                <td mat-cell *matCellDef="let row">{{ row.customerAcceptsMarketing }}</td>
-              </ng-container>
               <ng-container matColumnDef="voucherDescription">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-                <td mat-cell *matCellDef="let row">{{ row.voucherDescription }}</td>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherDescription }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherQuantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
-                <td mat-cell *matCellDef="let row">{{ row.voucherQuantity }}</td>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherQuantity }}</td>
+              </ng-container>
+              <ng-container matColumnDef="customerAcceptsMarketing">
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Accepts Marketing</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.customerAcceptsMarketing | yesNo }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherIsDonation">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Donation</th>
-                <td mat-cell *matCellDef="let row">{{ row.voucherIsDonation }}</td>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Donation</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherIsDonation | yesNo }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Voucher Id</th>
-                <td mat-cell *matCellDef="let row">{{ row.voucherId }}</td>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Voucher Id</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherId }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherGross">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross Payment</th>
-                <td mat-cell *matCellDef="let row">{{ row.voucherGross | currency }}</td>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Gross Payment</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherGross | currency }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherFees">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fees</th>
-                <td mat-cell *matCellDef="let row">{{ row.voucherFees | currency }}</td>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Fees</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherFees | currency }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherNet">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Payment</th>
-                <td mat-cell *matCellDef="let row">{{ row.voucherNet | currency }}</td>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Net Payment</th>
+                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherNet | currency }}</td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

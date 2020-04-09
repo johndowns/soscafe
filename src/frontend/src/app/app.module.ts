@@ -11,6 +11,7 @@ import { isIE } from './config';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppMaterialModule } from './core';
+import { YesNoPipe } from './core/YesNoPipe';
 import { DefaultLayoutComponent } from './components/layout';
 import { VendorService } from 'src/app/providers';
 import {
@@ -42,6 +43,7 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     VendorPaymentsComponent,
     HomeComponent,
     VendorVouchersComponent,
+    YesNoPipe,
   ],
   imports: [
     BrowserModule,
