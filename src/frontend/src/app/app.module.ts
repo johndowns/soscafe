@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MsalModule, MsalInterceptor } from '@azure/msal-angular';
 import { LogLevel, Logger, CryptoUtils } from 'msal';
+import { isIE } from './config';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -62,7 +63,7 @@ export function loggerCallback(logLevel, message, piiEnabled) {
         },
         cache: {
           cacheLocation: 'localStorage',
-          storeAuthStateInCookie: true, // set to true for IE 11
+          storeAuthStateInCookie: isIE
         },
         framework: {
           isAngular: true,
