@@ -20,8 +20,9 @@ import {
   SidebarComponent,
 } from './components/shared';
 import {
-  VendorDetailComponent,
   VendorListComponent,
+  VendorViewComponent,
+  VendorDetailComponent,
   VendorPaymentsComponent,
   VendorVouchersComponent,
 } from './components/vendor';
@@ -39,10 +40,11 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     HeaderComponent,
     SidebarComponent,
     VendorListComponent,
+    VendorViewComponent,
     VendorDetailComponent,
     VendorPaymentsComponent,
-    HomeComponent,
     VendorVouchersComponent,
+    HomeComponent,
     YesNoPipe,
   ],
   imports: [

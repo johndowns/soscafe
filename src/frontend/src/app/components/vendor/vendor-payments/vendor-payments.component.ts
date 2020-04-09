@@ -7,7 +7,7 @@ import { VendorPaymentSummary } from 'src/app/model';
 import { VendorService } from 'src/app/providers';
 
 @Component({
-  selector: 'app-vendor-payment',
+  selector: 'app-vendor-payments',
   templateUrl: './vendor-payments.component.html',
 })
 export class VendorPaymentsComponent implements OnInit {

@@ -4,12 +4,7 @@ import { MsalGuard } from '@azure/msal-angular';
 
 import { DefaultLayoutComponent } from './components/layout';
 import { HomeComponent } from './components/home/home.component';
-import {
-  VendorDetailComponent,
-  VendorListComponent,
-  VendorPaymentsComponent,
-  VendorVouchersComponent,
-} from './components/vendor';
+import { VendorListComponent, VendorViewComponent } from './components/vendor';
 
 const routes: Routes = [
   {
@@ -23,17 +18,7 @@ const routes: Routes = [
       },
       {
         path: 'vendors/:id',
-        component: VendorDetailComponent,
-        canActivate: [MsalGuard],
-      },
-      {
-        path: 'vendors/:id/payments',
-        component: VendorPaymentsComponent,
-        canActivate: [MsalGuard],
-      },
-      {
-        path: 'vendors/:id/vouchers',
-        component: VendorVouchersComponent,
+        component: VendorViewComponent,
         canActivate: [MsalGuard],
       },
       {
