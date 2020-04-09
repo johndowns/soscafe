@@ -36,9 +36,10 @@ export class VendorService {
 
   downloadVendorPaymentsCsv(
     vendorId: string
-  ): Observable<Blob> {
-    return this.http.get<Blob>(
-      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments/csv`
+  ): any {
+    return this.http.get(
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments/csv`,
+      { responseType: 'blob' }
     );
   }
 
@@ -48,9 +49,10 @@ export class VendorService {
     );
   }
 
-  downloadVendorVouchersCsv(vendorId: string): Observable<Blob> {
-    return this.http.get<Blob>(
-      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/csv`
+  downloadVendorVouchersCsv(vendorId: string): any {
+    return this.http.get(
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/csv`,
+      { responseType: 'blob' }
     );
   }
 

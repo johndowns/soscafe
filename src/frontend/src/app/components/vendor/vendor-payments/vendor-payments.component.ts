@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { VendorPaymentSummary } from 'src/app/model';
 import { VendorService } from 'src/app/providers';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-vendor-payments',
@@ -59,22 +60,10 @@ export class VendorPaymentsComponent implements OnInit {
   download() {
     this.vendorService
       .downloadVendorPaymentsCsv(this.vendorId)
-      .subscribe((response) => {
-        // It is necessary to create a new blob object with mime-type explicitly set
-        // otherwise only Chrome works like it should
-        const newBlob = new Blob([response], { type: 'text/csv' });
-
-        // IE doesn't allow using a blob object directly as link href
-        // instead it is necessary to use msSaveOrOpenBlob
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-          window.navigator.msSaveOrOpenBlob(newBlob);
-          return;
-        }
-
-        // For other browsers:
-        // Create a link pointing to the ObjectURL containing the blob.
-        const downloadURL = URL.createObjectURL(newBlob);
-        window.open(downloadURL);
+      .subscribe((blob) => {
+        saveAs(blob, 'payments.csv', {
+          type: 'text/csv'
+       });
       });
   }
 }

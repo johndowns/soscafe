@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~9.1.0",
     "@angular/router": "~9.1.0",
     "@azure/msal-angular": "^1.0.0-beta.4",
+    "file-saver": "^2.0.2",
     "hammerjs": "^2.0.8",
     "msal": "^1.2.2",
     "rxjs": "~6.5.4",
