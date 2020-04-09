@@ -1,3 +1,4 @@
+import { HomeComponent } from './components/home/home.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MsalGuard } from '@azure/msal-angular';
@@ -33,10 +34,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        component: VendorListComponent,
-        canActivate: [
-          MsalGuard
-        ],
+        component: HomeComponent,
       }
     ],
   },
