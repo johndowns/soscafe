@@ -27,16 +27,8 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank Account</th>
                 <td mat-cell *matCellDef="let row">{{ row.bankAccountNumber }}</td>
               </ng-container>
-              <ng-container matColumnDef="grossPayment">
-                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Gross Payment</th>
-                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.grossPayment | currency }}</td>
-              </ng-container>
-              <ng-container matColumnDef="fees">
-                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Fees</th>
-                <td class="cell-right" mat-cell *matCellDef="let row">{{ row.fees | currency }}</td>
-              </ng-container>
-              <ng-container matColumnDef="netPayment">
-                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Net Payment</th>
+              <ng-container matColumnDef="paymentAmount">
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
                 <td class="cell-right" mat-cell *matCellDef="let row">{{ row.netPayment | currency }}</td>
               </ng-container>
               <!--

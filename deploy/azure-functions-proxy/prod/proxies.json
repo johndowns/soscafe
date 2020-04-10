@@ -1,0 +1,99 @@
+{
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+        "root": {
+            "matchCondition": {
+                "route": "/",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/index.html",
+            "responseOverrides": {
+            }
+        },
+        "files": {
+            "matchCondition": {
+                "route": "/{filename}.{ext}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/{filename}.{ext}"
+        },
+        "routes": {
+            "matchCondition": {
+                "route": "/{*restOfPath}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/index.html",
+            "responseOverrides": {
+            }
+        },
+        "assets": {
+            "matchCondition": {
+                "route": "/assets/{*file}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/assets/{*file}"
+        },
+        "icons-material-design-iconic-font-css": {
+            "matchCondition": {
+                "route": "/assets/icons/material-design-iconic-font/css/{file}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/assets/icons/material-design-iconic-font/css/{file}"
+        },
+        "icons-material-design-iconic-font-fonts": {
+            "matchCondition": {
+                "route": "/assets/icons/material-design-iconic-font/fonts/{file}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/assets/icons/material-design-iconic-font/fonts/{file}"
+        },
+        "images": {
+            "matchCondition": {
+                "route": "/assets/images/{file}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/assets/images/{file}"
+        },
+        "material-design-iconic-font-css": {
+            "matchCondition": {
+                "route": "/assets/material-design-iconic-font/css/{file}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/assets/material-design-iconic-font/css/{file}"
+        },
+        "material-design-iconic-font-fonts": {
+            "matchCondition": {
+                "route": "/assets/material-design-iconic-font/fonts/{file}",
+                "methods": [
+                    "GET",
+                    "HEAD"
+                ]
+            },
+            "backendUri": "https://soscafevendorui.z8.web.core.windows.net/assets/material-design-iconic-font/fonts/{file}"
+        }
+    }
+}

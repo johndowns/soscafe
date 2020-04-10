@@ -42,12 +42,12 @@ namespace SosCafe.Admin.Csv
         public string VoucherId { get; set; }
 
         [Name("Voucher Gross")]
-        public decimal VoucherGross { get; set; }
+        public string VoucherGross { get; set; }
 
         [Name("Voucher Fees")]
-        public decimal VoucherFees { get; set; }
+        public string VoucherFees { get; set; }
 
         [Name("Voucher Net")]
-        public decimal VoucherNet { get; set; }
+        public string VoucherNet { get; set; }
     }
 }

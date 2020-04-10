@@ -16,9 +16,7 @@ export class VendorPaymentsComponent implements OnInit {
     'paymentId',
     'paymentDate',
     'bankAccountNumber',
-    'grossPayment',
-    'fees',
-    'netPayment',
+    'paymentAmount',
   ];
   dataSource: MatTableDataSource<VendorPaymentSummary>;
   @ViewChild(MatPaginator, { static: true })

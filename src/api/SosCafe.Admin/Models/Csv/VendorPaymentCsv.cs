@@ -17,12 +17,6 @@ namespace SosCafe.Admin.Csv
         [Name("Bank account")]
         public string BankAccountNumber { get; set; }
 
-        [Name("Gross Payment")]
-        public string GrossPayment { get; set; }
-
-        [Name("Fees")]
-        public string Fees { get; set; }
-
         [Name("Net Payment")]
         public string NetPayment { get; set; }
     }
