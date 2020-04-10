@@ -132,8 +132,6 @@ namespace SosCafe.Admin.Models
                 PaymentId = vendorPaymentToImport.PaymentId,
                 PaymentDate = vendorPaymentToImport.PaymentDate,
                 BankAccountNumber = vendorPaymentToImport.BankAccountNumber,
-                GrossPayment = decimal.Parse(vendorPaymentToImport.GrossPayment, NumberStyles.Currency),
-                Fees = decimal.Parse(vendorPaymentToImport.Fees, NumberStyles.Currency),
                 NetPayment = decimal.Parse(vendorPaymentToImport.NetPayment, NumberStyles.Currency)
             };
 

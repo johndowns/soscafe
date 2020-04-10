@@ -189,8 +189,6 @@ namespace SosCafe.Admin
                 PaymentId = entity.PaymentId,
                 PaymentDate = entity.PaymentDate,
                 BankAccountNumber = entity.BankAccountNumber,
-                GrossPayment = entity.GrossPayment.ToString(),
-                Fees = entity.Fees.ToString(),
                 NetPayment = entity.NetPayment.ToString()
             });
 
