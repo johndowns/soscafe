@@ -109,6 +109,12 @@ namespace SosCafe.Admin.Models
         {
             log.LogInformation("Processing vendor payment with payment ID {PaymentId}.", vendorPaymentToImport.PaymentId);
 
+            // Special case handling.
+            if (vendorPaymentToImport.NetPayment.Trim() == "$-")
+            {
+                vendorPaymentToImport.NetPayment = "0";
+            }
+
             // Convert the data to the entity format.
             var vendorPaymentEntity = new VendorPaymentEntity
             {
