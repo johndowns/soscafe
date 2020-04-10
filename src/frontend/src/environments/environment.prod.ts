@@ -18,7 +18,8 @@ export const environment = {
     consentScopes: [
       'openid',
       'profile',
-      'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
+      'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'
     ],
+    appScope: 'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'
   }
 };

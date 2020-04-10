@@ -89,7 +89,7 @@ export function loggerCallback(logLevel, message, piiEnabled) {
           [
             env.apiBaseUrl,
             [
-              'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'
+              env.msal.appScope
             ]
           ]
         ],

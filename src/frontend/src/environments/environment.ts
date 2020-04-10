@@ -4,21 +4,21 @@
 
 export const environment = {
   production: false,
-  appBaseUrl: 'http://localhost:4200/',
-  apiBaseUrl: 'https://vendorapi.soscafe.nz/',
+  appBaseUrl: 'https://soscafevendoruiproxytest.azurewebsites.net/',
+  apiBaseUrl: 'https://soscafevendor-test.azurewebsites.net/',
   msal: {
     auth: {
-      clientId: '1cc0426e-f8d7-4ddb-94b5-18185c09a6bd',
-      authority: 'https://soscafe.b2clogin.com/tfp/soscafe.onmicrosoft.com/b2c_1_signupsignin',
+      clientId: 'f6577358-0ee8-454b-9678-7d02519ede64',
+      authority: 'https://soscafetest.b2clogin.com/tfp/soscafetest.onmicrosoft.com/b2c_1_signupsignin',
       validateAuthority: false,
       navigateToLoginRequestUrl: true,
     },
-
     consentScopes: [
       'openid',
       'profile',
-      'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
+      'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'
     ],
+    appScope: 'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'
   }
 };
 
