@@ -163,6 +163,20 @@ namespace SosCafe.Admin.Models
         {
             log.LogInformation("Processing vendor voucher with order ID {OrderId}.", vendorVoucherToImport.OrderId);
 
+            // Special case handling.
+            if (vendorVoucherToImport.VoucherGross.Trim() == "$-")
+            {
+                vendorVoucherToImport.VoucherGross = "0";
+            }
+            if (vendorVoucherToImport.VoucherFees.Trim() == "$-")
+            {
+                vendorVoucherToImport.VoucherFees = "0";
+            }
+            if (vendorVoucherToImport.VoucherNet.Trim() == "$-")
+            {
+                vendorVoucherToImport.VoucherNet = "0";
+            }
+
             // Convert the data to the entity format.
             var vendorVoucherEntity = new VendorVoucherEntity
             {
@@ -178,9 +192,9 @@ namespace SosCafe.Admin.Models
                 VoucherQuantity = vendorVoucherToImport.VoucherQuantity,
                 VoucherIsDonation = vendorVoucherToImport.VoucherIsDonation.Contains("TRUE"),
                 VoucherId = vendorVoucherToImport.VoucherId,
-                VoucherGross = vendorVoucherToImport.VoucherGross,
-                VoucherFees = vendorVoucherToImport.VoucherFees,
-                VoucherNet = vendorVoucherToImport.VoucherNet
+                VoucherGross = decimal.Parse(vendorVoucherToImport.VoucherGross, NumberStyles.Currency),
+                VoucherFees = decimal.Parse(vendorVoucherToImport.VoucherFees, NumberStyles.Currency),
+                VoucherNet = decimal.Parse(vendorVoucherToImport.VoucherNet, NumberStyles.Currency)
             };
 
             // Upsert vendor voucher table entity.

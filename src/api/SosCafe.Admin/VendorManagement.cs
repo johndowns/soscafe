@@ -282,9 +282,9 @@ namespace SosCafe.Admin
                 VoucherDescription = entity.VoucherDescription,
                 VoucherQuantity = entity.VoucherQuantity,
                 VoucherIsDonation = entity.VoucherIsDonation.ToString(),
-                VoucherGross = entity.VoucherGross,
-                VoucherFees = entity.VoucherFees,
-                VoucherNet = entity.VoucherNet
+                VoucherGross = entity.VoucherGross.ToString(),
+                VoucherFees = entity.VoucherFees.ToString(),
+                VoucherNet = entity.VoucherNet.ToString()
             });
 
             // Serialize to CSV.
