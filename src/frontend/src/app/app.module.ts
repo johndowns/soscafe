@@ -8,6 +8,7 @@ import { MsalModule, MsalInterceptor } from '@azure/msal-angular';
 import { LogLevel, Logger, CryptoUtils } from 'msal';
 import { isIE } from './config';
 
+import { environment as env, environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppMaterialModule } from './core';
@@ -59,13 +60,12 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     MsalModule.forRoot(
       {
         auth: {
-          clientId: '1cc0426e-f8d7-4ddb-94b5-18185c09a6bd',
-          authority:
-            'https://soscafe.b2clogin.com/tfp/soscafe.onmicrosoft.com/b2c_1_signupsignin',
-          validateAuthority: false,
-          redirectUri: window.location.origin,
-          postLogoutRedirectUri: window.location.origin,
-          navigateToLoginRequestUrl: true,
+          clientId: env.msal.auth.clientId,
+          authority: env.msal.auth.authority,
+          validateAuthority: env.msal.auth.validateAuthority,
+          redirectUri: env.appBaseUrl,
+          postLogoutRedirectUri: env.appBaseUrl,
+          navigateToLoginRequestUrl: env.msal.auth.navigateToLoginRequestUrl,
         },
         cache: {
           cacheLocation: 'localStorage',
@@ -84,16 +84,12 @@ export function loggerCallback(logLevel, message, piiEnabled) {
       },
       {
         popUp: false,
-        consentScopes: [
-          'openid',
-          'profile',
-          'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation',
-        ],
+        consentScopes: env.msal.consentScopes,
         protectedResourceMap: [
           [
-            'https://vendorapi.soscafe.nz/',
+            env.apiBaseUrl,
             [
-              'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'
+              env.msal.appScope
             ]
           ]
         ],

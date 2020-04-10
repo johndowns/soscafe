@@ -3,7 +3,23 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  appBaseUrl: 'https://soscafevendoruiproxytest.azurewebsites.net/',
+  apiBaseUrl: 'https://soscafevendor-test.azurewebsites.net/',
+  msal: {
+    auth: {
+      clientId: 'f6577358-0ee8-454b-9678-7d02519ede64',
+      authority: 'https://soscafetest.b2clogin.com/tfp/soscafetest.onmicrosoft.com/b2c_1_signupsignin',
+      validateAuthority: false,
+      navigateToLoginRequestUrl: true,
+    },
+    consentScopes: [
+      'openid',
+      'profile',
+      'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'
+    ],
+    appScope: 'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'
+  }
 };
 
 /*
@@ -13,4 +29,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+import 'zone.js/dist/zone-error';  // Included with Angular CLI.
