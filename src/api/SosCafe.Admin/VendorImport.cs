@@ -7,8 +7,8 @@ using System.Linq;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
 using SosCafe.Admin.Csv;
-using System;
 using SosCafe.Admin.Entities;
+using System.Collections.Generic;
 
 namespace SosCafe.Admin.Models
 {
@@ -24,18 +24,10 @@ namespace SosCafe.Admin.Models
             // and add to a queue for processing.
             log.LogInformation("Processing file {FileName}, length {FileLength}.", name, myBlob.Length);
 
-            using (var reader = new StreamReader(myBlob))
-            using (var csv = new CsvReader(reader, new CultureInfo("en-NZ")))
-            {
-                csv.Configuration.HeaderValidated = null;
-                csv.Configuration.MissingFieldFound = null;
+            var records = GetRecordsFromCsv<VendorDetailsCsv>(myBlob);
+            log.LogInformation("Found {RecordCount} records.", records.Count);
 
-                var records = csv.GetRecords<VendorDetailsCsv>().ToList();
-                log.LogInformation("Found {RecordCount} records.", records.Count);
-
-                // Add the record to the queue using the output binding.
-                records.ForEach(vdCsv => outputQueueMessages.Add(vdCsv));
-           }
+            records.ForEach(vvCsv => outputQueueMessages.Add(vvCsv));
         }
 
         [FunctionName("ProcessImportedVendor")]
@@ -103,18 +95,10 @@ namespace SosCafe.Admin.Models
             // and add to a queue for processing.
             log.LogInformation("Processing file {FileName}, length {FileLength}.", name, myBlob.Length);
 
-            using (var reader = new StreamReader(myBlob))
-            using (var csv = new CsvReader(reader, new CultureInfo("en-NZ")))
-            {
-                csv.Configuration.HeaderValidated = null;
-                csv.Configuration.MissingFieldFound = null;
+            var records = GetRecordsFromCsv<VendorPaymentCsv>(myBlob);
+            log.LogInformation("Found {RecordCount} records.", records.Count);
 
-                var records = csv.GetRecords<VendorPaymentCsv>().ToList();
-                log.LogInformation("Found {RecordCount} records.", records.Count);
-
-                // Add the record to the queue using the output binding.
-                records.ForEach(vvCsv => outputQueueMessages.Add(vvCsv));
-            }
+            records.ForEach(vvCsv => outputQueueMessages.Add(vvCsv));
         }
 
         [FunctionName("ProcessImportedVendorPayment")]
@@ -158,18 +142,11 @@ namespace SosCafe.Admin.Models
             // and add to a queue for processing.
             log.LogInformation("Processing file {FileName}, length {FileLength}.", name, myBlob.Length);
 
-            using (var reader = new StreamReader(myBlob))
-            using (var csv = new CsvReader(reader, new CultureInfo("en-NZ")))
-            {
-                csv.Configuration.HeaderValidated = null;
-                csv.Configuration.MissingFieldFound = null;
+            var records = GetRecordsFromCsv<VendorVoucherCsv>(myBlob);
+            log.LogInformation("Found {RecordCount} records.", records.Count);
 
-                var records = csv.GetRecords<VendorVoucherCsv>().ToList();
-                log.LogInformation("Found {RecordCount} records.", records.Count);
+            records.ForEach(vvCsv => outputQueueMessages.Add(vvCsv));
 
-                // Add the record to the queue using the output binding.
-                records.ForEach(vvCsv => outputQueueMessages.Add(vvCsv));
-            }
         }
 
         [FunctionName("ProcessImportedVendorVoucher")]
@@ -210,6 +187,21 @@ namespace SosCafe.Admin.Models
             else
             {
                 log.LogInformation("Upserted entity into VendorVouchers table.");
+            }
+        }
+
+        private static List<T> GetRecordsFromCsv<T>(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            using (var csv = new CsvReader(reader, new CultureInfo("en-NZ")))
+            {
+                csv.Configuration.HeaderValidated = null;
+                csv.Configuration.MissingFieldFound = null;
+                csv.Configuration.ShouldSkipRecord = record => record.All(string.IsNullOrEmpty);
+
+                var records = csv.GetRecords<T>().ToList();
+
+                return records;
             }
         }
     }
