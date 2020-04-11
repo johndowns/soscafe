@@ -28,7 +28,7 @@ namespace SosCafe.Admin
             // Read all records from table storage where the partition key is the user's ID.
             TableContinuationToken token = null;
             var availableVendorAssignments = new List<VendorUserAssignmentEntity>();
-            var filterToUserPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId.ToUpper());
+            var filterToUserPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, userId.CleanStringForPartitionKey().ToUpper());
             do
             {
                 var queryResult = await vendorUserAssignmentsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorUserAssignmentEntity>().Where(filterToUserPartition), token);
@@ -56,7 +56,8 @@ namespace SosCafe.Admin
         internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)
         {
             // Check that the user-vendor combination exists.
-            var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(userId.CleanStringForPartitionKey().ToUpper(), vendorId);
+            var cleanedUserId = userId.CleanStringForPartitionKey().ToUpper();
+            var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(cleanedUserId, vendorId);
             var findResult = await vendorUserAssignmentsTable.ExecuteAsync(findOperation);
             return findResult.Result != null;
         }
