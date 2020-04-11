@@ -28,7 +28,7 @@
             set
             {
                 userId = value;
-                PartitionKey = userId.CleanStringForPartitionKey();
+                PartitionKey = userId.CleanStringForPartitionKey().ToUpper();
             }
         }
     }
