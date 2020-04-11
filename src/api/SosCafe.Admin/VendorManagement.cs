@@ -225,6 +225,7 @@ namespace SosCafe.Admin
             var allVouchersForVendor = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable);
             var mappedResults = allVouchersForVendor.Select(entity => new VendorVoucherApiModel
             {
+                LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
                 OrderRef = entity.OrderRef,
                 OrderDate = entity.OrderDate,
@@ -271,6 +272,7 @@ namespace SosCafe.Admin
             var mappedResults = allVouchersForVendor.Select(entity => new VendorVoucherCsv
             {
                 VendorId = entity.VendorId,
+                LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
                 OrderRef = entity.OrderRef,
                 OrderDate = entity.OrderDate,

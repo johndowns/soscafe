@@ -4,6 +4,8 @@ namespace SosCafe.Admin.Models.Api
 {
     public class VendorVoucherApiModel
     {
+        public string LineItemId { get; set; }
+
         public string OrderId { get; set; }
 
         public string OrderRef { get; set; }

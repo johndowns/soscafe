@@ -18,19 +18,21 @@ namespace SosCafe.Admin.Entities
             }
         }
 
-        private string orderId;
-        public string OrderId
+        private string lineItemId;
+        public string LineItemId
         {
             get
             {
-                return orderId;
+                return lineItemId;
             }
             set
             {
-                orderId = value;
-                RowKey = OrderId;
+                lineItemId = value;
+                RowKey = LineItemId;
             }
         }
+
+        public string OrderId { get; set; }
 
         public string OrderRef { get; set; }
 

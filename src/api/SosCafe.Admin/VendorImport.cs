@@ -181,6 +181,7 @@ namespace SosCafe.Admin.Models
             var vendorVoucherEntity = new VendorVoucherEntity
             {
                 VendorId = vendorVoucherToImport.VendorId,
+                LineItemId = vendorVoucherToImport.LineItemId,
                 OrderId = vendorVoucherToImport.OrderId,
                 OrderRef = vendorVoucherToImport.OrderRef,
                 OrderDate = vendorVoucherToImport.OrderDate,
