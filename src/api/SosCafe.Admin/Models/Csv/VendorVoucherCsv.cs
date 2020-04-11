@@ -8,7 +8,7 @@ namespace SosCafe.Admin.Csv
         [Name("Vendor ID")]
         public string VendorId { get; set; }
 
-        [Name("lineItemID")]
+        [Name("lineItemId")]
         public string LineItemId { get; set; }
 
         [Name("Order ID")]
