@@ -69,7 +69,7 @@ namespace SosCafe.Admin.Models
             {
                 VendorShopifyId = vendorToImport.ShopifyId,
                 VendorName = vendorToImport.BusinessName,
-                UserId = vendorToImport.EmailAddress
+                UserId = vendorToImport.EmailAddress.Trim()
             };
 
             // Upsert vendor user assignment entity.
