@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  appBaseUrl: 'http://localhost:4200/',
+  appBaseUrl: 'https://soscafevendoruiproxytest.azurewebsites.net/',
   apiBaseUrl: 'https://soscafevendor-test.azurewebsites.net/',
   msal: {
     auth: {
