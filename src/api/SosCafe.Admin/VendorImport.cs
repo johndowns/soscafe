@@ -46,7 +46,7 @@ namespace SosCafe.Admin.Models
                 RegisteredDate = vendorToImport.RegisteredDate,
                 BusinessName = vendorToImport.BusinessName,
                 ContactName = vendorToImport.ContactName,
-                EmailAddress = vendorToImport.EmailAddress,
+                EmailAddress = vendorToImport.EmailAddress.Trim(),
                 PhoneNumber = vendorToImport.PhoneNumber,
                 BankAccountNumber = vendorToImport.BankAccountNumber,
                 DateAcceptedTerms = vendorToImport.DateAcceptedTerms
