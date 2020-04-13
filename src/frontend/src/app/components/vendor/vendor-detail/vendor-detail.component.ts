@@ -91,6 +91,7 @@ export class VendorDetailComponent implements OnInit {
   }
 
   onSubmitConfirmation(isSucess: boolean) {
+    window.scroll(0,0);
     const message = isSucess ? 'Your details have been updated.' : 'Failed to update.';
     this.snackBar.open(message, 'OK', {
       duration: 3000,
