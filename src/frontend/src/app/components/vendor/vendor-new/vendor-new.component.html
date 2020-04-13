@@ -5,15 +5,17 @@
       <img mat-card-image src="assets/images/banner.png" alt="sosbusiness"/>
       <mat-card-header>
         <mat-card-title>Register a new venue</mat-card-title>
-        <mat-card-subtitle>We are a not-for-profit initiative supporting local businesses through the COVID-19 pandemic in New Zealand. This form is for businesses use only. If you would like to suggest a business, please go here: <a href="https://soscafe.nz/pages/suggest-a-place" target="_blank">sosbusiness.nz/pages/suggest-a-place</a></mat-card-subtitle>
+        <mat-card-subtitle>
+          <p>We are a not-for-profit initiative supporting local businesses through the COVID-19 pandemic in New Zealand. This form is for businesses use only. If you would like to suggest a business, please go here: <a href="https://soscafe.nz/pages/suggest-a-place" target="_blank">sosbusiness.nz/pages/suggest-a-place</a></p>
+          <ul>
+            <li>If you are a franchise or chain, please view our FAQs: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
+            <li>If you are a brewery and sell beer/alcohol, check out our friends at: <a href="https://www.beerwithus.co.nz/" target="_blank">www.beerwithus.co.nz</a></li>
+            <li>If you are a non-food or service establishment eg retailer, please register with our friends at: <a href="https://www.shopitforward.co.nz/" target="_blank">www.shopitforward.co.nz</a></li>
+            <li>Questions about fees, how this works etc? Check out our FAQs here: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
+          </ul>
+        </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <ul>
-          <li>If you are a franchise or chain, please view our FAQs: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
-          <li>If you are a brewery and sell beer/alcohol, check out our friends at: <a href="https://www.beerwithus.co.nz/" target="_blank">www.beerwithus.co.nz</a></li>
-          <li>If you are a non-food or service establishment eg retailer, please register with our friends at: <a href="https://www.shopitforward.co.nz/" target="_blank">www.shopitforward.co.nz</a></li>
-          <li>Questions about fees, how this works etc? Check out our FAQs here: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
-        </ul>
         <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit(newVendorForm.value)">
           <mat-form-field appearance="fill">
             <mat-label>Business Name</mat-label>
