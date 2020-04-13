@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 
 @Component({
   selector: 'app-vendor-detail',
@@ -33,7 +34,8 @@ export class VendorDetailComponent implements OnInit {
     private location: Location,
     private snackBar: MatSnackBar,
     private vendorService: VendorService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private errorService: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,10 @@ export class VendorDetailComponent implements OnInit {
           termsAccepted: false,
         });
       },
-      (err) => console.log('HTTP Error', err),
+      (err) => {
+        console.log('LOG HTTP Error', err);
+        this.errorService.handleError(err);
+      },
       () => {
         this.workInProgress = false;
       }
