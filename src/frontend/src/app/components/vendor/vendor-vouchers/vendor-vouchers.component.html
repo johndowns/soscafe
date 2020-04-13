@@ -67,16 +67,16 @@
                 <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Donation</th>
                 <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherIsDonation | yesNo }}</td>
               </ng-container>
-              <!--
               <ng-container matColumnDef="noData">
                 <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
                   No voucher records.
                 </mat-footer-cell>
               </ng-container>
-              -->
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <!--<mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></mat-footer-row>-->
+              <ng-container *ngIf="dataSource.data.length === 0">
+                <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
+              </ng-container>
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
           </div>

@@ -23,13 +23,15 @@
 
               <ng-container matColumnDef="noData">
                 <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                  No businesses registered.
+                  You don't have any vendors linked to your account yet. If this isn't what you expect, please contact us.
                 </mat-footer-cell>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <ng-container *ngIf="dataSource.data.length === 0"><mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row></ng-container>
+              <ng-container *ngIf="dataSource.data.length === 0">
+                <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
+              </ng-container>
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
           </div>
