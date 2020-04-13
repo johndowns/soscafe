@@ -2,6 +2,7 @@
  Topbar
 *******************/
 mat-toolbar {
+  background-color: #274d50;
   box-shadow: 1px 0px 10px rgba(0, 0, 0, 0.5);
   &.topbar {
     padding: 0px 15px;
@@ -20,7 +21,7 @@ mat-toolbar {
         margin-right: 5px;
       }
       .app-logo {
-        max-height: 64px;
+        max-height: 50px;
       }
     }
   }
@@ -39,6 +40,7 @@ mat-toolbar {
   position: relative;
   /* Make sure the toolbar will stay on top of the content as it scrolls past. */
   z-index: 2;
+  background-color: #274d50;
 }
 
 .example-sidenav-container {
