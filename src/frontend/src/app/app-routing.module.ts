@@ -5,6 +5,7 @@ import { MsalGuard } from '@azure/msal-angular';
 import { DefaultLayoutComponent } from './components/layout';
 import { HomeComponent } from './components/home/home.component';
 import { VendorListComponent, VendorViewComponent } from './components/vendor';
+import { ErrorComponent } from './components/shared/error/error.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,14 @@ const routes: Routes = [
       {
         path: '',
         component: HomeComponent,
+      },
+      {
+        path: 'error',
+        component: ErrorComponent,
+      },
+      {
+        path: '**',
+        redirectTo: '/error',
       },
     ],
   },
