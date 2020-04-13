@@ -1,0 +1,86 @@
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { Location } from '@angular/common';
+import { VendorService } from 'src/app/providers';
+import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
+
+@Component({
+  selector: 'app-vendor-new',
+  templateUrl: './vendor-new.component.html'
+})
+export class VendorNewComponent implements OnInit {
+  public termsAndConditionsAccepted = false;
+  public bankAccountNumber: FormControl;
+  public workInProgress = false;
+  private vendorId: string;
+
+  BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
+
+  public newVendorForm = new FormGroup({
+    id: new FormControl(''),
+    businessName: new FormControl(''),
+    businessType: new FormControl(''),
+    contactName: new FormControl(''),
+    emailAddress: new FormControl(''),
+    phoneNumber: new FormControl(''),
+    businessDescription: new FormControl(''),
+    businessLocation: new FormControl(''),
+    businessPhoto: new FormControl(''),
+    bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
+    termsAccepted: new FormControl('', [Validators.required]),
+  });
+
+  constructor(
+    private location: Location,
+    private snackBar: MatSnackBar,
+    private vendorService: VendorService,
+    private route: ActivatedRoute,
+    private errorService: ErrorHandlerService
+  ) {}
+
+  ngOnInit(): void {
+    this.workInProgress = false;
+  }
+
+  onCancelClick() {
+    this.goBack();
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+  onSubmit(vendorDetail: VendorDetail) {
+    this.workInProgress = true;
+    const updateVendorDetails: UpdateVendorDetails = {
+      ...vendorDetail,
+      dateAcceptedTerms: new Date().toISOString(),
+    };
+
+    this.vendorService
+      .updateVendor(this.vendorId, updateVendorDetails)
+      .subscribe(
+        () => {
+          this.onSubmitConfirmation(true);
+        },
+        (err) => {
+          console.error('HTTP Error', err);
+          this.onSubmitConfirmation(false);
+        },
+        () => {
+          this.workInProgress = false;
+        }
+      );
+  }
+
+  onSubmitConfirmation(isSucess: boolean) {
+    window.scroll(0,0);
+    const message = isSucess ? 'Your details have been updated.' : 'Failed to update.';
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+    });
+  }
+}

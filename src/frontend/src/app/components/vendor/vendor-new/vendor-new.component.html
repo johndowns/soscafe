@@ -1,0 +1,119 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="25%"></div>
+  <div fxFlex.gt-sm="50%">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Register a new venue</mat-card-title>
+        <mat-card-subtitle>We are a not-for-profit initiative supporting local businesses through the COVID-19 pandemic in New Zealand. This form is for businesses use only. If you would like to suggest a business, please go here: <a href="https://soscafe.nz/pages/suggest-a-place" target="_blank">sosbusiness.nz/pages/suggest-a-place</a></mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <li>If you are a franchise or chain, please view our FAQs: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
+          <li>If you are a brewery and sell beer/alcohol, check out our friends at: <a href="https://www.beerwithus.co.nz/" target="_blank">www.beerwithus.co.nz</a></li>
+          <li>If you are a non-food or service establishment eg retailer, please register with our friends at: <a href="https://www.shopitforward.co.nz/" target="_blank">www.shopitforward.co.nz</a></li>
+          <li>Questions about fees, how this works etc? Check out our FAQs here: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
+        </ul>
+        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit(newVendorForm.value)">
+          <mat-form-field appearance="fill">
+            <mat-label>Business Name</mat-label>
+            <input matInput formControlName="businessName" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>I am a</mat-label>
+            <mat-select formControlName="businessType" required>
+              <mat-option value="foodBeverageBusiness">Food/Beverage Business</mat-option>
+              <mat-option value="servicesBusiness">Services Business</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Contact Name</mat-label>
+            <input matInput formControlName="contactName" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="emailAddress" required>
+            <small><i>IMPORTANT: This email will be what you will use to log in to your Vendor Portal to view your voucher sales so it must be valid</i></small>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber" required>
+            <small><i>We may contact you to verify your business.</i></small>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Description of Establisment</mat-label>
+            <textarea matInput formControlName="businessDescription" required></textarea>
+            <small><i>Include your address, phone number, website and/or social media so customers can find you easily.</i></small>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Location</mat-label>
+            <mat-select formControlName="businessLocation" required>
+              <mat-option value="auckland-central">Auckland/Central</mat-option>
+              <mat-option value="auckland-north-shore">Auckland/North</mat-option>
+              <mat-option value="auckland-south">Auckland/South</mat-option>
+              <mat-option value="auckland-east">Auckland/East</mat-option>
+              <mat-option value="auckland-west">Auckland/West</mat-option>
+              <mat-option value="bay-of-plenty">Bay Of Plenty</mat-option>
+              <mat-option value="canterbury">Canterbury</mat-option>
+              <mat-option value="central-north-island">Central North Island</mat-option>
+              <mat-option value="christchurch">Christchurch</mat-option>
+              <mat-option value="coromandel">Coromandel</mat-option>
+              <mat-option value="dunedin">Dunedin</mat-option>
+              <mat-option value="gisborne">Gisborne</mat-option>
+              <mat-option value="hamilton">Hamilton</mat-option>
+              <mat-option value="hawkes-bay">Hawke's Bay</mat-option>
+              <mat-option value="kapiti-coast">Kapiti Coast</mat-option>
+              <mat-option value="manawatu-whanganui">Manawatu/Whanganui</mat-option>
+              <mat-option value="nelson-marlborough">Nelson/Marlborough</mat-option>
+              <mat-option value="northland">Northland</mat-option>
+              <mat-option value="north-canterbury">North Canterbury</mat-option>
+              <mat-option value="otago">Otago</mat-option>
+              <mat-option value="queenstown">Queenstown Lakes Region</mat-option>
+              <mat-option value="southland">Southland</mat-option>
+              <mat-option value="south-canterbury">South Canterbury</mat-option>
+              <mat-option value="taranaki">Taranaki</mat-option>
+              <mat-option value="waikato">Waikato</mat-option>
+              <mat-option value="wairarapa">Wairarapa</mat-option>
+              <mat-option value="wellington">Wellington</mat-option>
+              <mat-option value="wellington-hutt-valley">Wellington/Hutt Valley</mat-option>
+              <mat-option value="west-coast">West Coast</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Photo of your business</mat-label>
+            <!-- To be changed out for File Upload form field -->
+            <input matInput formControlName="businessPhoto">
+            <small><i>Add a link to a photo you would like us to use. Alternatively we will default to what we find on google.</i></small>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Bank Account Number</mat-label>
+            <input matInput formControlName="bankAccountNumber" required>
+            <mat-hint>XX-XXXX-XXXXXXX-XX or XX-XXXX-XXXXXXX-XXX</mat-hint>
+            <mat-error>
+              Please enter a valid bank account number, e.g. 12-1234-1234567-12 or 12-1234-1234567-012.
+            </mat-error>
+          </mat-form-field>
+          <p><strong>Terms and conditions</strong></p>
+          <p>
+            <small>
+              By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
+              to assist you in the online provision of vouchers for future products or services that you will offer the
+              purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
+              process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
+              conditions on our website.
+            </small>
+          </p>
+          <p>
+            <mat-checkbox formControlName="termsAccepted" required>I agree to the above terms</mat-checkbox>
+          </p>
+          <div class="button-row">
+            <button mat-raised-button color="primary" [disabled]="!newVendorForm.valid || workInProgress" type="submit">Submit</button>
+            <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="loading-indicator" *ngIf="workInProgress">
+  <mat-spinner></mat-spinner>
+</div>
