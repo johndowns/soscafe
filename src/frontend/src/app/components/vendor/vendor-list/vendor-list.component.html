@@ -20,24 +20,25 @@
                   <a matLine [routerLink]="['/vendors', row.id]">{{row.businessName}}</a>
                 </td>
               </ng-container>
-              <!--
+
               <ng-container matColumnDef="noData">
                 <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
                   No businesses registered.
                 </mat-footer-cell>
               </ng-container>
-              -->
+
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <!--<mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></mat-footer-row>-->
+              <ng-container *ngIf="dataSource.data.length === 0"><mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row></ng-container>
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
           </div>
         </div>
+        <br>
+        <a href="http://sosbusiness.nz/pages/vendor-portal" target="_blank">Having problems? Check out our frequently asked questions.</a>
       </mat-card-content>
     </mat-card>
 
-    <a href="http://sosbusiness.nz/pages/vendor-portal" target="_blank">Having problems? Check out our frequently asked questions.</a>
   </div>
 </div>
 <div class="loading-indicator" *ngIf="workInProgress">
