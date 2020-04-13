@@ -24,14 +24,22 @@ html {
 a:hover,
 a:focus,
 a {
-  text-decoration: none;
-}
-a.link {
-  color: $headingtext;
+  color: $themecolor;
   text-decoration: none;
   &:hover,
   &:focus {
-    color: $themecolor;
+    color: $themecolor !important;
+  }
+  &:visited {
+    color: $themecolor-dark ;
+  }
+}
+a.link {
+  color: $themecolor;
+  text-decoration: none;
+  &:hover,
+  &:focus {
+    color: $themecolor !important;
   }
 }
 .img-responsive {
@@ -684,7 +692,7 @@ Rounds
 }
 
 /*******************
-froms
+Forms
 *******************/
 .form-control {
   border: 0px;
@@ -780,6 +788,13 @@ Table
   .mat-cell {
     white-space: nowrap;
   }
+}
+
+/*******************
+Tabs
+*******************/
+.mat-ink-bar {
+  background-color: $accentColor !important;
 }
 
 /*******************
