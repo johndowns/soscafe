@@ -6,8 +6,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Reflection.Metadata.Ecma335;
 using SosCafe.Admin.Models.Api;
 using SosCafe.Admin.Models.Queue;
 using System.Security.Claims;
@@ -48,7 +46,7 @@ namespace SosCafe.Admin
 
         [FunctionName("AddVendorToShopify")]
         public static async Task<IActionResult> AddVendorToShopify(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "internal/AddVendorToShopify")] AddVendorQueueModel addVendorModel,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] AddVendorQueueModel addVendorModel,
             HttpRequest req,
             ILogger log)
         {
@@ -60,7 +58,7 @@ namespace SosCafe.Admin
 
         [FunctionName("SendVendorWelcomeEmail")]
         public static async Task<IActionResult> SendVendorWelcomeEmail(
-           [HttpTrigger(AuthorizationLevel.Function, "post", Route = "internal/SendVendorWelcomeEmail")] AddVendorQueueModel addVendorModel,
+           [HttpTrigger(AuthorizationLevel.Function, "post", Route =  null)] AddVendorQueueModel addVendorModel,
            HttpRequest req,
            ILogger log)
         {
