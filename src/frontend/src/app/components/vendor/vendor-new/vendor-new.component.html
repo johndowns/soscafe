@@ -16,26 +16,17 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit(newVendorForm.value)">
+        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit()">
           <mat-form-field appearance="fill">
             <mat-label>Business Name</mat-label>
             <input matInput formControlName="businessName" required>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>I am a</mat-label>
-            <mat-select formControlName="businessType" required>
+            <mat-select formControlName="type" required>
               <mat-option value="foodBeverageBusiness">Food/Beverage Business</mat-option>
               <mat-option value="servicesBusiness">Services Business</mat-option>
             </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Contact Name</mat-label>
-            <input matInput formControlName="contactName" required>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Email Address</mat-label>
-            <input matInput formControlName="emailAddress" required>
-            <small><i>IMPORTANT: This email will be what you will use to log in to your Vendor Portal to view your voucher sales so it must be valid</i></small>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Phone Number</mat-label>
@@ -44,12 +35,12 @@
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Description of Establisment</mat-label>
-            <textarea matInput formControlName="businessDescription" required></textarea>
+            <textarea matInput formControlName="description" required></textarea>
             <small><i>Include your address, phone number, website and/or social media so customers can find you easily.</i></small>
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Location</mat-label>
-            <mat-select formControlName="businessLocation" required>
+            <mat-select formControlName="city" required>
               <mat-option value="auckland-central">Auckland/Central</mat-option>
               <mat-option value="auckland-north-shore">Auckland/North</mat-option>
               <mat-option value="auckland-south">Auckland/South</mat-option>
@@ -84,7 +75,7 @@
           <mat-form-field appearance="fill">
             <mat-label>Photo of your business</mat-label>
             <!-- To be changed out for File Upload form field -->
-            <input matInput formControlName="businessPhoto">
+            <input matInput formControlName="businessPhotoUrl">
             <small><i>Add a link to a photo you would like us to use. Alternatively we will default to what we find on google.</i></small>
           </mat-form-field>
           <mat-form-field appearance="fill">
@@ -106,10 +97,10 @@
             </small>
           </p>
           <p>
-            <mat-checkbox formControlName="termsAccepted" required>I agree to the above terms</mat-checkbox>
+            <mat-checkbox formControlName="hasAcceptedTerms" required>I agree to the above terms</mat-checkbox>
           </p>
           <div class="button-row">
-            <button mat-raised-button color="primary" [disabled]="!newVendorForm.valid || workInProgress" type="submit">Submit</button>
+            <button mat-raised-button color="primary" [disabled]="!newVendorForm.valid" type="submit">Submit</button>
             <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
           </div>
         </form>

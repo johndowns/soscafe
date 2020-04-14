@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { HttpClient } from '@angular/common/http'
 import { Location } from '@angular/common';
 import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 
 @Component({
@@ -14,34 +16,37 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
 export class VendorNewComponent implements OnInit {
   public termsAndConditionsAccepted = false;
   public bankAccountNumber: FormControl;
+  public newVendorForm: FormGroup;
   public workInProgress = false;
   private vendorId: string;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
-
-  public newVendorForm = new FormGroup({
-    id: new FormControl(''),
-    businessName: new FormControl(''),
-    businessType: new FormControl(''),
-    contactName: new FormControl(''),
-    emailAddress: new FormControl(''),
-    phoneNumber: new FormControl(''),
-    businessDescription: new FormControl(''),
-    businessLocation: new FormControl(''),
-    businessPhoto: new FormControl(''),
-    bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
-    termsAccepted: new FormControl('', [Validators.required]),
-  });
 
   constructor(
     private location: Location,
     private snackBar: MatSnackBar,
     private vendorService: VendorService,
     private route: ActivatedRoute,
-    private errorService: ErrorHandlerService
-  ) {}
+    private router: Router,
+    private errorService: ErrorHandlerService,
+    private formBuilder: FormBuilder,
+    private http: HttpClient,
+  ) {
+    this.newVendorForm = this.formBuilder.group({
+      businessName: new FormControl('', [Validators.required]),
+      type: new FormControl('', [Validators.required]),
+      phoneNumber: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
+      businessPhotoUrl: new FormControl('', [Validators.required]),
+      bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
+      hasAcceptedTerms: new FormControl('', [Validators.required]),
+    })
+  }
 
-  ngOnInit(): void {
+  constructor(public dialog: MatDialog) {}
+
+  ngOnInit() {
     this.workInProgress = false;
   }
 
@@ -53,22 +58,30 @@ export class VendorNewComponent implements OnInit {
     this.location.back();
   }
 
-  onSubmit(vendorDetail: VendorDetail) {
+  onSubmit() {
     this.workInProgress = true;
-    const updateVendorDetails: UpdateVendorDetails = {
-      ...vendorDetail,
-      dateAcceptedTerms: new Date().toISOString(),
-    };
 
-    this.vendorService
-      .updateVendor(this.vendorId, updateVendorDetails)
-      .subscribe(
+    var formData: any = new FormData();
+
+    formData.append('businessName', this.newVendorForm.get('businessName').value);
+    formData.append('type', this.newVendorForm.get('type').value);
+    formData.append('phoneNumber', this.newVendorForm.get('phoneNumber').value);
+    formData.append('description', this.newVendorForm.get('description').value);
+    formData.append('city', this.newVendorForm.get('city').value);
+    formData.append('businessPhotoUrl', this.newVendorForm.get('businessPhotoUrl').value);
+    formData.append('bankAccountNumber', this.newVendorForm.get('bankAccountNumber').value);
+    formData.append('hasAcceptedTerms', this.newVendorForm.get('hasAcceptedTerms').value);
+
+    console.log(formData);
+
+    this.http.post('https://vendorapi.soscafe.nz/vendors', formData).subscribe(
         () => {
           this.onSubmitConfirmation(true);
         },
         (err) => {
           console.error('HTTP Error', err);
           this.onSubmitConfirmation(false);
+          this.errorService.handleError(err);
         },
         () => {
           this.workInProgress = false;
@@ -78,9 +91,33 @@ export class VendorNewComponent implements OnInit {
 
   onSubmitConfirmation(isSucess: boolean) {
     window.scroll(0,0);
-    const message = isSucess ? 'Your details have been updated.' : 'Failed to update.';
-    this.snackBar.open(message, 'OK', {
-      duration: 3000,
-    });
+
+    if (isSucess === true){
+      this.dialog.open(VenderNewSuccessDialog, {
+        width: '250px'
+      });
+    }
+    else {
+      this.snackBar.open('Something went wrong.', 'OK', {
+        duration: 5000,
+      });
+    }
   }
+}
+
+@Component({
+  selector: 'vendor-new-success-dialog',
+  templateUrl: 'vendor-new-success.component.html',
+})
+export class VenderNewSuccessDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<VenderNewSuccessDialog>
+  ){}
+
+  onClick(): void {
+    this.dialogRef.close();
+    this.router.navigate(['/']);
+  }
+
 }
