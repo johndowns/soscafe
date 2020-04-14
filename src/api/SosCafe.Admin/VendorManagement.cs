@@ -17,6 +17,7 @@ using System.IO;
 using CsvHelper;
 using System.Globalization;
 using SosCafe.Admin.Csv;
+using SosCafe.Admin.Models.Queue;
 
 namespace SosCafe.Admin
 {
@@ -295,6 +296,55 @@ namespace SosCafe.Admin
             {
                 FileDownloadName = "SOSCafe-Vouchers.csv"
             };
+        }
+
+        [FunctionName("CreateVendor")]
+        public static IActionResult CreateVendor(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "vendors")] AddVendorRequestApiModel requestModel,
+            HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
+            [Queue("addvendor", Connection = "SosCafeStorage")] ICollector<AddVendorQueueModel> outputMessages,
+            ILogger log)
+        {
+            // Get the user details from their token claims.
+            // This also implicitly authorizes the request, since any authenticated user can access this API.
+            var emailAddress = UserManagement.GetEmailAddress(claimsPrincipal, log);
+            var contactName = UserManagement.GetDisplayName(claimsPrincipal, log);
+            if (string.IsNullOrEmpty(emailAddress) || string.IsNullOrEmpty(contactName))
+            {
+                log.LogError("Token is missing required claims.");
+                return new UnauthorizedResult();
+            }
+
+            var registrationTime = DateTime.UtcNow;
+
+            // Perform validation on the properties.
+            if (requestModel.DateAcceptedTerms == null)
+            {
+                return new BadRequestErrorMessageResult("The terms must be accepted in order to update the vendor.");
+            }
+            else if (!BankAccountRegex.IsMatch(requestModel.BankAccountNumber))
+            {
+                return new BadRequestErrorMessageResult("The bank account number is invalid.");
+            }
+
+            // Enqueue a message for the logic app to process.
+            outputMessages.Add(new AddVendorQueueModel
+            {
+                BusinessName = requestModel.BusinessName,
+                Type = requestModel.Type,
+                PhoneNumber = requestModel.PhoneNumber,
+                Description = requestModel.Description,
+                City = requestModel.City,
+                BusinessPhotoUrl = requestModel.BusinessPhotoUrl,
+                BankAccountNumber = requestModel.BankAccountNumber,
+                DateAcceptedTerms = registrationTime,
+                EmailAddress = emailAddress,
+                ContactName = contactName,
+                RegisteredDate = registrationTime
+            });
+
+            return new AcceptedResult();
         }
 
         private static async Task<List<VendorPaymentEntity>> GetPaymentsForVendorAsync(string vendorId, CloudTable vendorPaymentsTable)

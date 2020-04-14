@@ -49,8 +49,19 @@ namespace SosCafe.Admin
 
         internal static string GetUserId(ClaimsPrincipal claimsPrincipal, ILogger log)
         {
+            return GetEmailAddress(claimsPrincipal, log).ToUpper();
+        }
+
+        internal static string GetEmailAddress(ClaimsPrincipal claimsPrincipal, ILogger log)
+        {
             var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
-            return userEmailAddress.ToUpper() ?? string.Empty;
+            return userEmailAddress ?? string.Empty;
+        }
+
+        internal static string GetDisplayName(ClaimsPrincipal claimsPrincipal, ILogger log)
+        {
+            var userDisplayName = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+            return userDisplayName ?? string.Empty;
         }
 
         internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)

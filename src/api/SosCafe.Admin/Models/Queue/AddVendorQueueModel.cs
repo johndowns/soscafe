@@ -12,7 +12,7 @@ namespace SosCafe.Admin.Models.Queue
         public string BusinessPhotoUrl { get; set; }
         public string BankAccountNumber { get; set; }
         public DateTime DateAcceptedTerms { get; set; }
-        public string UserId { get; set; }
+        public string EmailAddress { get; set; }
         public string ContactName { get; set; }
         public DateTime RegisteredDate { get; set; }
     }
