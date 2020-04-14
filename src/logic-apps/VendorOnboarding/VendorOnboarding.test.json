@@ -1,0 +1,195 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Add_vendor_to_Shopify": {
+                "inputs": {
+                    "body": "@triggerBody()?['MessageText']",
+                    "function": {
+                        "id": "/subscriptions/dfcaa4bf-88a2-4d1b-ac63-326363f2be78/resourceGroups/SosCafeTest/providers/Microsoft.Web/sites/soscafevendor-test/functions/AddVendorToShopify"
+                    }
+                },
+                "runAfter": {
+                    "Parse_JSON": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            },
+            "Delete_message": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azurequeues']['connectionId']"
+                        }
+                    },
+                    "method": "delete",
+                    "path": "/@{encodeURIComponent('addvendor')}/messages/@{encodeURIComponent(triggerBody()?['MessageId'])}",
+                    "queries": {
+                        "popreceipt": "@triggerBody()?['PopReceipt']"
+                    }
+                },
+                "runAfter": {
+                    "Send_vendor_welcome_email": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Insert_vendor_entity": {
+                "inputs": {
+                    "body": {
+                        "BankAccountNumber": "@{body('Parse_JSON')?['bankAccountNumber']}",
+                        "BusinessName": "@{body('Parse_JSON')?['businessName']}",
+                        "ContactName": "@{body('Parse_JSON')?['contactName']}",
+                        "EmailAddress": "@{body('Parse_JSON')?['emailAddress']}",
+                        "PartitionKey": "Vendors",
+                        "PhoneNumber": "@{body('Parse_JSON')?['phoneNumber']}",
+                        "RegisteredDate": "@{body('Parse_JSON')?['registeredDate']}",
+                        "RowKey": "@{body('Add_vendor_to_Shopify').shopifyId}",
+                        "ShopifyId": "@{body('Add_vendor_to_Shopify').shopifyId}",
+                        "Source": "Self"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azuretables']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/Tables/@{encodeURIComponent('Vendors')}/entities"
+                },
+                "runAfter": {
+                    "Add_vendor_to_Shopify": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Insert_vendor_user_assignment_entity": {
+                "inputs": {
+                    "body": {
+                        "PartitionKey": "@{toUpper(body('Parse_JSON')?['emailAddress'])}",
+                        "RowKey": "@{body('Add_vendor_to_Shopify').shopifyId}",
+                        "Source": "Registration",
+                        "UserId": "@{body('Parse_JSON')?['emailAddress']}",
+                        "VendorName": "@{body('Parse_JSON')?['businessName']}",
+                        "VendorShopifyId": "@{body('Add_vendor_to_Shopify').shopifyId}"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azuretables']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/Tables/@{encodeURIComponent('VendorUserAssignments')}/entities"
+                },
+                "runAfter": {
+                    "Insert_vendor_entity": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            },
+            "Parse_JSON": {
+                "inputs": {
+                    "content": "@triggerBody()?['MessageText']",
+                    "schema": {
+                        "properties": {
+                            "bankAccountNumber": {
+                                "type": "string"
+                            },
+                            "businessName": {
+                                "type": "string"
+                            },
+                            "businessPhotoUrl": {},
+                            "city": {
+                                "type": "string"
+                            },
+                            "contactName": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "emailAddress": {
+                                "type": "string"
+                            },
+                            "hasAcceptedTerms": {
+                                "type": "boolean"
+                            },
+                            "phoneNumber": {
+                                "type": "string"
+                            },
+                            "registeredDate": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "runAfter": {},
+                "type": "ParseJson"
+            },
+            "Send_vendor_welcome_email": {
+                "inputs": {
+                    "body": "@triggerBody()?['MessageText']",
+                    "function": {
+                        "id": "/subscriptions/dfcaa4bf-88a2-4d1b-ac63-326363f2be78/resourceGroups/SosCafeTest/providers/Microsoft.Web/sites/soscafevendor-test/functions/SendVendorWelcomeEmail"
+                    }
+                },
+                "runAfter": {
+                    "Insert_vendor_user_assignment_entity": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Function"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "When_there_are_messages_in_a_queue": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azurequeues']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/@{encodeURIComponent('addvendor')}/message_trigger"
+                },
+                "recurrence": {
+                    "frequency": "Minute",
+                    "interval": 3
+                },
+                "splitOn": "@triggerBody()?['QueueMessagesList']?['QueueMessage']",
+                "type": "ApiConnection"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "azurequeues": {
+                    "connectionId": "/subscriptions/dfcaa4bf-88a2-4d1b-ac63-326363f2be78/resourceGroups/SosCafeTest/providers/Microsoft.Web/connections/azurequeues",
+                    "connectionName": "azurequeues",
+                    "id": "/subscriptions/dfcaa4bf-88a2-4d1b-ac63-326363f2be78/providers/Microsoft.Web/locations/australiaeast/managedApis/azurequeues"
+                },
+                "azuretables": {
+                    "connectionId": "/subscriptions/dfcaa4bf-88a2-4d1b-ac63-326363f2be78/resourceGroups/SosCafeTest/providers/Microsoft.Web/connections/azuretables",
+                    "connectionName": "azuretables",
+                    "id": "/subscriptions/dfcaa4bf-88a2-4d1b-ac63-326363f2be78/providers/Microsoft.Web/locations/australiaeast/managedApis/azuretables"
+                }
+            }
+        }
+    }
+}
