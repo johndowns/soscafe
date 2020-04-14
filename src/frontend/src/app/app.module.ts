@@ -26,7 +26,6 @@ import {
   VendorDetailComponent,
   VendorPaymentsComponent,
   VendorVouchersComponent,
-  VendorNewComponent,
 } from './components/vendor';
 import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/shared/error/error.component';
@@ -50,7 +49,6 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     HomeComponent,
     YesNoPipe,
     ErrorComponent,
-    VendorNewComponent,
   ],
   imports: [
     BrowserModule,
