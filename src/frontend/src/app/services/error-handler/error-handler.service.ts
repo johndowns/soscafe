@@ -24,20 +24,21 @@ export class ErrorHandlerService {
 
   private handle500Error = (err: HttpErrorResponse) => {
     this.createErrorMessage(err);
-    this.router.navigate(['/error']);
+    this.router.navigate(['/error'], { queryParams: { error: err.status + " " + err.statusText, si:true } });
   }
 
   private handle404Error = (err: HttpErrorResponse) => {
     this.createErrorMessage(err);
-    this.router.navigate(['/error']);
+    this.router.navigate(['/error'], { queryParams: { error: err.status + " " + err.statusText, si:true } });
   }
 
   private handleOtherError = (err: HttpErrorResponse) => {
     this.createErrorMessage(err);
-    this.router.navigate(['/error']);
+    this.router.navigate(['/error'], { queryParams: { error: err.status + " " + err.statusText, si:true } });
   }
 
   private createErrorMessage(err: HttpErrorResponse){
     this.errorMessage = err.error ? err.error : err.statusText;
   }
+
 }
