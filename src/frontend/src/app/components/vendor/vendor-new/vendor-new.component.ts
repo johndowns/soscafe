@@ -23,6 +23,7 @@ export class VendorNewComponent implements OnInit {
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
   constructor(
+    // private dialog: MatDialog,
     private location: Location,
     private snackBar: MatSnackBar,
     private vendorService: VendorService,
@@ -43,8 +44,6 @@ export class VendorNewComponent implements OnInit {
       hasAcceptedTerms: new FormControl('', [Validators.required]),
     })
   }
-
-  constructor(public dialog: MatDialog) {}
 
   ngOnInit() {
     this.workInProgress = false;
@@ -74,7 +73,7 @@ export class VendorNewComponent implements OnInit {
 
     console.log(formData);
 
-    this.http.post('https://vendorapi.soscafe.nz/vendors', formData).subscribe(
+    this.http.post('https://soscafevendor-test.azurewebsites.net/vendors', formData).subscribe(
         () => {
           this.onSubmitConfirmation(true);
         },
@@ -93,9 +92,9 @@ export class VendorNewComponent implements OnInit {
     window.scroll(0,0);
 
     if (isSucess === true){
-      this.dialog.open(VenderNewSuccessDialog, {
-        width: '250px'
-      });
+      // this.dialog.open(VenderNewSuccessDialog, {
+      //   width: '250px'
+      // });
     }
     else {
       this.snackBar.open('Something went wrong.', 'OK', {
@@ -112,7 +111,8 @@ export class VendorNewComponent implements OnInit {
 export class VenderNewSuccessDialog {
 
   constructor(
-    public dialogRef: MatDialogRef<VenderNewSuccessDialog>
+    public dialogRef: MatDialogRef<VenderNewSuccessDialog>,
+    private router: Router,
   ){}
 
   onClick(): void {
