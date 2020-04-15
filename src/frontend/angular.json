@@ -133,6 +133,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "soscafe-vendor-app"
+    }
+  },
+  "defaultProject": "soscafe-vendor-app",
+  "cli": {
+    "analytics": false
+  }
 }

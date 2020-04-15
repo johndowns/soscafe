@@ -6,27 +6,27 @@
       </mat-card-header>
       <mat-card-content>
         <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
-          <mat-form-field appearance="none">
+          <mat-form-field appearance="outline">
             <mat-label>Business Name</mat-label>
-            <input matInput formControlName="businessName" readonly>
+            <input matInput formControlName="businessName">
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Registered Date</mat-label>
             <input matInput formControlName="registeredDate" readonly>
           </mat-form-field>
-          <mat-form-field appearance="none">
+          <mat-form-field appearance="outline">
             <mat-label>Contact Name</mat-label>
-            <input matInput formControlName="contactName" readonly>
+            <input matInput formControlName="contactName">
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Email Address</mat-label>
             <input matInput formControlName="emailAddress" readonly>
           </mat-form-field>
-          <mat-form-field appearance="none">
+          <mat-form-field appearance="outline">
             <mat-label>Phone Number</mat-label>
-            <input matInput formControlName="phoneNumber" readonly>
+            <input matInput formControlName="phoneNumber">
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Bank Account Number</mat-label>
             <input matInput formControlName="bankAccountNumber" required>
             <mat-hint>XX-XXXX-XXXXXXX-XX or XX-XXXX-XXXXXXX-XXX</mat-hint>

@@ -26,6 +26,8 @@ import {
   VendorDetailComponent,
   VendorPaymentsComponent,
   VendorVouchersComponent,
+  VendorNewSuccessComponent,
+  VendorNewComponent,
 } from './components/vendor';
 import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/shared/error/error.component';
@@ -46,6 +48,8 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     VendorDetailComponent,
     VendorPaymentsComponent,
     VendorVouchersComponent,
+    VendorNewComponent,
+    VendorNewSuccessComponent,
     HomeComponent,
     YesNoPipe,
     ErrorComponent,

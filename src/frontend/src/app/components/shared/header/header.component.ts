@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { MsalService, BroadcastService } from '@azure/msal-angular';
 
 @Component({
@@ -12,7 +14,10 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private broadcastService: BroadcastService,
-    private authService: MsalService) {}
+    private authService: MsalService,
+    private router: Router,
+    private location: Location,
+  ) {}
 
   ngOnInit(): void {
     this.checkAccount();
@@ -41,5 +46,9 @@ export class HeaderComponent implements OnInit {
 
   onSignOut() {
     this.authService.logout();
+  }
+
+  onNewVendor() {
+    this.router.navigate(['/new-vendor']);
   }
 }
