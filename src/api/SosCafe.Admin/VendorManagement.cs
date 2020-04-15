@@ -24,6 +24,43 @@ namespace SosCafe.Admin
     public static class VendorManagement
     {
         private static readonly Regex BankAccountRegex = new Regex(@"[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}");
+        private static string[] AllowedCities = new string[]
+{
+            "Auckland/Central",
+            "Auckland/North",
+            "Auckland/South",
+            "Auckland/East",
+            "Auckland/West",
+            "Bay Of Plenty",
+            "Canterbury",
+            "Central North Island",
+            "Christchurch",
+            "Coromandel",
+            "Dunedin",
+            "Gisborne",
+            "Hamilton",
+            "Hawke’s Bay",
+            "Kapiti Coast",
+            "Manawatu/Whanganui",
+            "Nelson/Marlborough",
+            "Northland",
+            "North Canterbury",
+            "Otago",
+            "Queenstown",
+            "Southland",
+            "South Canterbury",
+            "Taranaki",
+            "Waikato",
+            "Wairarapa",
+            "Wellington",
+            "Wellington/Hutt Valley",
+            "West Coast"
+        };
+        private static string[] AllowedTypes = new string[]
+        {
+            "Food/Beverage",
+            "Services"
+        };
 
         [FunctionName("GetVendor")]
         public static async Task<IActionResult> GetVendor(
@@ -323,9 +360,17 @@ namespace SosCafe.Admin
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted in order to update the vendor.");
             }
-            else if (!BankAccountRegex.IsMatch(requestModel.BankAccountNumber))
+            if (!BankAccountRegex.IsMatch(requestModel.BankAccountNumber))
             {
                 return new BadRequestErrorMessageResult("The bank account number is invalid.");
+            }
+            if (!AllowedCities.Contains(requestModel.City))
+            {
+                return new BadRequestErrorMessageResult("The city is invalid.");
+            }
+            if (!AllowedTypes.Contains(requestModel.Type))
+            {
+                return new BadRequestErrorMessageResult("The type is invalid.");
             }
 
             // Enqueue a message for the logic app to process.
