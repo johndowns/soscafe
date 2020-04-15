@@ -1,12 +1,19 @@
 <div fxLayout="row">
   <div fxFlex.gt-sm="100%">
     <mat-card>
-      <mat-card-header>
-        <mat-card-title>Vendors</mat-card-title>
-        <mat-card-subtitle>Please select the vendor you want to manage</mat-card-subtitle>
-      </mat-card-header>
+      <div fxLayout="row">
+        <div fxFlex.gt-sm="50%">
+          <mat-card-header>
+            <mat-card-title>Vendors</mat-card-title>
+            <mat-card-subtitle>Please select the vendor you want to manage</mat-card-subtitle>
+          </mat-card-header>
+        </div>
+        <div fxFlex.gt-sm="50%" style="margin: 24px;">
+          <a mat-stroked-button mat-tooltip="Register a new vendor" routerLink="/new-vendor" style="float: right;"><mat-icon>add</mat-icon> Register a new vendor</a>
+        </div>
+      </div>
       <mat-card-content>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>Search</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="Type vendor name">
         </mat-form-field>
@@ -33,7 +40,8 @@
                 <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
               </ng-container>
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+            <!-- Hiding pagination until fixed -->
+            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator> -->
           </div>
         </div>
         <br>
