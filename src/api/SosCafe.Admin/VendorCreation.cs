@@ -33,32 +33,55 @@ namespace SosCafe.Admin
             // Initialise the product definition.
             var product = new Product()
             {
-                Title = addVendorModel.BusinessName,
+                Title = $"{addVendorModel.BusinessName} - {addVendorModel.City}",
                 Vendor = addVendorModel.BusinessName,
                 BodyHtml = addVendorModel.Description,
                 ProductType = addVendorModel.Type,
+                Options = new List<ProductOption>
+                {
+                    new ProductOption
+                    {
+                        Name = "Voucher"
+                    }
+                },
+                Tags = $"{addVendorModel.City}, {addVendorModel.Type}",
                 Variants = new List<ProductVariant>
                 {
                     new ProductVariant
                     {
                         Option1 = "$5.00",
                         Price = 5,
-                        SKU = $"{addVendorModel.BusinessName}-5"
+                        SKU = $"{addVendorModel.BusinessName}-5",
+                        Taxable = false
                     },
                     new ProductVariant
                     {
                         Option1 = "$25.00",
                         Price = 25,
-                        SKU = $"{addVendorModel.BusinessName}-25"
+                        SKU = $"{addVendorModel.BusinessName}-25",
+                        Taxable = false
                     },
                     new ProductVariant
                     {
                         Option1 = "100.00",
                         Price = 100,
-                        SKU = $"{addVendorModel.BusinessName}-100"
+                        SKU = $"{addVendorModel.BusinessName}-100",
+                        Taxable = false
                     }
                 }
             };
+
+            // Initialise the image, if there is one.
+            if (!string.IsNullOrEmpty(addVendorModel.BusinessPhotoUrl))
+            {
+                product.Images = new List<ProductImage>
+                {
+                    new ProductImage
+                    {
+                        Src = addVendorModel.BusinessPhotoUrl
+                    }
+                };
+            }
 
             // Submit the product definition to Shopify.
             var service = new ProductService(ShopifyDomainName, ShopifyPassword);
