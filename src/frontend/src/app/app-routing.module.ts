@@ -4,7 +4,7 @@ import { MsalGuard } from '@azure/msal-angular';
 
 import { DefaultLayoutComponent } from './components/layout';
 import { HomeComponent } from './components/home/home.component';
-import { VendorListComponent, VendorViewComponent } from './components/vendor';
+import { VendorNewComponent, VendorNewSuccessComponent, VendorListComponent, VendorViewComponent } from './components/vendor';
 import { ErrorComponent } from './components/shared/error/error.component';
 
 const routes: Routes = [
@@ -21,6 +21,14 @@ const routes: Routes = [
         path: 'vendors/:id',
         component: VendorViewComponent,
         canActivate: [MsalGuard],
+      },
+      {
+        path: 'new-vendor',
+        component: VendorNewComponent
+      },
+      {
+        path: 'new-vendor/success',
+        component: VendorNewSuccessComponent
       },
       {
         path: '',
