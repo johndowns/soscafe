@@ -68,6 +68,7 @@ export class VendorNewComponent implements OnInit {
         },
         (err) => {
           console.error('HTTP Error', err);
+          this.errorService.handleError(err);
           this.onSubmitConfirmation(false);
         },
         () => {
@@ -84,7 +85,6 @@ export class VendorNewComponent implements OnInit {
       this.router.navigate(['/new-vendor/success'], { queryParams: { businessName: this.newVendorForm.value.businessName, si:true } });
     }
     else {
-      this.errorService.handleError(err);
       this.snackBar.open('Something went wrong.', 'OK', {
         duration: 5000,
       });
