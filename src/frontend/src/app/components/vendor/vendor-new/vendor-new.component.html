@@ -16,29 +16,29 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit(newVendorForm)">
-          <mat-form-field appearance="fill">
+        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
             <mat-label>Business Name</mat-label>
             <input matInput formControlName="businessName" required>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>I am a</mat-label>
             <mat-select formControlName="type" required>
               <mat-option value="foodBeverageBusiness">Food/Beverage Business</mat-option>
               <mat-option value="servicesBusiness">Services Business</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Phone Number</mat-label>
             <input matInput formControlName="phoneNumber" required>
             <small><i>We may contact you to verify your business.</i></small>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Description of Establisment</mat-label>
             <textarea matInput formControlName="description" required></textarea>
             <small><i>Include your address, phone number, website and/or social media so customers can find you easily.</i></small>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Location</mat-label>
             <mat-select formControlName="city" required>
               <mat-option value="auckland-central">Auckland/Central</mat-option>
@@ -72,13 +72,13 @@
               <mat-option value="west-coast">West Coast</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Photo of your business</mat-label>
             <!-- To be changed out for File Upload form field -->
             <input matInput formControlName="businessPhotoUrl">
             <small><i>Add a link to a photo you would like us to use. Alternatively we will default to what we find on google.</i></small>
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Bank Account Number</mat-label>
             <input matInput formControlName="bankAccountNumber" required>
             <mat-hint>XX-XXXX-XXXXXXX-XX or XX-XXXX-XXXXXXX-XXX</mat-hint>
@@ -87,15 +87,8 @@
             </mat-error>
           </mat-form-field>
           <p><strong>Terms and conditions</strong></p>
-          <p>
-            <small>
-              By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
-              to assist you in the online provision of vouchers for future products or services that you will offer the
-              purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
-              process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
-              conditions on our website.
-            </small>
-          </p>
+          <p><small>By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us to assist you in the online provision of vouchers for future products or services that you will offer the purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and process payments for you, then remit those funds to you on a regular basis.</small></p>
+          <p><small><a href="https://sosbusiness.nz/pages/terms-and-conditions" target="_blank">Please refer to the terms and onditions on our website</a>.</small></p>
           <p>
             <mat-checkbox formControlName="hasAcceptedTerms" required>I agree to the above terms</mat-checkbox>
           </p>
