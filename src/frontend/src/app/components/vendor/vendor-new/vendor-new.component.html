@@ -16,7 +16,7 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit()">
+        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit(newVendorForm)">
           <mat-form-field appearance="fill">
             <mat-label>Business Name</mat-label>
             <input matInput formControlName="businessName" required>
