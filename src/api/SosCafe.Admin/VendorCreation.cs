@@ -10,27 +10,70 @@ using SosCafe.Admin.Models.Queue;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Web.Http;
+using ShopifySharp;
+using System.Collections.Generic;
 
 namespace SosCafe.Admin
 {
     public static class VendorCreation
     {
+        private static string ShopifyDomainName = Environment.GetEnvironmentVariable("ShopifyDomainName");
+        private static string ShopifyPassword = Environment.GetEnvironmentVariable("ShopifyPassword");
+        private static string SendGridApiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
+        private static string SendGridTemplateId = Environment.GetEnvironmentVariable("SendGridTemplateId");
+        private static string SendGridEmailFromAddress = Environment.GetEnvironmentVariable("SendGridEmailFromAddress");
+        private static string SendGridEmailFromName = Environment.GetEnvironmentVariable("SendGridEmailFromName");
+
         [FunctionName("AddVendorToShopify")]
         public static async Task<IActionResult> AddVendorToShopify(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] AddVendorQueueModel addVendorModel,
             HttpRequest req,
             ILogger log)
         {
-            // TODO send request to Shopify
+            // Initialise the product definition.
+            var product = new Product()
+            {
+                Title = addVendorModel.BusinessName,
+                Vendor = addVendorModel.BusinessName,
+                BodyHtml = addVendorModel.Description,
+                ProductType = addVendorModel.Type,
+                Variants = new List<ProductVariant>
+                {
+                    new ProductVariant
+                    {
+                        Option1 = "$5.00",
+                        Price = 5,
+                        SKU = $"{addVendorModel.BusinessName}-5"
+                    },
+                    new ProductVariant
+                    {
+                        Option1 = "$10.00",
+                        Price = 10,
+                        SKU = $"{addVendorModel.BusinessName}-10"
+                    }
+                }
+            };
 
-            var responseObject = new AddVendorToShopifyResultApiModel() { ShopifyId = Guid.NewGuid().ToString() };
+            // Submit the product definition to Shopify.
+            var service = new ProductService(ShopifyDomainName, ShopifyPassword);
+            product = await service.CreateAsync(product, new ProductCreateOptions 
+            {
+                Published = false
+            }
+            );
+
+            // Handle the response.
+            if (product?.Id == null)
+            {
+                log.LogError("Received unexpected empty product from Shopify.");
+                return new InternalServerErrorResult();
+            }
+
+            var productId = product.Id.ToString();
+
+            var responseObject = new AddVendorToShopifyResultApiModel() { ShopifyId = productId };
             return new OkObjectResult(responseObject);
         }
-
-        private static string SendGridApiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
-        private static string SendGridTemplateId = Environment.GetEnvironmentVariable("SendGridTemplateId");
-        private static string SendGridEmailFromAddress = Environment.GetEnvironmentVariable("SendGridEmailFromAddress");
-        private static string SendGridEmailFromName = Environment.GetEnvironmentVariable("SendGridEmailFromName");
 
         [FunctionName("SendVendorWelcomeEmail")]
         public static async Task<IActionResult> SendVendorWelcomeEmail(
