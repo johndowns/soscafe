@@ -47,9 +47,15 @@ namespace SosCafe.Admin
                     },
                     new ProductVariant
                     {
-                        Option1 = "$10.00",
-                        Price = 10,
-                        SKU = $"{addVendorModel.BusinessName}-10"
+                        Option1 = "$25.00",
+                        Price = 25,
+                        SKU = $"{addVendorModel.BusinessName}-25"
+                    },
+                    new ProductVariant
+                    {
+                        Option1 = "100.00",
+                        Price = 100,
+                        SKU = $"{addVendorModel.BusinessName}-100"
                     }
                 }
             };
