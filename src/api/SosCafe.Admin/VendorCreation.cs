@@ -63,7 +63,7 @@ namespace SosCafe.Admin
                     },
                     new ProductVariant
                     {
-                        Option1 = "100.00",
+                        Option1 = "$100.00",
                         Price = 100,
                         SKU = $"{addVendorModel.BusinessName}-100",
                         Taxable = false
