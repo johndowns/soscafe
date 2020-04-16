@@ -102,7 +102,8 @@ namespace SosCafe.Admin
                 ContactName = vendorDetailsEntity.ContactName,
                 EmailAddress = vendorDetailsEntity.EmailAddress,
                 PhoneNumber = vendorDetailsEntity.PhoneNumber,
-                BankAccountNumber = vendorDetailsEntity.BankAccountNumber
+                BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
+                HasAgreedToTerms = vendorDetailsEntity.DateAcceptedTerms != null
             };
 
             // Return the vendor details.
@@ -133,7 +134,7 @@ namespace SosCafe.Admin
             }
 
             // Perform validation on the properties.
-            if (vendorDetailsApiModel.DateAcceptedTerms == null)
+            if (vendorDetailsEntity.DateAcceptedTerms == null && vendorDetailsApiModel.DateAcceptedTerms == null)
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted in order to update the vendor.");
             }
@@ -144,7 +145,10 @@ namespace SosCafe.Admin
 
             // Update entity.
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
-            vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms;
+            if (vendorDetailsApiModel.DateAcceptedTerms != null)
+            {
+                vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms;
+            }
 
             // Submit entity update to table.
             var replaceVendorDetailsEntityOperation = TableOperation.Replace(vendorDetailsEntity);
