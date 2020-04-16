@@ -1,4 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { environment as env } from 'src/environments/environment';
+import { Component, OnInit, Inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http'
@@ -32,6 +33,7 @@ export class VendorNewComponent implements OnInit {
     private errorService: ErrorHandlerService,
     private formBuilder: FormBuilder,
     private http: HttpClient,
+    // private vendorsBaseUrl = env.apiBaseUrl,
   ) {
     this.newVendorForm = this.formBuilder.group({
       businessName: new FormControl('', [Validators.required]),
@@ -62,7 +64,7 @@ export class VendorNewComponent implements OnInit {
 
     console.log(this.newVendorForm.value);
 
-    this.http.post('https://soscafevendor-test.azurewebsites.net/vendors', this.newVendorForm.value).subscribe(
+    this.http.post(`${env.apiBaseUrl}/vendors`, this.newVendorForm.value).subscribe(
         () => {
           this.workInProgress = false;
         },
