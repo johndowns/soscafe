@@ -43,6 +43,10 @@ jobs:
 
   build-front-end:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    
     steps:
     - name: 'Check out'
       uses: actions/checkout@master
