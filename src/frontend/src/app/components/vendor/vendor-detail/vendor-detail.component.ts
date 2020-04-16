@@ -52,9 +52,9 @@ export class VendorDetailComponent implements OnInit {
           emailAddress: res.emailAddress,
           phoneNumber: res.phoneNumber,
           bankAccountNumber: res.bankAccountNumber,
-          termsAccepted: res.HasAgreedToTerms,
+          termsAccepted: res.hasAgreedToTerms,
         });
-        this.HasAgreedToTerms = res.HasAgreedToTerms;
+        this.HasAgreedToTerms = res.hasAgreedToTerms;
         console.log(this.HasAgreedToTerms);
       },
       (err) => {
