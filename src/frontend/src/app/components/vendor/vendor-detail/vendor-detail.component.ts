@@ -16,6 +16,7 @@ export class VendorDetailComponent implements OnInit {
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
+  HasAgreedToTerms: boolean;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
@@ -27,7 +28,7 @@ export class VendorDetailComponent implements OnInit {
     emailAddress: new FormControl(''),
     phoneNumber: new FormControl(''),
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
-    termsAccepted: new FormControl('', [Validators.required]),
+    termsAccepted: new FormControl(''),
   });
 
   constructor(
@@ -51,8 +52,10 @@ export class VendorDetailComponent implements OnInit {
           emailAddress: res.emailAddress,
           phoneNumber: res.phoneNumber,
           bankAccountNumber: res.bankAccountNumber,
-          termsAccepted: false,
+          termsAccepted: res.HasAgreedToTerms,
         });
+        this.HasAgreedToTerms = res.HasAgreedToTerms;
+        console.log(this.HasAgreedToTerms);
       },
       (err) => {
         console.log('LOG HTTP Error', err);
