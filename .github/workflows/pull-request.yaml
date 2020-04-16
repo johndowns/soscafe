@@ -11,7 +11,7 @@ env:
   DOTNET_VERSION: '3.1.201'
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-api:
     runs-on: windows-latest
     steps:
     - name: 'Check out'
@@ -40,3 +40,21 @@ jobs:
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+
+  build-front-end:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Check out'
+      uses: actions/checkout@master
+    
+    - name: Install Node $
+        uses: actions/setup-node@v1
+        with:
+          node-version: $
+    
+    - name: Run npm install and build
+        run: |
+          npm install
+          npm run build:test
+
+    # TODO deploy
