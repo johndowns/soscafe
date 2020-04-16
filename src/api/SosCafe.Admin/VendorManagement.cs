@@ -144,6 +144,8 @@ namespace SosCafe.Admin
             }
 
             // Update entity.
+            vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
+            vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             if (vendorDetailsApiModel.DateAcceptedTerms != null)
             {
