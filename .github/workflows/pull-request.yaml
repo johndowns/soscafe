@@ -59,6 +59,7 @@ jobs:
     
     - name: Run npm install and build
       run: |
+        cd src/frontend
         npm install
         npm run build:test
 
