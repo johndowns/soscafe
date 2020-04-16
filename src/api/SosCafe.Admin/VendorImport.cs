@@ -49,7 +49,7 @@ namespace SosCafe.Admin.Models
                 EmailAddress = vendorToImport.EmailAddress.Trim(),
                 PhoneNumber = vendorToImport.PhoneNumber,
                 BankAccountNumber = vendorToImport.BankAccountNumber,
-                DateAcceptedTerms = vendorToImport.DateAcceptedTerms
+                DateAcceptedTerms = vendorToImport.DateAcceptedTerms?.ToString("o")
             };
 
             // Upsert vendor table entity.
