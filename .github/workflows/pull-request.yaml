@@ -9,6 +9,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: soscafevendor-test
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/api'
   DOTNET_VERSION: '3.1.201'
+  NODE_VERSION: '10.x'
 
 jobs:
   build-and-deploy-api:
@@ -51,10 +52,10 @@ jobs:
     - name: 'Check out'
       uses: actions/checkout@master
     
-    - name: Install Node $
+    - name: Install Node  ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v1
       with:
-        node-version: $
+        node-version: ${{ env.NODE_VERSION }}
     
     - name: Run npm install and build
       run: |
