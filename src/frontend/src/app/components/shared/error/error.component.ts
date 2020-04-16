@@ -19,8 +19,8 @@ export class ErrorComponent implements OnInit {
   }
 
   ngOnInit() {
-    // setTimeout(() => {
-    //     this.router.navigate(['/']);
-    // }, 5000);  //5s
+    setTimeout(() => {
+        this.router.navigate(['/']);
+    }, 5000);  //5s
   }
 }
