@@ -62,7 +62,7 @@ export class VendorNewComponent implements OnInit {
 
     console.log(this.newVendorForm.value);
 
-    this.http.post('https://soscafevendor-test.azurewebsites.net/vendors', this.newVendorForm.value).subscribe(
+    this.http.post(window.location.origin + '/vendors', this.newVendorForm.value).subscribe(
         () => {
           this.workInProgress = false;
         },
