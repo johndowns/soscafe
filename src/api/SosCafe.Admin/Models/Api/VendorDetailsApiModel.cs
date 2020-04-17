@@ -17,5 +17,7 @@ namespace SosCafe.Admin.Models.Api
         public string PhoneNumber { get; set; }
 
         public string BankAccountNumber { get; set; }
+
+        public bool HasAgreedToTerms { get; set; }
     }
 }

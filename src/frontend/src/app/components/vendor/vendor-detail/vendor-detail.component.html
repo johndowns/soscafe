@@ -15,16 +15,16 @@
             <input matInput formControlName="registeredDate" readonly>
           </mat-form-field>
           <mat-form-field appearance="none">
-            <mat-label>Contact Name</mat-label>
-            <input matInput formControlName="contactName" readonly>
-          </mat-form-field>
-          <mat-form-field appearance="none">
             <mat-label>Email Address</mat-label>
             <input matInput formControlName="emailAddress" readonly>
           </mat-form-field>
-          <mat-form-field appearance="none">
+          <mat-form-field appearance="outline">
+            <mat-label>Contact Name</mat-label>
+            <input matInput formControlName="contactName">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Phone Number</mat-label>
-            <input matInput formControlName="phoneNumber" readonly>
+            <input matInput formControlName="phoneNumber">
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Bank Account Number</mat-label>
@@ -34,19 +34,36 @@
               Please enter a valid bank account number, e.g. 12-1234-1234567-12 or 12-1234-1234567-012.
             </mat-error>
           </mat-form-field>
-          <p><strong>Terms and conditions</strong></p>
-          <p>
-            <small>
-              By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
-              to assist you in the online provision of vouchers for future products or services that you will offer the
-              purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
-              process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
-              conditions on our website.
-            </small>
-          </p>
-          <p>
-            <mat-checkbox formControlName="termsAccepted" required>I agree to the above terms</mat-checkbox>
-          </p>
+          <ng-container *ngIf="hasAgreedToTerms != true">
+            <p><strong>Terms and conditions</strong></p>
+            <p>
+              <small>
+                By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
+                to assist you in the online provision of vouchers for future products or services that you will offer the
+                purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
+                process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
+                conditions on our website.
+              </small>
+            </p>
+            <p>
+              <mat-checkbox formControlName="hasAgreedToTerms" required>I agree to the above terms</mat-checkbox>
+            </p>
+          </ng-container>
+          <ng-container *ngIf="hasAgreedToTerms == true">
+            <p><strong>Terms and conditions</strong></p>
+            <p>
+              <small>
+                By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
+                to assist you in the online provision of vouchers for future products or services that you will offer the
+                purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
+                process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
+                conditions on our website.
+              </small>
+            </p>
+            <p>
+              <mat-checkbox formControlName="hasAgreedToTerms" disabled>I agree to the above terms</mat-checkbox>
+            </p>
+          </ng-container>
           <div class="button-row">
             <button mat-raised-button color="primary" [disabled]="!vendorForm.valid || workInProgress" type="submit">Save</button>
             <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
