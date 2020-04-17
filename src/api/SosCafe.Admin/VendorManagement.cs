@@ -195,7 +195,8 @@ namespace SosCafe.Admin
                 GrossPayment = entity.GrossPayment,
                 Fees = entity.Fees,
                 NetPayment = entity.NetPayment
-            });
+            })
+                .OrderByDescending(d => d.PaymentDate);
 
             // Return the payment list.
             return new OkObjectResult(mappedResults);
@@ -231,7 +232,8 @@ namespace SosCafe.Admin
                 PaymentDate = entity.PaymentDate,
                 BankAccountNumber = entity.BankAccountNumber,
                 NetPayment = entity.NetPayment.ToString()
-            });
+            })
+                .OrderByDescending(d => d.PaymentDate);
 
             // Serialize to CSV.
             var fileBytes = CsvCreator.CreateCsvFile(mappedResults);
@@ -281,7 +283,8 @@ namespace SosCafe.Admin
                 VoucherGross = entity.VoucherGross,
                 VoucherFees = entity.VoucherFees,
                 VoucherNet = entity.VoucherNet
-            });
+            })
+                .OrderByDescending(d => d.OrderDate);
 
             // Return the voucher list.
             return new OkObjectResult(mappedResults);
@@ -328,7 +331,8 @@ namespace SosCafe.Admin
                 VoucherGross = entity.VoucherGross.ToString(),
                 VoucherFees = entity.VoucherFees.ToString(),
                 VoucherNet = entity.VoucherNet.ToString()
-            });
+            })
+                .OrderByDescending(d => d.OrderDate);
 
             // Serialize to CSV.
             var fileBytes = CsvCreator.CreateCsvFile(mappedResults);

@@ -119,7 +119,8 @@ namespace SosCafe.Admin
             {
                 Id = entity.ShopifyId,
                 BusinessName = entity.BusinessName
-            });
+            })
+                .OrderBy(d => d.BusinessName);
 
             // Return the results.
             return new OkObjectResult(mappedResults);
@@ -161,7 +162,8 @@ namespace SosCafe.Admin
                 EmailAddress = entity.EmailAddress,
                 BankAccountNumber = entity.BankAccountNumber,
                 InternalTag = entity.InternalTag
-            });
+            })
+                .OrderBy(d => d.BusinessName);
 
             // Serialize to CSV.
             var fileBytes = CsvCreator.CreateCsvFile(allVendorDetailsCsv);

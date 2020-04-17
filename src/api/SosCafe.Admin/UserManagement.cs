@@ -41,7 +41,8 @@ namespace SosCafe.Admin
             {
                 Id = entity.VendorShopifyId,
                 BusinessName = entity.VendorName
-            });
+            })
+                .OrderBy(d => d.BusinessName);
 
             // Return the results.
             return new OkObjectResult(mappedResults);
