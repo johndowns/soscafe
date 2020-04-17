@@ -7,6 +7,7 @@ on:
 
 env:
   AZURE_FUNCTIONAPP_NAME: soscafevendor-test
+  FRONT_END_AZURE_STORAGE_NAME: soscafevendoruitest
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/api'
   DOTNET_VERSION: '3.1.201'
   NODE_VERSION: '10.x'
@@ -15,7 +16,7 @@ jobs:
   build-api:
     runs-on: windows-latest
     steps:
-    - name: 'Check out'
+    - name: Check out
       uses: actions/checkout@master
 
     - name: Set up .NET Core v${{ env.DOTNET_VERSION }} environment
@@ -41,10 +42,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 'Check out'
+    - name: Check out
       uses: actions/checkout@master
     
-    - name: Install Node  ${{ env.NODE_VERSION }}
+    - name: Install Node v${{ env.NODE_VERSION }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.NODE_VERSION }}
@@ -59,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: frontend
-        path: src/frontend/dist
+        path: src/frontend/dist/soscafe-vendor-app
 
   deploy:
     runs-on: ubuntu-latest
@@ -76,13 +77,17 @@ jobs:
       with:
         name: frontend
 
-    - name: 'Log in via Azure CLI'
+    - name: Log into Azure via Azure CLI
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Publish function app'
+    - name: Publish API to function app ${{ env.AZURE_FUNCTIONAPP_NAME }}
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+        package: api
+
+    - name: Deploy front-end to storage account
+      run: |
+        az storage blob upload-batch --auth-mode key --account-name ${{ env.FRONT_END_AZURE_STORAGE_NAME }} --destination `$web --source frontend
