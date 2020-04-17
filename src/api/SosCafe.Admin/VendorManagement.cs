@@ -13,9 +13,6 @@ using SosCafe.Admin.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.IO;
-using CsvHelper;
-using System.Globalization;
 using SosCafe.Admin.Csv;
 using SosCafe.Admin.Models.Queue;
 
@@ -83,7 +80,7 @@ namespace SosCafe.Admin
                 return new NotFoundResult();
             }
 
-            // Read the vendor details from table storage.
+            // Read the vendor details from table storage. TODO may be able to do an input binding point read here
             var findOperation = TableOperation.Retrieve<VendorDetailsEntity>("Vendors", vendorId);
             var findResult = await vendorDetailsTable.ExecuteAsync(findOperation);
             if (findResult.Result == null)
@@ -237,7 +234,7 @@ namespace SosCafe.Admin
             });
 
             // Serialize to CSV.
-            var fileBytes = CreateCsvFile(mappedResults);
+            var fileBytes = CsvCreator.CreateCsvFile(mappedResults);
             return new FileContentResult(fileBytes, "text/csv")
             {
                 FileDownloadName = "SOSCafe-Payments.csv"
@@ -334,7 +331,7 @@ namespace SosCafe.Admin
             });
 
             // Serialize to CSV.
-            var fileBytes = CreateCsvFile(mappedResults);
+            var fileBytes = CsvCreator.CreateCsvFile(mappedResults);
             return new FileContentResult(fileBytes, "text/csv")
             {
                 FileDownloadName = "SOSCafe-Vouchers.csv"
@@ -428,20 +425,6 @@ namespace SosCafe.Admin
             } while (token != null);
 
             return allVouchersForVendor;
-        }
-
-        private static byte[] CreateCsvFile<T>(IEnumerable<T> recordsToWrite)
-        {
-            using (var stream = new MemoryStream())
-            {
-                using (var writer = new StreamWriter(stream))
-                using (var csv = new CsvWriter(writer, new CultureInfo("en-NZ")))
-                {
-                    csv.WriteRecords(recordsToWrite);
-                }
-
-                return stream.ToArray();
-            }
         }
     }
 }

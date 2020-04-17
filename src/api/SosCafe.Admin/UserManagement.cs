@@ -64,6 +64,12 @@ namespace SosCafe.Admin
             return userDisplayName ?? string.Empty;
         }
 
+        internal static bool GetIsAdminClaim(ClaimsPrincipal claimsPrincipal)
+        {
+            var isAdminClaim = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "isadmin")?.Value;
+            return !string.IsNullOrEmpty(isAdminClaim);
+        }
+
         internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)
         {
             // Check that the user-vendor combination exists.
@@ -71,6 +77,11 @@ namespace SosCafe.Admin
             var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(cleanedUserId, vendorId);
             var findResult = await vendorUserAssignmentsTable.ExecuteAsync(findOperation);
             return findResult.Result != null;
+        }
+
+        internal static bool IsUserAuthorisedForAdmin(ClaimsPrincipal claimsPrincipal)
+        {
+            return GetIsAdminClaim(claimsPrincipal);
         }
     }
 }
