@@ -43,7 +43,7 @@ namespace SosCafe.Admin
             }
 
             // Map to an API response.
-            var vendorDetailsResponse = new VendorDetailsApiModel
+            var vendorDetailsResponse = new InternalVendorDetailsApiModel
             {
                 Id = vendorDetailsEntity.ShopifyId,
                 RegisteredDate = vendorDetailsEntity.RegisteredDate,
@@ -52,7 +52,8 @@ namespace SosCafe.Admin
                 EmailAddress = vendorDetailsEntity.EmailAddress,
                 PhoneNumber = vendorDetailsEntity.PhoneNumber,
                 BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
-                HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null)
+                HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null),
+                InternalTag = vendorDetailsEntity.InternalTag
             };
 
             // Return the vendor details.
@@ -98,7 +99,7 @@ namespace SosCafe.Admin
             string tag = req.Query["tag"];
             if (!string.IsNullOrEmpty(tag))
             {
-                filters.Add(TableQuery.GenerateFilterCondition("TODO-Tag", QueryComparisons.Equal, tag));
+                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.InternalTag), QueryComparisons.Equal, tag));
             }
 
             var filter = CombineTableFilters(filters);
@@ -158,7 +159,8 @@ namespace SosCafe.Admin
                 ContactName = entity.ContactName,
                 PhoneNumber = entity.PhoneNumber,
                 EmailAddress = entity.EmailAddress,
-                BankAccountNumber = entity.BankAccountNumber
+                BankAccountNumber = entity.BankAccountNumber,
+                InternalTag = entity.InternalTag
             });
 
             // Serialize to CSV.

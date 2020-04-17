@@ -28,5 +28,8 @@ namespace SosCafe.Admin.Csv
 
         [Name("Date Accepted Terms")]
         public DateTime? DateAcceptedTerms { get; set; }
+
+        [Name("InternalTag")]
+        public string InternalTag { get; set; }
     }
 }

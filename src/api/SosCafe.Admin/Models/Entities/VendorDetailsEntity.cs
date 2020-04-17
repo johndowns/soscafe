@@ -36,5 +36,7 @@ namespace SosCafe.Admin.Entities
         public string BankAccountNumber { get; set; }
 
         public string DateAcceptedTerms { get; set; }
+
+        public string InternalTag { get; set; }
     }
 }
