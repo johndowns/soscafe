@@ -24,11 +24,13 @@ const routes: Routes = [
       },
       {
         path: 'new-vendor',
-        component: VendorNewComponent
+        component: VendorNewComponent,
+        canActivate: [MsalGuard],
       },
       {
         path: 'new-vendor/success',
-        component: VendorNewSuccessComponent
+        component: VendorNewSuccessComponent,
+        canActivate: [MsalGuard],
       },
       {
         path: '',
