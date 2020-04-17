@@ -34,7 +34,7 @@
               Please enter a valid bank account number, e.g. 12-1234-1234567-12 or 12-1234-1234567-012.
             </mat-error>
           </mat-form-field>
-          <ng-container *ngIf="HasAgreedToTerms != true">
+          <ng-container *ngIf="hasAgreedToTerms != true">
             <p><strong>Terms and conditions</strong></p>
             <p>
               <small>
@@ -46,12 +46,12 @@
               </small>
             </p>
             <p>
-              <mat-checkbox formControlName="termsAccepted" required>I agree to the above terms</mat-checkbox>
+              <mat-checkbox formControlName="hasAgreedToTerms" required>I agree to the above terms</mat-checkbox>
             </p>
           </ng-container>
-          <ng-container *ngIf="HasAgreedToTerms == true">
+          <ng-container *ngIf="hasAgreedToTerms == true">
             <br/><br/>
-          </ng-container>  
+          </ng-container>
           <div class="button-row">
             <button mat-raised-button color="primary" [disabled]="!vendorForm.valid || workInProgress" type="submit">Save</button>
             <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>

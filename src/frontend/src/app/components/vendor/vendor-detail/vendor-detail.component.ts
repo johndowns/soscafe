@@ -12,11 +12,10 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
   templateUrl: './vendor-detail.component.html',
 })
 export class VendorDetailComponent implements OnInit {
-  public termsAndConditionsAccepted = false;
+  public hasAgreedToTerms: boolean;
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
-  HasAgreedToTerms: boolean;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
@@ -28,7 +27,7 @@ export class VendorDetailComponent implements OnInit {
     emailAddress: new FormControl(''),
     phoneNumber: new FormControl(''),
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
-    termsAccepted: new FormControl(''),
+    hasAgreedToTerms: new FormControl(''),
   });
 
   constructor(
@@ -52,10 +51,11 @@ export class VendorDetailComponent implements OnInit {
           emailAddress: res.emailAddress,
           phoneNumber: res.phoneNumber,
           bankAccountNumber: res.bankAccountNumber,
-          termsAccepted: res.hasAgreedToTerms,
+          hasAgreedToTerms: res.hasAgreedToTerms,
         });
-        this.HasAgreedToTerms = res.hasAgreedToTerms;
-        console.log(this.HasAgreedToTerms);
+        this.hasAgreedToTerms = res.hasAgreedToTerms;
+        console.log(res);
+        console.log(this.hasAgreedToTerms);
       },
       (err) => {
         console.log('LOG HTTP Error', err);

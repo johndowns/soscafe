@@ -6,4 +6,5 @@ export class VendorDetail {
   public emailAddress: string;
   public phoneNumber: string;
   public bankAccountNumber: string;
+  public hasAgreedToTerms: boolean;
 }
