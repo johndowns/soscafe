@@ -18,11 +18,6 @@ jobs:
     - name: 'Check out'
       uses: actions/checkout@master
 
-    - name: 'Log in via Azure CLI'
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
     - name: Set up .NET Core v${{ env.DOTNET_VERSION }} environment
       uses: actions/setup-dotnet@v1
       with:
@@ -39,7 +34,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: api
-        path: ./output
+        path: src/api/output
 
 
   build-front-end:
@@ -80,6 +75,11 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: frontend
+
+    - name: 'Log in via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: 'Publish function app'
       uses: Azure/functions-action@v1
