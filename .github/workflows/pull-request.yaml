@@ -82,12 +82,12 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Deploy front-end to storage account
+      run: |
+        az storage blob upload-batch --auth-mode key --account-name ${{ env.FRONT_END_AZURE_STORAGE_NAME }} --destination \$web --source frontend
+
     - name: Publish API to function app ${{ env.AZURE_FUNCTIONAPP_NAME }}
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: api
-
-    - name: Deploy front-end to storage account
-      run: |
-        az storage blob upload-batch --auth-mode key --account-name ${{ env.FRONT_END_AZURE_STORAGE_NAME }} --destination `$web --source frontend
