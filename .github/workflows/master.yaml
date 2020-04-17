@@ -96,4 +96,4 @@ jobs:
 
     - name: Purge front-end CDN
       run: |
-        az cdn endpoint purge -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} -n ${{ env:FRONT_END_AZURE_CDN_ENDPOINT_NAME }} --profile-name ${{ env:FRONT_END_AZURE_CDN_PROFILE_NAME }} --content-paths '/*'
+        az cdn endpoint purge -g ${{ env.AZURE_RESOURCE_GROUP_NAME }} -n ${{ env.FRONT_END_AZURE_CDN_ENDPOINT_NAME }} --profile-name ${{ env.FRONT_END_AZURE_CDN_PROFILE_NAME }} --content-paths '/*'
