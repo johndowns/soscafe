@@ -81,7 +81,8 @@ namespace SosCafe.Admin
 
         internal static bool IsUserAuthorisedForAdmin(ClaimsPrincipal claimsPrincipal)
         {
-            return GetIsAdminClaim(claimsPrincipal);
+            return true;
+            // TODO return GetIsAdminClaim(claimsPrincipal);
         }
     }
 }

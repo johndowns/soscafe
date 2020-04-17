@@ -21,7 +21,7 @@ namespace SosCafe.Admin
     {
         [FunctionName("AdminGetVendor")]
         public static IActionResult AdminGetVendor(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "admin/vendors/{vendorId}")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "internal/vendors/{vendorId}")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("Vendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
@@ -61,7 +61,7 @@ namespace SosCafe.Admin
 
         [FunctionName("AdminSearchVendors")]
         public static async Task<IActionResult> AdminSearchVendors(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "admin/vendors")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "internal/vendors")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorsTable,
             ILogger log)
@@ -80,25 +80,25 @@ namespace SosCafe.Admin
             string vendorId = req.Query["vendorId"];
             if (!string.IsNullOrEmpty(vendorId))
             {
-                filters.Add(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, vendorId));
+                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.RowKey), QueryComparisons.Equal, vendorId));
             }
 
             string name = req.Query["name"];
             if (!string.IsNullOrEmpty(name))
             {
-                filters.Add(TableQuery.GenerateFilterCondition("VendorName", QueryComparisons.Equal, name));
+                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.BusinessName), QueryComparisons.Equal, name));
             }
 
             string emailAddress = req.Query["emailAddress"];
             if (!string.IsNullOrEmpty(emailAddress))
             {
-                filters.Add(TableQuery.GenerateFilterCondition("EmailAddress", QueryComparisons.Equal, emailAddress));
+                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.EmailAddress), QueryComparisons.Equal, emailAddress));
             }
 
             string tag = req.Query["tag"];
             if (!string.IsNullOrEmpty(tag))
             {
-                filters.Add(TableQuery.GenerateFilterCondition("Tag", QueryComparisons.Equal, tag));
+                filters.Add(TableQuery.GenerateFilterCondition("TODO-Tag", QueryComparisons.Equal, tag));
             }
 
             var filter = CombineTableFilters(filters);
@@ -124,12 +124,21 @@ namespace SosCafe.Admin
             return new OkObjectResult(mappedResults);
         }
 
-        [FunctionName("ExportVendorList")]
-        public static async Task<IActionResult> ExportVendorList(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "admin/vendors/csv")] HttpRequest req,
+        [FunctionName("AdminExportVendorList")]
+        public static async Task<IActionResult> AdminExportVendorList(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "internal/vendors/csv")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
             ILogger log)
         {
+            // Check the authorisation.
+            var isAuthorised = UserManagement.IsUserAuthorisedForAdmin(claimsPrincipal);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised admin request. Denying request.");
+                return new NotFoundResult();
+            }
+
             // Read all records from table storage.
             TableContinuationToken token = null;
             var allVendorDetails = new List<VendorDetailsEntity>();
