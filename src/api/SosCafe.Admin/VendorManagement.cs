@@ -64,7 +64,7 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
+            [Table("Vendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
@@ -79,16 +79,6 @@ namespace SosCafe.Admin
                 log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
                 return new NotFoundResult();
             }
-
-            // Read the vendor details from table storage. TODO may be able to do an input binding point read here
-            var findOperation = TableOperation.Retrieve<VendorDetailsEntity>("Vendors", vendorId);
-            var findResult = await vendorDetailsTable.ExecuteAsync(findOperation);
-            if (findResult.Result == null)
-            {
-                log.LogWarning("Could not find vendor {VendorId}.", vendorId);
-                return new NotFoundResult();
-            }
-            var vendorDetailsEntity = (VendorDetailsEntity)findResult.Result;
 
             // Map to an API response.
             var vendorDetailsResponse = new VendorDetailsApiModel
