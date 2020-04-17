@@ -144,7 +144,7 @@ namespace SosCafe.Admin
 
             // Update entity.
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
-            vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms;
+            vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms.Value.ToString("o");
 
             // Submit entity update to table.
             var replaceVendorDetailsEntityOperation = TableOperation.Replace(vendorDetailsEntity);

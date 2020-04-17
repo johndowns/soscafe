@@ -35,7 +35,6 @@ namespace SosCafe.Admin.Entities
 
         public string BankAccountNumber { get; set; }
 
-
-        public DateTime? DateAcceptedTerms { get; set; }
+        public string DateAcceptedTerms { get; set; }
     }
 }
