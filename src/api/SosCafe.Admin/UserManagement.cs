@@ -23,7 +23,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = GetUserId(claimsPrincipal, log);
+            var userId = GetUserId(claimsPrincipal);
 
             // Read all records from table storage where the partition key is the user's ID.
             TableContinuationToken token = null;
@@ -48,18 +48,18 @@ namespace SosCafe.Admin
             return new OkObjectResult(mappedResults);
         }
 
-        internal static string GetUserId(ClaimsPrincipal claimsPrincipal, ILogger log)
+        internal static string GetUserId(ClaimsPrincipal claimsPrincipal)
         {
-            return GetEmailAddress(claimsPrincipal, log).ToUpper();
+            return GetEmailAddress(claimsPrincipal).ToUpper();
         }
 
-        internal static string GetEmailAddress(ClaimsPrincipal claimsPrincipal, ILogger log)
+        internal static string GetEmailAddress(ClaimsPrincipal claimsPrincipal)
         {
             var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
             return userEmailAddress ?? string.Empty;
         }
 
-        internal static string GetDisplayName(ClaimsPrincipal claimsPrincipal, ILogger log)
+        internal static string GetDisplayName(ClaimsPrincipal claimsPrincipal)
         {
             var userDisplayName = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "name")?.Value;
             return userDisplayName ?? string.Empty;
@@ -82,7 +82,8 @@ namespace SosCafe.Admin
 
         internal static bool IsUserAuthorisedForAdmin(ClaimsPrincipal claimsPrincipal)
         {
-            return true;
+            var userId = GetUserId(claimsPrincipal);
+            return userId == "JOHN+TEST1@JOHNDOWNS.CO.NZ";
             // TODO return GetIsAdminClaim(claimsPrincipal);
         }
     }

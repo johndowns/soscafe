@@ -69,7 +69,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            var userId = UserManagement.GetUserId(claimsPrincipal);
             log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -119,7 +119,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            var userId = UserManagement.GetUserId(claimsPrincipal);
             log.LogInformation("Received PUT vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -174,7 +174,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            var userId = UserManagement.GetUserId(claimsPrincipal);
             log.LogInformation("Received GET payments request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -212,7 +212,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            var userId = UserManagement.GetUserId(claimsPrincipal);
             log.LogInformation("Received GET payments CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -253,7 +253,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            var userId = UserManagement.GetUserId(claimsPrincipal);
             log.LogInformation("Received GET vouchers request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -300,7 +300,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
+            var userId = UserManagement.GetUserId(claimsPrincipal);
             log.LogInformation("Received GET vouchers CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
 
             // Authorise the request.
@@ -352,8 +352,8 @@ namespace SosCafe.Admin
         {
             // Get the user details from their token claims.
             // This also implicitly authorizes the request, since any authenticated user can access this API.
-            var emailAddress = UserManagement.GetEmailAddress(claimsPrincipal, log);
-            var contactName = UserManagement.GetDisplayName(claimsPrincipal, log);
+            var emailAddress = UserManagement.GetEmailAddress(claimsPrincipal);
+            var contactName = UserManagement.GetDisplayName(claimsPrincipal);
             if (string.IsNullOrEmpty(emailAddress) || string.IsNullOrEmpty(contactName))
             {
                 log.LogError("Token is missing required claims.");
