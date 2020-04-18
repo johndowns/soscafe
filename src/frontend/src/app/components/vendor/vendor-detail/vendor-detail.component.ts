@@ -13,6 +13,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
 })
 export class VendorDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
+  public isClickAndCollect: boolean;
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
@@ -28,6 +29,7 @@ export class VendorDetailComponent implements OnInit {
     phoneNumber: new FormControl(''),
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
     hasAgreedToTerms: new FormControl(''),
+    isClickAndCollect: new FormControl(''),
   });
 
   constructor(
@@ -52,6 +54,7 @@ export class VendorDetailComponent implements OnInit {
           phoneNumber: res.phoneNumber,
           bankAccountNumber: res.bankAccountNumber,
           hasAgreedToTerms: res.hasAgreedToTerms,
+          isClickAndCollect: res.isClickAndCollect,
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
         console.log(res);
