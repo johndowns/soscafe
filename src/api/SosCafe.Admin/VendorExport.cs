@@ -43,7 +43,8 @@ namespace SosCafe.Admin
                 ContactName = entity.ContactName,
                 PhoneNumber = entity.PhoneNumber,
                 EmailAddress = entity.EmailAddress,
-                BankAccountNumber = entity.BankAccountNumber
+                BankAccountNumber = entity.BankAccountNumber,
+                IsClickAndCollect = entity.IsClickAndCollect
             });
 
             // Serialize to CSV.

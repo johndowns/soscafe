@@ -7,4 +7,5 @@ export class VendorDetail {
   public phoneNumber: string;
   public bankAccountNumber: string;
   public hasAgreedToTerms: boolean;
+  public isClickAndCollect: boolean;
 }
