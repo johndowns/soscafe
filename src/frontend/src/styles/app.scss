@@ -28,10 +28,10 @@ a {
   text-decoration: none;
   &:hover,
   &:focus {
-    color: $themecolor !important;
+    color: $themecolor-alt;
   }
   &:visited {
-    color: $themecolor-dark ;
+    color: $themecolor;
   }
 }
 a.link {
@@ -39,7 +39,7 @@ a.link {
   text-decoration: none;
   &:hover,
   &:focus {
-    color: $themecolor !important;
+    color: $themecolor-alt;
   }
 }
 .img-responsive {
