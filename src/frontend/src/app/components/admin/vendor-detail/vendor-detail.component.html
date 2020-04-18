@@ -1,0 +1,80 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="100%">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Business Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
+          <mat-form-field appearance="none">
+            <mat-label>Business Name</mat-label>
+            <input matInput formControlName="businessName" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="none">
+            <mat-label>Registered Date</mat-label>
+            <input matInput formControlName="registeredDate" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="none">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="emailAddress" readonly>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Contact Name</mat-label>
+            <input matInput formControlName="contactName">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Bank Account Number</mat-label>
+            <input matInput formControlName="bankAccountNumber" required>
+            <mat-hint>XX-XXXX-XXXXXXX-XX or XX-XXXX-XXXXXXX-XXX</mat-hint>
+            <mat-error>
+              Please enter a valid bank account number, e.g. 12-1234-1234567-12 or 12-1234-1234567-012.
+            </mat-error>
+          </mat-form-field>
+          <br/><br/>
+          <mat-checkbox formControlName="isClickAndCollect">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
+          <ng-container *ngIf="hasAgreedToTerms != true">
+            <p><strong>Terms and conditions</strong></p>
+            <p>
+              <small>
+                By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
+                to assist you in the online provision of vouchers for future products or services that you will offer the
+                purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
+                process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
+                conditions on our website.
+              </small>
+            </p>
+            <p>
+              <mat-checkbox formControlName="hasAgreedToTerms" required>I agree to the above terms</mat-checkbox>
+            </p>
+          </ng-container>
+          <ng-container *ngIf="hasAgreedToTerms == true">
+            <p><strong>Terms and conditions</strong></p>
+            <p>
+              <small>
+                By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
+                to assist you in the online provision of vouchers for future products or services that you will offer the
+                purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and
+                process payments for you, then remit those funds to you on a regular basis. Please refer to the terms and
+                conditions on our website.
+              </small>
+            </p>
+            <p>
+              <mat-checkbox formControlName="hasAgreedToTerms" disabled>I agree to the above terms</mat-checkbox>
+            </p>
+          </ng-container>
+          <div class="button-row">
+            <button mat-raised-button color="primary" [disabled]="!vendorForm.valid || workInProgress" type="submit">Save</button>
+            <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="loading-indicator" *ngIf="workInProgress">
+  <mat-spinner></mat-spinner>
+</div>

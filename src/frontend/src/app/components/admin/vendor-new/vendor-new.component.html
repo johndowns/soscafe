@@ -1,0 +1,106 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="25%"></div>
+  <div fxFlex.gt-sm="50%">
+    <mat-card>
+      <img mat-card-image src="assets/images/banner.png" alt="sosbusiness"/>
+      <mat-card-header>
+        <mat-card-title>Register a new business</mat-card-title>
+        <mat-card-subtitle>
+          <p>We are a not-for-profit initiative supporting local businesses through the COVID-19 pandemic in New Zealand. This form is for businesses use only. If you would like to suggest a business, please go here: <a href="https://soscafe.nz/pages/suggest-a-place" target="_blank">sosbusiness.nz/pages/suggest-a-place</a></p>
+          <ul>
+            <li>If you are a franchise or chain, please view our FAQs: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
+            <li>If you are a brewery and sell beer/alcohol, check out our friends at: <a href="https://www.beerwithus.co.nz/" target="_blank">www.beerwithus.co.nz</a></li>
+            <li>If you are a non-food or service establishment eg retailer, please register with our friends at: <a href="https://www.shopitforward.co.nz/" target="_blank">www.shopitforward.co.nz</a></li>
+            <li>Questions about fees, how this works etc? Check out our FAQs here: <a href="https://sosbusiness.nz/pages/for-vendors" target="_blank">sosbusiness.nz/pages/for-vendors</a></li>
+          </ul>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="vendor-form" [formGroup]="newVendorForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Business Name</mat-label>
+            <input matInput formControlName="businessName" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>I am a</mat-label>
+            <mat-select formControlName="type" required>
+              <mat-option value="Food/Beverage">Food/Beverage Business</mat-option>
+              <mat-option value="Services">Services Business</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber" required>
+            <small><i>We may contact you to verify your business.</i></small>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Description of Establishment</mat-label>
+            <textarea matInput formControlName="description" required></textarea>
+            <small><i>Include your address, phone number, website and/or social media so customers can find you easily.</i></small>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <mat-select formControlName="city" required>
+              <mat-option value="Auckland/Central">Auckland/Central</mat-option>
+              <mat-option value="Auckland/North">Auckland/North</mat-option>
+              <mat-option value="Auckland/South">Auckland/South</mat-option>
+              <mat-option value="Auckland/East">Auckland/East</mat-option>
+              <mat-option value="Auckland/West">Auckland/West</mat-option>
+              <mat-option value="Bay Of Plenty">Bay Of Plenty</mat-option>
+              <mat-option value="Canterbury">Canterbury</mat-option>
+              <mat-option value="Central North Island">Central North Island</mat-option>
+              <mat-option value="Christchurch">Christchurch</mat-option>
+              <mat-option value="Coromandel">Coromandel</mat-option>
+              <mat-option value="Dunedin">Dunedin</mat-option>
+              <mat-option value="Gisborne">Gisborne</mat-option>
+              <mat-option value="Hamilton">Hamilton</mat-option>
+              <mat-option value="Hawke's Bay">Hawke's Bay</mat-option>
+              <mat-option value="Kapiti Coast">Kapiti Coast</mat-option>
+              <mat-option value="Manawatu/Whanganui">Manawatu/Whanganui</mat-option>
+              <mat-option value="Nelson/Marlborough">Nelson/Marlborough</mat-option>
+              <mat-option value="Northland">Northland</mat-option>
+              <mat-option value="North Canterbury">North Canterbury</mat-option>
+              <mat-option value="Otago">Otago</mat-option>
+              <mat-option value="Queenstown">Queenstown</mat-option>
+              <mat-option value="Southland">Southland</mat-option>
+              <mat-option value="South Canterbury">South Canterbury</mat-option>
+              <mat-option value="Taranaki">Taranaki</mat-option>
+              <mat-option value="Waikato">Waikato</mat-option>
+              <mat-option value="Wairarapa">Wairarapa</mat-option>
+              <mat-option value="Wellington">Wellington</mat-option>
+              <mat-option value="Wellington/Hutt Valley">Wellington/Hutt Valley</mat-option>
+              <mat-option value="West Coast">West Coast</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Photo of your business</mat-label>
+            <!-- To be changed out for File Upload form field -->
+            <input matInput formControlName="businessPhotoUrl">
+            <small><i>Add a link to a photo you would like us to use. Alternatively we will default to what we find on google.</i></small>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Bank Account Number</mat-label>
+            <input matInput formControlName="bankAccountNumber" required>
+            <mat-hint>XX-XXXX-XXXXXXX-XX or XX-XXXX-XXXXXXX-XXX</mat-hint>
+            <mat-error>
+              Please enter a valid bank account number, e.g. 12-1234-1234567-12 or 12-1234-1234567-012.
+            </mat-error>
+          </mat-form-field>
+          <p><strong>Terms and conditions</strong></p>
+          <p><small>By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us to assist you in the online provision of vouchers for future products or services that you will offer the purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and process payments for you, then remit those funds to you on a regular basis.</small></p>
+          <p><small><a href="https://sosbusiness.nz/pages/terms-and-conditions" target="_blank">Please refer to the terms and onditions on our website</a>.</small></p>
+          <p>
+            <mat-checkbox formControlName="hasAgreedToTerms" required>I agree to the above terms</mat-checkbox>
+          </p>
+          <div class="button-row">
+            <button mat-raised-button color="primary" [disabled]="!newVendorForm.valid" type="submit">Submit</button>
+            <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="loading-indicator" *ngIf="workInProgress">
+  <mat-spinner></mat-spinner>
+</div>
