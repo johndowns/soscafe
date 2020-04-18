@@ -44,6 +44,7 @@ export class VendorNewComponent implements OnInit {
       businessPhotoUrl: new FormControl(''),
       bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
       hasAgreedToTerms: new FormControl('', [Validators.required]),
+      isClickAndCollect: new FormControl(''),
     })
   }
 
