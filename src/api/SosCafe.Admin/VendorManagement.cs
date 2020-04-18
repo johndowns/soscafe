@@ -39,7 +39,7 @@ namespace SosCafe.Admin
             "Dunedin",
             "Gisborne",
             "Hamilton",
-            "Hawke’s Bay",
+            "Hawke's Bay",
             "Kapiti Coast",
             "Manawatu/Whanganui",
             "Nelson/Marlborough",
