@@ -16,6 +16,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
 })
 export class VendorNewComponent implements OnInit {
   public hasAgreedToTerms = false;
+  public isClickAndCollect = false;
   public bankAccountNumber: FormControl;
   public newVendorForm: FormGroup;
   public workInProgress = false;
@@ -44,6 +45,7 @@ export class VendorNewComponent implements OnInit {
       businessPhotoUrl: new FormControl(''),
       bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
       hasAgreedToTerms: new FormControl('', [Validators.required]),
+      isClickAndCollect: new FormControl(''),
     })
   }
 
