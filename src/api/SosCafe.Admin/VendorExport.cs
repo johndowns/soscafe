@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using SosCafe.Admin.Entities;
 using System.Linq;
 using SosCafe.Admin.Csv;
+using System.Text.RegularExpressions;
 
 namespace SosCafe.Admin
 {
@@ -43,7 +44,7 @@ namespace SosCafe.Admin
                 ContactName = entity.ContactName,
                 PhoneNumber = entity.PhoneNumber,
                 EmailAddress = entity.EmailAddress,
-                BankAccountNumber = entity.BankAccountNumber,
+                BankAccountNumber = FormatBankAccountNumber(entity.BankAccountNumber),
                 IsClickAndCollect = entity.IsClickAndCollect
             });
 
@@ -55,6 +56,13 @@ namespace SosCafe.Admin
             }
 
             return new AcceptedResult();
+        }
+
+        private static string FormatBankAccountNumber(string bankAccountNumber)
+        {
+            string bankAccountNumberWithNumbersOnly = string.Concat(bankAccountNumber.Where(char.IsDigit));
+            if (bankAccountNumberWithNumbersOnly.Length < 15 || bankAccountNumberWithNumbersOnly.Length > 16) return bankAccountNumberWithNumbersOnly;
+            return Regex.Replace(bankAccountNumberWithNumbersOnly, @"(\w{2})(\w{4})(\w{7})(\w{2,3})", @"$1-$2-$3-$4");
         }
     }
 }
