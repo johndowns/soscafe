@@ -8,10 +8,10 @@ import { VendorService } from 'src/app/providers';
 import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-vendor-vouchers',
-  templateUrl: './vendor-vouchers.component.html',
+  selector: 'app-admin-business-vouchers',
+  templateUrl: './admin-business-vouchers.component.html',
 })
-export class VendorVouchersComponent implements OnInit {
+export class AdminBusinessVouchersComponent implements OnInit {
   displayedColumns: string[] = [
     'orderRef',
     'orderDate',

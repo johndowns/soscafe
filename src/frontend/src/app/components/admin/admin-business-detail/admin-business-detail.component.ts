@@ -8,10 +8,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 
 @Component({
-  selector: 'app-vendor-detail',
-  templateUrl: './vendor-detail.component.html',
+  selector: 'app-admin-business-detail',
+  templateUrl: './admin-business-detail.component.html',
 })
-export class VendorDetailComponent implements OnInit {
+export class AdminBusinessDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
   public isClickAndCollect: boolean;
   public bankAccountNumber: FormControl;

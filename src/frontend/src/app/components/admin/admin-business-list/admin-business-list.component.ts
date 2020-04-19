@@ -1,46 +1,33 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { VendorPaymentSummary } from 'src/app/model';
 import { VendorService } from 'src/app/providers';
-import { saveAs } from 'file-saver';
+import { VendorSummary } from 'src/app/model';
 
 @Component({
-  selector: 'app-vendor-payments',
-  templateUrl: './vendor-payments.component.html',
+  selector: 'app-admin-business-list',
+  templateUrl: './admin-business-list.component.html',
 })
-export class VendorPaymentsComponent implements OnInit {
-  displayedColumns: string[] = [
-    'paymentId',
-    'paymentDate',
-    'bankAccountNumber',
-    'paymentAmount',
-  ];
-  dataSource: MatTableDataSource<VendorPaymentSummary>;
+export class AdminBusinessListComponent implements OnInit {
+  displayedColumns: string[] = ['businessName'];
+  dataSource: MatTableDataSource<VendorSummary>;
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
   @ViewChild(MatSort, { static: true })
   sort: MatSort;
   public workInProgress = false;
-  private vendorId: string;
 
-  constructor(
-    private vendorService: VendorService,
-    private route: ActivatedRoute
-  ) {}
-
+  constructor(private vendorService: VendorService) {}
   ngOnInit() {
     this.workInProgress = true;
-    this.vendorId = this.route.snapshot.params.id;
-    this.vendorService.getVendorPayments(this.vendorId).subscribe(
+    this.vendorService.getVendors().subscribe(
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      (err) => console.error('HTTP Error', err),
+      (err) => console.log('HTTP Error', err),
       () => {
         this.workInProgress = false;
       }
@@ -53,15 +40,5 @@ export class VendorPaymentsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  download() {
-    this.vendorService
-      .downloadVendorPaymentsCsv(this.vendorId)
-      .subscribe((blob) => {
-        saveAs(blob, 'payments.csv', {
-          type: 'text/csv'
-       });
-      });
   }
 }
