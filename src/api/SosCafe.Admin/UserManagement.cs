@@ -71,9 +71,18 @@ namespace SosCafe.Admin
             return !string.IsNullOrEmpty(isAdminClaim);
         }
 
-        internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)
+        internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, ClaimsPrincipal claimsPrincipal, string vendorId)
         {
-            // Check that the user-vendor combination exists.
+            // Get the user ID.
+            var userId = GetUserId(claimsPrincipal);
+
+            // If the user is an admin user, they are automatically authorised.
+            if (GetIsAdminClaim(claimsPrincipal))
+            {
+                return true;
+            }
+
+            // Otherwise, check that the user-vendor combination exists.
             var cleanedUserId = userId.CleanStringForPartitionKey().ToUpper();
             var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(cleanedUserId, vendorId);
             var findResult = await vendorUserAssignmentsTable.ExecuteAsync(findOperation);
@@ -82,9 +91,7 @@ namespace SosCafe.Admin
 
         internal static bool IsUserAuthorisedForAdmin(ClaimsPrincipal claimsPrincipal)
         {
-            var userId = GetUserId(claimsPrincipal);
-            return userId == "JOHN+TEST1@JOHNDOWNS.CO.NZ";
-            // TODO return GetIsAdminClaim(claimsPrincipal);
+            return GetIsAdminClaim(claimsPrincipal);
         }
     }
 }

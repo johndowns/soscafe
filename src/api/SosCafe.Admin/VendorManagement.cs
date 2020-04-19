@@ -68,15 +68,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal);
-            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET vendor request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -109,15 +105,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal);
-            log.LogInformation("Received PUT vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received PUT vendors request for vendor {VendorId}.", vendorId);
+            if (! await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -165,15 +157,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal);
-            log.LogInformation("Received GET payments request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET payments request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -203,15 +191,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal);
-            log.LogInformation("Received GET payments CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET payments CSV request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -244,15 +228,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal);
-            log.LogInformation("Received GET vouchers request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET vouchers request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -291,15 +271,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal);
-            log.LogInformation("Received GET vouchers CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET vouchers CSV request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
