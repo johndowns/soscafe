@@ -5,6 +5,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { VendorService } from 'src/app/providers';
 import { VendorSummary } from 'src/app/model';
+import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-admin-business-list',
@@ -19,14 +21,19 @@ export class AdminBusinessListComponent implements OnInit {
   sort: MatSort;
   public workInProgress = false;
   public searchTerm: string;
+  public searchType: string;
   public notFound = false;
   public hideTable = true;
 
   public businessSearchForm = new FormGroup({
     search: new FormControl(''),
+    searchType: new FormControl('')
   });
 
-  constructor(private vendorService: VendorService) {}
+  constructor(
+    private vendorService: VendorService,
+    private errorService: ErrorHandlerService
+  ) {}
   ngOnInit() {
     this.workInProgress = false;
   }
@@ -35,10 +42,19 @@ export class AdminBusinessListComponent implements OnInit {
     this.workInProgress = true;
     this.hideTable = false;
     this.searchTerm = this.businessSearchForm.value.search;
+    this.searchType = this.businessSearchForm.value.searchType;
     console.log(this.searchTerm);
-    this.vendorService.searchVendorAdmin(this.searchTerm).subscribe(
+    this.vendorService.searchVendorAdmin(this.searchTerm, this.searchType).subscribe(
       (res) => {
-        this.dataSource = new MatTableDataSource(res);
+        console.log(res);
+        if (res.length === 0) {
+          this.notFound = true;
+          this.dataSource = null;
+        }
+        else {
+          this.dataSource = new MatTableDataSource(res);
+          this.notFound = false;
+        }
       },
       (err) => {
         if (err.status === 404) {
@@ -48,7 +64,6 @@ export class AdminBusinessListComponent implements OnInit {
         else {
           console.error('HTTP Error', err);
           this.errorService.handleError(err);
-          this.onSubmitConfirmation(false);
         }
       },
       () => {
@@ -60,5 +75,15 @@ export class AdminBusinessListComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  download() {
+    this.vendorService
+      .getVendorListAdmin()
+      .subscribe((blob) => {
+        saveAs(blob, 'businessesListAdmin.csv', {
+          type: 'text/csv'
+       });
+      });
   }
 }

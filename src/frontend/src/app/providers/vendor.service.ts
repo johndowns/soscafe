@@ -68,12 +68,14 @@ export class VendorService {
     );
   }
 
-  searchVendorAdmin(searchTerm: string): Observable<VendorSummary[]> {
-    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors?vendorId=${searchTerm}&name=${searchTerm}&emailAddress=${searchTerm}&tag=${searchTerm}`);
+  searchVendorAdmin(searchTerm: string, searchType: string): Observable<VendorSummary[]> {
+    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors?${searchType}=${searchTerm}`);
   }
 
-  getVendorAdmin(): Observable<VendorSummary[]> {
-    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors/${vendorId}`);
+  getVendorAdmin(vendorId: string): Observable<VendorDetail> {
+    return this.http.get<VendorDetail>(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}`
+    );
   }
 
   updateVendorAdmin(

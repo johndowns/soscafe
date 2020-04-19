@@ -30,6 +30,7 @@ export class AdminBusinessDetailComponent implements OnInit {
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
     hasAgreedToTerms: new FormControl(''),
     isClickAndCollect: new FormControl(''),
+    internalTag: new FormControl(''),
   });
 
   constructor(
@@ -55,6 +56,7 @@ export class AdminBusinessDetailComponent implements OnInit {
           bankAccountNumber: res.bankAccountNumber,
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
+          InternalTag: new FormControl(''),
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
         console.log(res);

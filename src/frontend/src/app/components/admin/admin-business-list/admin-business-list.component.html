@@ -9,18 +9,27 @@
           </mat-card-header>
         </div>
         <div fxFlex.gt-sm="50%" style="margin: 24px;">
-          <a mat-stroked-button mat-tooltip="Register a new vendor" routerLink="/new-vendor" style="float: right;"><mat-icon>add</mat-icon> Register a new business</a>
+          <a mat-stroked-button (click)="download()" style="float: right;"><mat-icon>save_alt</mat-icon> Export all businesses</a>
         </div>
       </div>
       <mat-card-content>
-        <form class="vendor-form" [formGroup]="businessSearchForm" (ngSubmit)="onSubmit(businessSearchForm.value)">
+        <form class="vendor-form" [formGroup]="businessSearchForm" (ngSubmit)="onSubmit()">
           <mat-form-field appearance="outline">
-            <mat-label>Search</mat-label>
+            <mat-label>Search by Business Name, ID, Tag, Contact Email or Contact Name</mat-label>
             <input matInput formControlName="search" required>
           </mat-form-field>
-          <button mat-raised-button color="primary" type="submit">Search</button>
+          <mat-form-field appearance="outline">
+            <mat-label>Search by</mat-label>
+            <mat-select formControlName="searchType" required>
+              <mat-option value="name">Name</mat-option>
+              <mat-option value="vendorId">ID</mat-option>
+              <mat-option value="emailAddress">Contact Email</mat-option>
+              <mat-option value="tag">Tag</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-stroked-button type="submit">Search</button>
         </form>
-        <br/><br/>
+        <br/>
         <div *ngIf="!workInProgress">
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort>
@@ -28,7 +37,7 @@
               <ng-container matColumnDef="businessName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                 <td mat-cell *matCellDef="let row">
-                  <a matLine [routerLink]="['/vendors', row.id]">{{row.businessName}}</a>
+                  <a matLine [routerLink]="['/admin/businesses', row.id]">{{row.businessName}}</a>
                 </td>
               </ng-container>
 

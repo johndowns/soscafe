@@ -11,7 +11,8 @@ export class HeaderComponent implements OnInit {
 
   loggedIn = false;
   userName = '';
-  isAdmin = false;
+  userEmail= '';
+  isAdmin;
 
   constructor(
     private broadcastService: BroadcastService,
