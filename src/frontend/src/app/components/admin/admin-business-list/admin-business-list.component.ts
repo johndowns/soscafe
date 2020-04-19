@@ -48,7 +48,6 @@ export class AdminBusinessListComponent implements OnInit {
   checkAccount() {
     const userAccount = this.authService.getAccount();
     this.loggedIn = !!userAccount;
-    console.log(userAccount);
     if (this.loggedIn) {
       if (userAccount.idToken.extension_IsAdmin === null) {
         this.isAdmin = false;
@@ -84,10 +83,8 @@ export class AdminBusinessListComponent implements OnInit {
     this.hideTable = false;
     this.searchTerm = this.businessSearchForm.value.search;
     this.searchType = this.businessSearchForm.value.searchType;
-    console.log(this.searchTerm);
     this.vendorService.searchVendorAdmin(this.searchTerm, this.searchType).subscribe(
       (res) => {
-        console.log(res);
         if (res.length === 0) {
           this.notFound = true;
           this.dataSource = null;

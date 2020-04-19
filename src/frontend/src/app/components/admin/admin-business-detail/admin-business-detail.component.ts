@@ -52,7 +52,6 @@ export class AdminBusinessDetailComponent implements OnInit {
   checkAccount() {
     const userAccount = this.authService.getAccount();
     this.loggedIn = !!userAccount;
-    console.log(userAccount);
     if (this.loggedIn) {
       if (userAccount.idToken.extension_IsAdmin === null) {
         this.isAdmin = false;
@@ -97,7 +96,6 @@ export class AdminBusinessDetailComponent implements OnInit {
           internalTag: res.internalTag,
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
-        console.log(res);
       },
       (err) => {
         console.log('LOG HTTP Error', err);

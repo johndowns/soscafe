@@ -57,8 +57,6 @@ export class VendorDetailComponent implements OnInit {
           isClickAndCollect: res.isClickAndCollect,
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
-        console.log(res);
-        console.log(this.hasAgreedToTerms);
       },
       (err) => {
         console.log('LOG HTTP Error', err);

@@ -32,7 +32,6 @@ export class HeaderComponent implements OnInit {
   checkAccount() {
     const userAccount = this.authService.getAccount();
     this.loggedIn = !!userAccount;
-    console.log(userAccount);
     if (this.loggedIn) {
       this.userName = userAccount.name;
       this.userEmail = userAccount.idToken.emails[0];
