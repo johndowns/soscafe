@@ -35,9 +35,8 @@
             <button mat-stroked-button type="submit" style="height: 68%; width: 100%; margin: .25em 0;"><mat-icon>search</mat-icon></button>
           </div>
         </form>
-        <br/>
         <div *ngIf="!workInProgress">
-          <div class="mat-elevation-z8">
+          <div class="mat-elevation-z8" *ngIf="!hideTable">
             <table mat-table [dataSource]="dataSource" matSort>
               <!-- Business Name Column -->
               <ng-container matColumnDef="businessName">
@@ -63,8 +62,6 @@
             <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator> -->
           </div>
         </div>
-        <br>
-        <a href="http://sosbusiness.nz/pages/vendor-portal" target="_blank">Having problems? Check out our frequently asked questions.</a>
       </mat-card-content>
     </mat-card>
   </div>
