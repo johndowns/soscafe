@@ -43,7 +43,7 @@ export class AdminBusinessVouchersComponent implements OnInit {
   ngOnInit() {
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
-    this.vendorService.getVendorVouchersAdmin(this.vendorId).subscribe(
+    this.vendorService.getVendorVouchers(this.vendorId).subscribe(
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
