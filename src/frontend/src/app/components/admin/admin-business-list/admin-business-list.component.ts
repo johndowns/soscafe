@@ -7,6 +7,8 @@ import { VendorService } from 'src/app/providers';
 import { VendorSummary } from 'src/app/model';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 import { saveAs } from 'file-saver';
+import { MsalService, BroadcastService } from '@azure/msal-angular';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-admin-business-list',
@@ -24,6 +26,10 @@ export class AdminBusinessListComponent implements OnInit {
   public searchType: string;
   public notFound = false;
   public hideTable = true;
+  loggedIn = false;
+  userName = '';
+  userEmail= '';
+  isAdmin;
 
   public businessSearchForm = new FormGroup({
     search: new FormControl(''),
@@ -32,9 +38,44 @@ export class AdminBusinessListComponent implements OnInit {
 
   constructor(
     private vendorService: VendorService,
-    private errorService: ErrorHandlerService
+    private errorService: ErrorHandlerService,
+    private broadcastService: BroadcastService,
+    private authService: MsalService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {}
+
+  checkAccount() {
+    const userAccount = this.authService.getAccount();
+    this.loggedIn = !!userAccount;
+    console.log(userAccount);
+    if (this.loggedIn) {
+      if (userAccount.idToken.extension_IsAdmin === null) {
+        this.isAdmin = false;
+        this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+      }
+      else {
+        this.isAdmin = userAccount.idToken.extension_IsAdmin;
+        if (this.isAdmin) {
+          //DO NOTHING
+        }
+        else {
+          this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+        }
+      }
+    }
+    else {
+      this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+    }
+  }
+
   ngOnInit() {
+    this.checkAccount();
+
+    this.broadcastService.subscribe('msal:loginSuccess', payload => {
+      this.checkAccount();
+    });
+
     this.workInProgress = false;
   }
 
