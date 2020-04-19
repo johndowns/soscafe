@@ -63,7 +63,7 @@ namespace SosCafe.Admin
 
         [FunctionName("AdminUpdateVendor")]
         public static async Task<IActionResult> AdminUpdateVendor(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "internal/vendors/{vendorId}")] UpdateVendorDetailsApiModel vendorDetailsApiModel,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "internal/vendors/{vendorId}")] InternalUpdateVendorDetailsApiModel vendorDetailsApiModel,
             HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
@@ -90,7 +90,7 @@ namespace SosCafe.Admin
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
-            // TODO update internal tag
+            vendorDetailsEntity.InternalTag = vendorDetailsApiModel.InternalTag;
 
             // Submit entity update to table.
             var replaceVendorDetailsEntityOperation = TableOperation.Replace(vendorDetailsEntity);
