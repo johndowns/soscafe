@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Http;
 using CsvHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -100,6 +101,11 @@ namespace SosCafe.Admin
             if (!string.IsNullOrEmpty(tag))
             {
                 filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.InternalTag), QueryComparisons.Equal, tag));
+            }
+
+            if (!filters.Any())
+            {
+                return new BadRequestErrorMessageResult("You must specify at least one filter criteria.");
             }
 
             var filter = CombineTableFilters(filters);
