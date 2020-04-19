@@ -167,6 +167,7 @@ namespace SosCafe.Admin
                 PhoneNumber = entity.PhoneNumber,
                 EmailAddress = entity.EmailAddress,
                 BankAccountNumber = entity.BankAccountNumber,
+                IsClickAndCollect = entity.IsClickAndCollect,
                 InternalTag = entity.InternalTag
             })
                 .OrderBy(d => d.BusinessName);

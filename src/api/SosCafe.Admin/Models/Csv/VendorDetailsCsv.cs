@@ -33,6 +33,6 @@ namespace SosCafe.Admin.Csv
         public bool IsClickAndCollect { get; set; }
 
         [Name("InternalTag")]
-        public string InternalTag { get; set; 
+        public string InternalTag { get; set; }
     }
 }
