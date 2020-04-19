@@ -68,7 +68,7 @@ namespace SosCafe.Admin
         internal static bool GetIsAdminClaim(ClaimsPrincipal claimsPrincipal)
         {
             var isAdminClaim = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type.Equals("extension_IsAdmin", System.StringComparison.InvariantCultureIgnoreCase))?.Value;
-            return !string.IsNullOrEmpty(isAdminClaim);
+            return !string.Equals(isAdminClaim, "true", System.StringComparison.InvariantCultureIgnoreCase);
         }
 
         internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, ClaimsPrincipal claimsPrincipal, string vendorId)
