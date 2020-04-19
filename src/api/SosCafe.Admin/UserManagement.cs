@@ -67,8 +67,14 @@ namespace SosCafe.Admin
 
         internal static bool GetIsAdminClaim(ClaimsPrincipal claimsPrincipal)
         {
-            var isAdminClaim = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type.Equals("extension_IsAdmin", System.StringComparison.InvariantCultureIgnoreCase))?.Value;
-            return !string.Equals(isAdminClaim, "true", System.StringComparison.InvariantCultureIgnoreCase);
+            var isAdminClaim = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type.Equals("extension_IsAdmin", System.StringComparison.InvariantCultureIgnoreCase));
+            if (isAdminClaim == null)
+            {
+                return false;
+            }
+
+            var isAdminClaimValue = isAdminClaim.Value;
+            return string.Equals(isAdminClaimValue, "true", System.StringComparison.InvariantCultureIgnoreCase);
         }
 
         internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, ClaimsPrincipal claimsPrincipal, string vendorId)
@@ -77,7 +83,7 @@ namespace SosCafe.Admin
             var userId = GetUserId(claimsPrincipal);
 
             // If the user is an admin user, they are automatically authorised.
-            if (GetIsAdminClaim(claimsPrincipal))
+            if (GetIsAdminClaim(claimsPrincipal, null))
             {
                 return true;
             }
