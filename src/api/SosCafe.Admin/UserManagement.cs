@@ -67,7 +67,7 @@ namespace SosCafe.Admin
 
         internal static bool GetIsAdminClaim(ClaimsPrincipal claimsPrincipal)
         {
-            var isAdminClaim = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "extension_IsAdmin")?.Value;
+            var isAdminClaim = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type.Equals("extension_IsAdmin", System.StringComparison.InvariantCultureIgnoreCase))?.Value;
             return !string.IsNullOrEmpty(isAdminClaim);
         }
 
