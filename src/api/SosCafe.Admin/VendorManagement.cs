@@ -391,6 +391,7 @@ namespace SosCafe.Admin
                 City = requestModel.City,
                 BusinessPhotoUrl = requestModel.BusinessPhotoUrl,
                 BankAccountNumber = requestModel.BankAccountNumber,
+                IsClickAndCollect = requestModel.IsClickAndCollect,
                 DateAcceptedTerms = registrationTime,
                 EmailAddress = emailAddress,
                 ContactName = contactName,
