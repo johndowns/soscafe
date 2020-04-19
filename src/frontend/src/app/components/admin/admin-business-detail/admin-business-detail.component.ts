@@ -94,11 +94,10 @@ export class AdminBusinessDetailComponent implements OnInit {
           bankAccountNumber: res.bankAccountNumber,
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
-          InternalTag: new FormControl(''),
+          internalTag: res.internalTag,
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
         console.log(res);
-        console.log(this.hasAgreedToTerms);
       },
       (err) => {
         console.log('LOG HTTP Error', err);
