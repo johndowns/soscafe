@@ -36,7 +36,7 @@ namespace SosCafe.Admin
             "Dunedin",
             "Gisborne",
             "Hamilton",
-            "Hawke’s Bay",
+            "Hawke's Bay",
             "Kapiti Coast",
             "Manawatu/Whanganui",
             "Nelson/Marlborough",
@@ -90,7 +90,8 @@ namespace SosCafe.Admin
                 EmailAddress = vendorDetailsEntity.EmailAddress,
                 PhoneNumber = vendorDetailsEntity.PhoneNumber,
                 BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
-                HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null)
+                HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null),
+                IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect
             };
 
             // Return the vendor details.
@@ -134,6 +135,7 @@ namespace SosCafe.Admin
             vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
+            vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
             if (vendorDetailsApiModel.DateAcceptedTerms != null)
             {
                 vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms.Value.ToString("o");
@@ -380,6 +382,7 @@ namespace SosCafe.Admin
                 City = requestModel.City,
                 BusinessPhotoUrl = requestModel.BusinessPhotoUrl,
                 BankAccountNumber = requestModel.BankAccountNumber,
+                IsClickAndCollect = requestModel.IsClickAndCollect,
                 DateAcceptedTerms = registrationTime,
                 EmailAddress = emailAddress,
                 ContactName = contactName,

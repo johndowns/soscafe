@@ -19,5 +19,7 @@ namespace SosCafe.Admin.Models.Api
         public string BankAccountNumber { get; set; }
 
         public bool HasAgreedToTerms { get; set; }
+
+        public bool IsClickAndCollect { get; set; }
     }
 }

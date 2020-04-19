@@ -29,7 +29,10 @@ namespace SosCafe.Admin.Csv
         [Name("Date Accepted Terms")]
         public DateTime? DateAcceptedTerms { get; set; }
 
+        [Name("Click and Collect")]
+        public bool IsClickAndCollect { get; set; }
+
         [Name("InternalTag")]
-        public string InternalTag { get; set; }
+        public string InternalTag { get; set; 
     }
 }

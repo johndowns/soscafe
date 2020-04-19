@@ -28,30 +28,30 @@ $custom-typography: mat-typography-config(
 @include angular-material-theme($theme);
 
 /*Theme Colors*/
-$topbar: #2196f3;
+$topbar: #173551;
 $sidebar: #fff;
 $sidebar-white: #e5edef;
 $sidebar-alt: #f2f6f8;
 $bodycolor: #ffffff;
 $headingtext: #455a64;
-$bodytext: #67757c;
+$bodytext: #7d8790;
 $sidebar-text: #607d8b;
 $sidebar-icons: #99abb4;
 
 $font-16: 16px;
 
 $light-text: #a6b7bf;
-$themecolor: #455a64;
+$themecolor: #173551;
 $themecolor-alt: #26c6da;
-$themecolor-dark: #333d42;
+$themecolor-dark: #08223b;
 
-$accentColor: #dbbb94;
+$accentColor: #febf03;
 
 /*bootstrap Color*/
 $danger: #fc4b6c;
 $success: #26c6da;
 $warning: #ffb22b;
-$primary: #7460ee;
+$primary: #febf03;
 $info: #1e88e5;
 $inverse: #2f3d4a;
 $muted: #99abb4;

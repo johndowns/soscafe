@@ -4,18 +4,18 @@
       <div fxLayout="row">
         <div fxFlex.gt-sm="50%">
           <mat-card-header>
-            <mat-card-title>Vendors</mat-card-title>
-            <mat-card-subtitle>Please select the vendor you want to manage</mat-card-subtitle>
+            <mat-card-title>Businesses</mat-card-title>
+            <mat-card-subtitle>Please select the business you want to manage</mat-card-subtitle>
           </mat-card-header>
         </div>
         <div fxFlex.gt-sm="50%" style="margin: 24px;">
-          <a mat-stroked-button mat-tooltip="Register a new vendor" routerLink="/new-vendor" style="float: right;"><mat-icon>add</mat-icon> Register a new vendor</a>
+          <a mat-stroked-button mat-tooltip="Register a new vendor" routerLink="/new-vendor" style="float: right;"><mat-icon>add</mat-icon> Register a new business</a>
         </div>
       </div>
       <mat-card-content>
         <mat-form-field appearance="outline">
           <mat-label>Search</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Type vendor name">
+          <input matInput (keyup)="applyFilter($event)" placeholder="Type business name">
         </mat-form-field>
         <div *ngIf="!workInProgress">
           <div class="mat-elevation-z8">
@@ -30,7 +30,7 @@
 
               <ng-container matColumnDef="noData">
                 <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                  <p>You don't have any vendors linked to your account yet. <a href="/new-vendor">Click here to register a new one. </a>If this isn't what you expect, please email <a href="mailto:portal@sosbusiness.nz" target="_blank">portal@sosbusiness.nz</a> and we will help.</p>
+                  <p>You don't have any businesses linked to your account yet. <a href="/new-vendor">Click here to register a new one. </a>If this isn't what you expect, please email <a href="mailto:portal@sosbusiness.nz" target="_blank">portal@sosbusiness.nz</a> and we will help.</p>
                 </mat-footer-cell>
               </ng-container>
 
