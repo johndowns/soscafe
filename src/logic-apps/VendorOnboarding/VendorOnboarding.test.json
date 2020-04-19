@@ -42,6 +42,7 @@
                         "BankAccountNumber": "@{body('Parse_JSON')?['bankAccountNumber']}",
                         "BusinessName": "@{body('Parse_JSON')?['businessName']}",
                         "ContactName": "@{body('Parse_JSON')?['contactName']}",
+                        "DateAcceptedTerms": "@{body('Parse_JSON')?['registeredDate']}",
                         "EmailAddress": "@{body('Parse_JSON')?['emailAddress']}",
                         "IsClickAndCollect": "@{body('Parse_Json').isClickAndCollect}",
                         "PartitionKey": "Vendors",
