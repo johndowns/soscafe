@@ -21,7 +21,7 @@ export class AdminBusinessListComponent implements OnInit {
   constructor(private vendorService: VendorService) {}
   ngOnInit() {
     this.workInProgress = true;
-    this.vendorService.getVendors().subscribe(
+    this.vendorService.searchVendorAdmin().subscribe(
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;

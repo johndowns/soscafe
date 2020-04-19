@@ -67,4 +67,30 @@ export class VendorService {
       updateVendorDetails
     );
   }
+
+  searchVendorAdmin(): Observable<VendorSummary[]> {
+    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors`);
+  }
+
+  getVendorAdmin(): Observable<VendorSummary[]> {
+    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors/${vendorId}`);
+  }
+
+  updateVendorAdmin(
+    vendorId: string,
+    updateVendorDetails: UpdateVendorDetails
+  ): Observable<VendorDetail> {
+    return this.http.put<UpdateVendorDetails>(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}`,
+      updateVendorDetails
+    );
+  }
+
+  getVendorListAdmin() {
+    return this.http.get(
+      `${this.vendorsBaseUrl}/internal/vendors/csv`,
+      { responseType: 'blob' }
+    );
+  }
+
 }

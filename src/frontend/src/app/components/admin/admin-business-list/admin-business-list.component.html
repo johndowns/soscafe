@@ -4,8 +4,8 @@
       <div fxLayout="row">
         <div fxFlex.gt-sm="50%">
           <mat-card-header>
-            <mat-card-title>Businesses</mat-card-title>
-            <mat-card-subtitle>Please select the business you want to manage</mat-card-subtitle>
+            <mat-card-title>Search for a Business</mat-card-title>
+            <mat-card-subtitle>Please search below for the business you want to manage</mat-card-subtitle>
           </mat-card-header>
         </div>
         <div fxFlex.gt-sm="50%" style="margin: 24px;">
@@ -13,10 +13,13 @@
         </div>
       </div>
       <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>Search</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Type business name">
-        </mat-form-field>
+        <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Type business name">
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit">Search</button>
+        </form>
         <div *ngIf="!workInProgress">
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort>
@@ -30,7 +33,7 @@
 
               <ng-container matColumnDef="noData">
                 <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                  <p>You don't have any businesses linked to your account yet. <a href="/new-vendor">Click here to register a new one. </a>If this isn't what you expect, please email <a href="mailto:portal@sosbusiness.nz" target="_blank">portal@sosbusiness.nz</a> and we will help.</p>
+                  <p>Unable to find that business. Please make sure you have entered the correct terms.</p>
                 </mat-footer-cell>
               </ng-container>
 

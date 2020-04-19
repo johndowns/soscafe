@@ -43,7 +43,7 @@ export class AdminBusinessDetailComponent implements OnInit {
   ngOnInit(): void {
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
-    this.vendorService.getVendor(this.vendorId).subscribe(
+    this.vendorService.getVendorAdmin(this.vendorId).subscribe(
       (res) => {
         this.vendorForm.patchValue({
           id: res.id,
@@ -86,7 +86,7 @@ export class AdminBusinessDetailComponent implements OnInit {
     };
 
     this.vendorService
-      .updateVendor(this.vendorId, updateVendorDetails)
+      .updateVendorAdmin(this.vendorId, updateVendorDetails)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);

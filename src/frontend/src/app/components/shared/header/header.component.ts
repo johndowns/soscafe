@@ -11,6 +11,7 @@ export class HeaderComponent implements OnInit {
 
   loggedIn = false;
   userName = '';
+  isAdmin = false;
 
   constructor(
     private broadcastService: BroadcastService,
@@ -34,6 +35,7 @@ export class HeaderComponent implements OnInit {
     if (this.loggedIn) {
       this.userName = userAccount.name;
       this.userEmail = userAccount.idToken.emails[0];
+      this.isAdmin = userAccount.idToken.extension_IsAdmin;
     }
   }
 
@@ -48,6 +50,10 @@ export class HeaderComponent implements OnInit {
 
   onSignOut() {
     this.authService.logout();
+  }
+
+  goToAdmin() {
+    this.router.navigate(['/admin/businesses']);
   }
 
   onNewVendor() {
