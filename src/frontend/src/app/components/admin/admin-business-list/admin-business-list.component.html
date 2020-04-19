@@ -13,13 +13,14 @@
         </div>
       </div>
       <mat-card-content>
-        <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
+        <form class="vendor-form" [formGroup]="businessSearchForm" (ngSubmit)="onSubmit(businessSearchForm.value)">
           <mat-form-field appearance="outline">
             <mat-label>Search</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Type business name">
+            <input matInput formControlName="search" required>
           </mat-form-field>
           <button mat-raised-button color="primary" type="submit">Search</button>
         </form>
+        <br/><br/>
         <div *ngIf="!workInProgress">
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort>
@@ -39,7 +40,7 @@
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <ng-container *ngIf="dataSource.data.length === 0">
+              <ng-container *ngIf="notFound">
                 <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
               </ng-container>
             </table>
