@@ -20,9 +20,9 @@ namespace SosCafe.Admin
 {
     public static class VendorManagement
     {
-        private static readonly Regex BankAccountRegex = new Regex(@"[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}");
+        internal static readonly Regex BankAccountRegex = new Regex(@"[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}");
         private static string[] AllowedCities = new string[]
-{
+        {
             "Auckland/Central",
             "Auckland/North",
             "Auckland/South",

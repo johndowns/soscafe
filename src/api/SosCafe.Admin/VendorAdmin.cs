@@ -61,6 +61,52 @@ namespace SosCafe.Admin
             return new OkObjectResult(vendorDetailsResponse);
         }
 
+        [FunctionName("AdminUpdateVendor")]
+        public static async Task<IActionResult> AdminUpdateVendor(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "internal/vendors/{vendorId}")] UpdateVendorDetailsApiModel vendorDetailsApiModel,
+            HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
+            string vendorId,
+            [Table("Vendors", "Vendors", "{vendorId}", Connection= "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
+            [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
+            ILogger log)
+        {
+            // Check the authorisation.
+            var isAuthorised = UserManagement.IsUserAuthorisedForAdmin(claimsPrincipal);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised admin request. Denying request.");
+                return new NotFoundResult();
+            }
+
+            // Perform validation on the properties.
+            if (!VendorManagement.BankAccountRegex.IsMatch(vendorDetailsApiModel.BankAccountNumber))
+            {
+                return new BadRequestErrorMessageResult("The bank account number is invalid.");
+            }
+
+            // Update entity.
+            vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
+            vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
+            vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
+            vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
+            // TODO update internal tag
+
+            // Submit entity update to table.
+            var replaceVendorDetailsEntityOperation = TableOperation.Replace(vendorDetailsEntity);
+            var replaceVendorDetailsEntityOperationResult = await vendorDetailsTable.ExecuteAsync(replaceVendorDetailsEntityOperation);
+            if (replaceVendorDetailsEntityOperationResult.HttpStatusCode < 200 || replaceVendorDetailsEntityOperationResult.HttpStatusCode > 299)
+            {
+                log.LogError("Failed to replace entity in Vendors table. Status code={InsertStatusCode}, Result={InsertResult}", replaceVendorDetailsEntityOperationResult.HttpStatusCode, replaceVendorDetailsEntityOperationResult.Result);
+                return new InternalServerErrorResult();
+            }
+            else
+            {
+                log.LogInformation("Replaced entity in Vendors table.");
+                return new OkResult();
+            }
+        }
+
         [FunctionName("AdminSearchVendors")]
         public static async Task<IActionResult> AdminSearchVendors(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "internal/vendors")] HttpRequest req,
