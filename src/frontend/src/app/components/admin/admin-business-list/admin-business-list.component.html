@@ -14,20 +14,26 @@
       </div>
       <mat-card-content>
         <form class="vendor-form" [formGroup]="businessSearchForm" (ngSubmit)="onSubmit()">
-          <mat-form-field appearance="outline">
-            <mat-label>Search by Business Name, ID, Tag, Contact Email or Contact Name</mat-label>
-            <input matInput formControlName="search" required>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Search by</mat-label>
-            <mat-select formControlName="searchType" required>
-              <mat-option value="name">Name</mat-option>
-              <mat-option value="vendorId">ID</mat-option>
-              <mat-option value="emailAddress">Contact Email</mat-option>
-              <mat-option value="tag">Tag</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button mat-stroked-button type="submit">Search</button>
+          <div fxFlex.gt-sm="20%">
+            <mat-form-field appearance="outline">
+              <mat-label>Search by</mat-label>
+              <mat-select formControlName="searchType" required>
+                <mat-option value="name" selected>Business Name</mat-option>
+                <mat-option value="vendorId">ID</mat-option>
+                <mat-option value="emailAddress">Contact Email</mat-option>
+                <mat-option value="tag">Tag</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex.gt-sm="75%" style="padding-left: 10px; padding-right: 10px;">
+            <mat-form-field appearance="outline">
+              <mat-label>Search</mat-label>
+              <input matInput formControlName="search" required>
+            </mat-form-field>
+          </div>
+          <div fxFlex.gt-sm="5%">
+            <button mat-stroked-button type="submit" style="height: 68%; width: 100%; margin: .25em 0;"><mat-icon>search</mat-icon></button>
+          </div>
         </form>
         <br/>
         <div *ngIf="!workInProgress">
