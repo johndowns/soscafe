@@ -34,7 +34,7 @@ export class AdminBusinessPaymentsComponent implements OnInit {
   ngOnInit() {
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
-    this.vendorService.getVendorPayments(this.vendorId).subscribe(
+    this.vendorService.getVendorPaymentsAdmin(this.vendorId).subscribe(
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
@@ -57,7 +57,7 @@ export class AdminBusinessPaymentsComponent implements OnInit {
 
   download() {
     this.vendorService
-      .downloadVendorPaymentsCsv(this.vendorId)
+      .downloadVendorPaymentsCsvAdmin(this.vendorId)
       .subscribe((blob) => {
         saveAs(blob, 'payments.csv', {
           type: 'text/csv'

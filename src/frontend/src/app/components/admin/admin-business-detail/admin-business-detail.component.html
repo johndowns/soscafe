@@ -8,7 +8,7 @@
         <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
           <mat-form-field appearance="none">
             <mat-label>Business Name</mat-label>
-            <input matInput formControlName="businessName">
+            <input matInput formControlName="businessName" readonly>
           </mat-form-field>
           <mat-form-field appearance="none">
             <mat-label>Registered Date</mat-label>
