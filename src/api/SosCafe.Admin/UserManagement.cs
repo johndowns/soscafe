@@ -83,7 +83,7 @@ namespace SosCafe.Admin
             var userId = GetUserId(claimsPrincipal);
 
             // If the user is an admin user, they are automatically authorised.
-            if (GetIsAdminClaim(claimsPrincipal, null))
+            if (GetIsAdminClaim(claimsPrincipal))
             {
                 return true;
             }
