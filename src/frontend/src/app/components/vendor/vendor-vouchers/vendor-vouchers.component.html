@@ -11,6 +11,10 @@
         </button>
       </mat-card-header>
       <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Search</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Search for voucher by Order #, Voucher ID, Customer Email or Customer Name">
+        </mat-form-field>
         <div *ngIf="!workInProgress">
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort>
@@ -36,7 +40,7 @@
                 <td mat-cell *matCellDef="let row">{{ row.customerRegion }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherId">
-                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Voucher Id</th>
+                <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Voucher ID</th>
                 <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherId }}</td>
               </ng-container>
               <ng-container matColumnDef="voucherDescription">
