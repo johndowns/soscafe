@@ -12,7 +12,6 @@ using System.Collections.Generic;
 
 namespace SosCafe.Admin.Models
 {
-    /*
     public static class VendorImport
     {
         [FunctionName("VendorListImport")]
@@ -227,5 +226,4 @@ namespace SosCafe.Admin.Models
             }
         }
     }
-    */
 }
