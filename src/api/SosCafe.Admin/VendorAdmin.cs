@@ -196,17 +196,10 @@ namespace SosCafe.Admin
             }
 
             // Read all records from table storage.
-            TableContinuationToken token = null;
-            var allVendorDetails = new List<VendorDetailsEntity>();
-            do
-            {
-                var queryResult = await vendorDetailsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorDetailsEntity>(), token);
-                allVendorDetails.AddRange(queryResult.Results);
-                token = queryResult.ContinuationToken;
-            } while (token != null);
+            var allVendorEntities = await GetAllVendors(vendorDetailsTable);
 
             // Transform into VendorDetailsCsv objects so that we can roundtrip successfully.
-            var allVendorDetailsCsv = allVendorDetails.Select(entity => new VendorDetailsCsv
+            var allVendorDetailsCsv = allVendorEntities.Select(entity => new VendorDetailsCsv
             {
                 ShopifyId = entity.ShopifyId,
                 BusinessName = entity.BusinessName,
@@ -226,6 +219,20 @@ namespace SosCafe.Admin
             {
                 FileDownloadName = "SOSCafe-AllVendors.csv"
             };
+        }
+
+        private static async Task<List<VendorDetailsEntity>> GetAllVendors(CloudTable vendorsTable)
+        {
+            TableContinuationToken token = null;
+            var allVendorDetails = new List<VendorDetailsEntity>();
+            do
+            {
+                var queryResult = await vendorsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorDetailsEntity>(), token);
+                allVendorDetails.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
+
+            return allVendorDetails;
         }
 
         private static string CombineTableFilters(List<string> filters)
