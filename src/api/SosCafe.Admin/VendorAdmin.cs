@@ -55,6 +55,7 @@ namespace SosCafe.Admin
                 PhoneNumber = vendorDetailsEntity.PhoneNumber,
                 BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
                 HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null),
+                IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect,
                 InternalTag = vendorDetailsEntity.InternalTag
             };
 
@@ -90,7 +91,7 @@ namespace SosCafe.Admin
             vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
-            vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
+            vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect; // TODO is this working?
             vendorDetailsEntity.InternalTag = vendorDetailsApiModel.InternalTag;
 
             // Submit entity update to table.
