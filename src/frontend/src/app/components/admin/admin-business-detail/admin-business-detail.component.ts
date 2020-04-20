@@ -1,22 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
+import { MsalService, BroadcastService } from '@azure/msal-angular';
 
 @Component({
-  selector: 'app-vendor-detail',
-  templateUrl: './vendor-detail.component.html',
+  selector: 'app-admin-business-detail',
+  templateUrl: './admin-business-detail.component.html',
 })
-export class VendorDetailComponent implements OnInit {
+export class AdminBusinessDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
   public isClickAndCollect: boolean;
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
+  loggedIn = false;
+  userName = '';
+  userEmail= '';
+  isAdmin;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
@@ -30,20 +35,53 @@ export class VendorDetailComponent implements OnInit {
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
     hasAgreedToTerms: new FormControl(''),
     isClickAndCollect: new FormControl(''),
+    internalTag: new FormControl(''),
   });
 
   constructor(
     private location: Location,
     private snackBar: MatSnackBar,
     private vendorService: VendorService,
+    private errorService: ErrorHandlerService,
+    private broadcastService: BroadcastService,
+    private authService: MsalService,
     private route: ActivatedRoute,
-    private errorService: ErrorHandlerService
+    private router: Router,
   ) {}
 
+  checkAccount() {
+    const userAccount = this.authService.getAccount();
+    this.loggedIn = !!userAccount;
+    if (this.loggedIn) {
+      if (userAccount.idToken.extension_IsAdmin === null) {
+        this.isAdmin = false;
+        this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+      }
+      else {
+        this.isAdmin = userAccount.idToken.extension_IsAdmin;
+        if (this.isAdmin) {
+          //DO NOTHING
+        }
+        else {
+          this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+        }
+      }
+    }
+    else {
+      this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+    }
+  }
+
   ngOnInit(): void {
+    this.checkAccount();
+
+    this.broadcastService.subscribe('msal:loginSuccess', payload => {
+      this.checkAccount();
+    });
+
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
-    this.vendorService.getVendor(this.vendorId).subscribe(
+    this.vendorService.getVendorAdmin(this.vendorId).subscribe(
       (res) => {
         this.vendorForm.patchValue({
           id: res.id,
@@ -55,6 +93,7 @@ export class VendorDetailComponent implements OnInit {
           bankAccountNumber: res.bankAccountNumber,
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
+          internalTag: res.internalTag,
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
       },
@@ -84,7 +123,7 @@ export class VendorDetailComponent implements OnInit {
     };
 
     this.vendorService
-      .updateVendor(this.vendorId, updateVendorDetails)
+      .updateVendorAdmin(this.vendorId, updateVendorDetails)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);

@@ -64,8 +64,6 @@ export class VendorNewComponent implements OnInit {
   onSubmit() {
     this.workInProgress = true;
 
-    console.log(this.newVendorForm.value);
-
     this.http.post(`${env.apiBaseUrl}/vendors`, this.newVendorForm.value).subscribe(
         () => {
           this.workInProgress = false;
@@ -85,7 +83,6 @@ export class VendorNewComponent implements OnInit {
     window.scroll(0,0);
 
     if (isSucess === true){
-      console.log('New Vendor Request Sent');
       this.router.navigate(['/new-vendor/success'], { queryParams: { businessName: this.newVendorForm.value.businessName, si:true } });
     }
     else {

@@ -67,4 +67,62 @@ export class VendorService {
       updateVendorDetails
     );
   }
+
+  //ADMIN VIEW FUCNTIONS
+
+  searchVendorAdmin(searchTerm: string, searchType: string): Observable<VendorSummary[]> {
+    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors?${searchType}=${searchTerm}`);
+  }
+
+  getVendorAdmin(vendorId: string): Observable<VendorDetail> {
+    return this.http.get<VendorDetail>(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}`
+    );
+  }
+
+  getVendorPaymentsAdmin(vendorId: string): Observable<VendorPaymentSummary[]> {
+    return this.http.get<VendorPaymentSummary[]>(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments`
+    );
+  }
+
+  downloadVendorPaymentsCsvAdmin(
+    vendorId: string
+  ): any {
+    return this.http.get(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments/csv`,
+      { responseType: 'blob' }
+    );
+  }
+
+  getVendorVouchersAdmin(vendorId: string): Observable<VendorVouchersSummary[]> {
+    return this.http.get<VendorVouchersSummary[]>(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/vouchers`
+    );
+  }
+
+  downloadVendorVouchersCsvAdmin(vendorId: string): any {
+    return this.http.get(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/vouchers/csv`,
+      { responseType: 'blob' }
+    );
+  }
+
+  updateVendorAdmin(
+    vendorId: string,
+    updateVendorDetails: UpdateVendorDetails
+  ): Observable<VendorDetail> {
+    return this.http.put<UpdateVendorDetails>(
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}`,
+      updateVendorDetails
+    );
+  }
+
+  getVendorListAdmin() {
+    return this.http.get(
+      `${this.vendorsBaseUrl}/internal/vendors/csv`,
+      { responseType: 'blob' }
+    );
+  }
+
 }
