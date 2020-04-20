@@ -73,7 +73,7 @@ namespace SosCafe.Admin
             try
             {
                 var phoneNumberParsed = PhoneNumberUtil.Parse(phoneNumber.Trim(), "NZ");
-                return PhoneNumberUtil.Format(phoneNumberParsed, PhoneNumberFormat.INTERNATIONAL);
+                return PhoneNumberUtil.Format(phoneNumberParsed, PhoneNumberFormat.NATIONAL);
             }
             catch (NumberParseException)
             {
