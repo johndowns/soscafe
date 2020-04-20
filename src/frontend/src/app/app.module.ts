@@ -29,6 +29,13 @@ import {
   VendorNewSuccessComponent,
   VendorNewComponent,
 } from './components/vendor';
+import {
+  AdminBusinessListComponent,
+  AdminBusinessViewComponent,
+  AdminBusinessDetailComponent,
+  AdminBusinessPaymentsComponent,
+  AdminBusinessVouchersComponent,
+} from './components/admin';
 import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/shared/error/error.component';
 
@@ -50,6 +57,11 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     VendorVouchersComponent,
     VendorNewComponent,
     VendorNewSuccessComponent,
+    AdminBusinessListComponent,
+    AdminBusinessViewComponent,
+    AdminBusinessDetailComponent,
+    AdminBusinessPaymentsComponent,
+    AdminBusinessVouchersComponent,
     HomeComponent,
     YesNoPipe,
     ErrorComponent,

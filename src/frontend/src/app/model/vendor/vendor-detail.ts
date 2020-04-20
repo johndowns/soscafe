@@ -8,4 +8,5 @@ export class VendorDetail {
   public bankAccountNumber: string;
   public hasAgreedToTerms: boolean;
   public isClickAndCollect: boolean;
+  public internalTag: string;
 }

@@ -1,0 +1,71 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="100%">
+    <mat-card>
+      <div fxLayout="row">
+        <div fxFlex.gt-sm="50%">
+          <mat-card-header>
+            <mat-card-title><mat-icon>verified_user</mat-icon> Search for a Business</mat-card-title>
+            <mat-card-subtitle>Please search below for the business you want to manage</mat-card-subtitle>
+          </mat-card-header>
+        </div>
+        <div fxFlex.gt-sm="50%" style="margin: 24px;">
+          <a mat-stroked-button (click)="download()" style="float: right;"><mat-icon>save_alt</mat-icon> Export all businesses</a>
+        </div>
+      </div>
+      <mat-card-content>
+        <form class="vendor-form" [formGroup]="businessSearchForm" (ngSubmit)="onSubmit()">
+          <div fxFlex.gt-sm="20%">
+            <mat-form-field appearance="outline">
+              <mat-label>Search by</mat-label>
+              <mat-select formControlName="searchType" required>
+                <mat-option value="name" selected>Business Name</mat-option>
+                <mat-option value="vendorId">ID</mat-option>
+                <mat-option value="emailAddress">Contact Email</mat-option>
+                <mat-option value="tag">Tag</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxFlex.gt-sm="75%" style="padding-left: 10px; padding-right: 10px;">
+            <mat-form-field appearance="outline">
+              <mat-label>Search</mat-label>
+              <input matInput formControlName="search" required>
+            </mat-form-field>
+          </div>
+          <div fxFlex.gt-sm="5%">
+            <button mat-stroked-button type="submit" style="height: 68%; width: 100%; margin: .25em 0;"><mat-icon>search</mat-icon></button>
+          </div>
+        </form>
+        <div *ngIf="!workInProgress">
+          <div class="mat-elevation-z8" *ngIf="!hideTable">
+            <table mat-table [dataSource]="dataSource" matSort>
+              <!-- Business Name Column -->
+              <ng-container matColumnDef="businessName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td mat-cell *matCellDef="let row">
+                  <a matLine [routerLink]="['/admin/businesses', row.id]">{{row.businessName}}</a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="noData">
+                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                  <p>Unable to find that business. Please make sure you have entered the correct terms.</p>
+                </mat-footer-cell>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <ng-container *ngIf="notFound">
+                <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
+              </ng-container>
+            </table>
+            <!-- Hiding pagination until fixed -->
+            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator> -->
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<div class="loading-indicator" *ngIf="workInProgress">
+  <mat-spinner></mat-spinner>
+</div>
