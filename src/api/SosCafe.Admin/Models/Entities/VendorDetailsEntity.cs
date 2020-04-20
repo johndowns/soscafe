@@ -38,5 +38,7 @@ namespace SosCafe.Admin.Entities
         public string DateAcceptedTerms { get; set; }
 
         public bool IsClickAndCollect { get; set; }
+
+        public string InternalTag { get; set; }
     }
 }

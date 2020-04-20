@@ -13,9 +13,6 @@ using SosCafe.Admin.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.IO;
-using CsvHelper;
-using System.Globalization;
 using SosCafe.Admin.Csv;
 using SosCafe.Admin.Models.Queue;
 
@@ -23,9 +20,9 @@ namespace SosCafe.Admin
 {
     public static class VendorManagement
     {
-        private static readonly Regex BankAccountRegex = new Regex(@"[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}");
+        internal static readonly Regex BankAccountRegex = new Regex(@"[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}");
         private static string[] AllowedCities = new string[]
-{
+        {
             "Auckland/Central",
             "Auckland/North",
             "Auckland/South",
@@ -67,31 +64,17 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
+            [Table("Vendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET vendor request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
-
-            // Read the vendor details from table storage.
-            var findOperation = TableOperation.Retrieve<VendorDetailsEntity>("Vendors", vendorId);
-            var findResult = await vendorDetailsTable.ExecuteAsync(findOperation);
-            if (findResult.Result == null)
-            {
-                log.LogWarning("Could not find vendor {VendorId}.", vendorId);
-                return new NotFoundResult();
-            }
-            var vendorDetailsEntity = (VendorDetailsEntity)findResult.Result;
 
             // Map to an API response.
             var vendorDetailsResponse = new VendorDetailsApiModel
@@ -122,15 +105,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received PUT vendors request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received PUT vendors request for vendor {VendorId}.", vendorId);
+            if (! await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -178,15 +157,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET payments request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET payments request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -200,7 +175,8 @@ namespace SosCafe.Admin
                 GrossPayment = entity.GrossPayment,
                 Fees = entity.Fees,
                 NetPayment = entity.NetPayment
-            });
+            })
+                .OrderByDescending(d => d.PaymentDate);
 
             // Return the payment list.
             return new OkObjectResult(mappedResults);
@@ -215,15 +191,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET payments CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET payments CSV request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -236,10 +208,11 @@ namespace SosCafe.Admin
                 PaymentDate = entity.PaymentDate,
                 BankAccountNumber = entity.BankAccountNumber,
                 NetPayment = entity.NetPayment.ToString()
-            });
+            })
+                .OrderByDescending(d => d.PaymentDate);
 
             // Serialize to CSV.
-            var fileBytes = CreateCsvFile(mappedResults);
+            var fileBytes = CsvCreator.CreateCsvFile(mappedResults);
             return new FileContentResult(fileBytes, "text/csv")
             {
                 FileDownloadName = "SOSCafe-Payments.csv"
@@ -255,15 +228,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET vouchers request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET vouchers request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -286,7 +255,8 @@ namespace SosCafe.Admin
                 VoucherGross = entity.VoucherGross,
                 VoucherFees = entity.VoucherFees,
                 VoucherNet = entity.VoucherNet
-            });
+            })
+                .OrderByDescending(d => d.OrderDate);
 
             // Return the voucher list.
             return new OkObjectResult(mappedResults);
@@ -301,15 +271,11 @@ namespace SosCafe.Admin
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
-            // Get the user principal ID.
-            var userId = UserManagement.GetUserId(claimsPrincipal, log);
-            log.LogInformation("Received GET vouchers CSV request for vendor {VendorId} from user {UserId}.", vendorId, userId);
-
             // Authorise the request.
-            var isAuthorised = await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, userId, vendorId);
-            if (!isAuthorised)
+            log.LogInformation("Received GET vouchers CSV request for vendor {VendorId}.", vendorId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
             {
-                log.LogInformation("Received unauthorised request from user {UserId} for vendor {VendorId}. Denying request.", userId, vendorId);
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
                 return new NotFoundResult();
             }
 
@@ -333,10 +299,11 @@ namespace SosCafe.Admin
                 VoucherGross = entity.VoucherGross.ToString(),
                 VoucherFees = entity.VoucherFees.ToString(),
                 VoucherNet = entity.VoucherNet.ToString()
-            });
+            })
+                .OrderByDescending(d => d.OrderDate);
 
             // Serialize to CSV.
-            var fileBytes = CreateCsvFile(mappedResults);
+            var fileBytes = CsvCreator.CreateCsvFile(mappedResults);
             return new FileContentResult(fileBytes, "text/csv")
             {
                 FileDownloadName = "SOSCafe-Vouchers.csv"
@@ -353,8 +320,8 @@ namespace SosCafe.Admin
         {
             // Get the user details from their token claims.
             // This also implicitly authorizes the request, since any authenticated user can access this API.
-            var emailAddress = UserManagement.GetEmailAddress(claimsPrincipal, log);
-            var contactName = UserManagement.GetDisplayName(claimsPrincipal, log);
+            var emailAddress = UserManagement.GetEmailAddress(claimsPrincipal);
+            var contactName = UserManagement.GetDisplayName(claimsPrincipal);
             if (string.IsNullOrEmpty(emailAddress) || string.IsNullOrEmpty(contactName))
             {
                 log.LogError("Token is missing required claims.");
@@ -391,6 +358,7 @@ namespace SosCafe.Admin
                 City = requestModel.City,
                 BusinessPhotoUrl = requestModel.BusinessPhotoUrl,
                 BankAccountNumber = requestModel.BankAccountNumber,
+                IsClickAndCollect = requestModel.IsClickAndCollect,
                 DateAcceptedTerms = registrationTime,
                 EmailAddress = emailAddress,
                 ContactName = contactName,
@@ -430,20 +398,6 @@ namespace SosCafe.Admin
             } while (token != null);
 
             return allVouchersForVendor;
-        }
-
-        private static byte[] CreateCsvFile<T>(IEnumerable<T> recordsToWrite)
-        {
-            using (var stream = new MemoryStream())
-            {
-                using (var writer = new StreamWriter(stream))
-                using (var csv = new CsvWriter(writer, new CultureInfo("en-NZ")))
-                {
-                    csv.WriteRecords(recordsToWrite);
-                }
-
-                return stream.ToArray();
-            }
         }
     }
 }

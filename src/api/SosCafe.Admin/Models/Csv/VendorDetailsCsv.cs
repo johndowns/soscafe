@@ -31,5 +31,8 @@ namespace SosCafe.Admin.Csv
 
         [Name("Click and Collect")]
         public bool IsClickAndCollect { get; set; }
+
+        [Name("InternalTag")]
+        public string InternalTag { get; set; }
     }
 }

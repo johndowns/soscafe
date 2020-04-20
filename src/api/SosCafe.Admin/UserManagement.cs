@@ -23,7 +23,7 @@ namespace SosCafe.Admin
             ILogger log)
         {
             // Get the user principal ID.
-            var userId = GetUserId(claimsPrincipal, log);
+            var userId = GetUserId(claimsPrincipal);
 
             // Read all records from table storage where the partition key is the user's ID.
             TableContinuationToken token = null;
@@ -41,36 +41,63 @@ namespace SosCafe.Admin
             {
                 Id = entity.VendorShopifyId,
                 BusinessName = entity.VendorName
-            });
+            })
+                .OrderBy(d => d.BusinessName);
 
             // Return the results.
             return new OkObjectResult(mappedResults);
         }
 
-        internal static string GetUserId(ClaimsPrincipal claimsPrincipal, ILogger log)
+        internal static string GetUserId(ClaimsPrincipal claimsPrincipal)
         {
-            return GetEmailAddress(claimsPrincipal, log).ToUpper();
+            return GetEmailAddress(claimsPrincipal).ToUpper();
         }
 
-        internal static string GetEmailAddress(ClaimsPrincipal claimsPrincipal, ILogger log)
+        internal static string GetEmailAddress(ClaimsPrincipal claimsPrincipal)
         {
             var userEmailAddress = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
             return userEmailAddress ?? string.Empty;
         }
 
-        internal static string GetDisplayName(ClaimsPrincipal claimsPrincipal, ILogger log)
+        internal static string GetDisplayName(ClaimsPrincipal claimsPrincipal)
         {
             var userDisplayName = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type == "name")?.Value;
             return userDisplayName ?? string.Empty;
         }
 
-        internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, string userId, string vendorId)
+        internal static bool GetIsAdminClaim(ClaimsPrincipal claimsPrincipal)
         {
-            // Check that the user-vendor combination exists.
+            var isAdminClaim = (claimsPrincipal.Identity as ClaimsIdentity).Claims.FirstOrDefault(c => c.Type.Equals("extension_IsAdmin", System.StringComparison.InvariantCultureIgnoreCase));
+            if (isAdminClaim == null)
+            {
+                return false;
+            }
+
+            var isAdminClaimValue = isAdminClaim.Value;
+            return string.Equals(isAdminClaimValue, "true", System.StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        internal static async Task<bool> IsUserAuthorisedForVendor(CloudTable vendorUserAssignmentsTable, ClaimsPrincipal claimsPrincipal, string vendorId)
+        {
+            // Get the user ID.
+            var userId = GetUserId(claimsPrincipal);
+
+            // If the user is an admin user, they are automatically authorised.
+            if (GetIsAdminClaim(claimsPrincipal))
+            {
+                return true;
+            }
+
+            // Otherwise, check that the user-vendor combination exists.
             var cleanedUserId = userId.CleanStringForPartitionKey().ToUpper();
             var findOperation = TableOperation.Retrieve<VendorDetailsEntity>(cleanedUserId, vendorId);
             var findResult = await vendorUserAssignmentsTable.ExecuteAsync(findOperation);
             return findResult.Result != null;
+        }
+
+        internal static bool IsUserAuthorisedForAdmin(ClaimsPrincipal claimsPrincipal)
+        {
+            return GetIsAdminClaim(claimsPrincipal);
         }
     }
 }
