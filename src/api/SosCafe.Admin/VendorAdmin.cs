@@ -159,7 +159,7 @@ namespace SosCafe.Admin
                 string tag = req.Query["tag"];
                 if (!string.IsNullOrEmpty(tag))
                 {
-                    allVendorEntities = allVendorEntities.Where(v => v.InternalTag.Contains(tag, System.StringComparison.InvariantCultureIgnoreCase)).ToList();
+                    allVendorEntities = allVendorEntities.Where(v => v.InternalTag?.Contains(tag, System.StringComparison.InvariantCultureIgnoreCase)).ToList();
                 }
             }
 
