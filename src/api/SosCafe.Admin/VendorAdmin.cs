@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
-using CsvHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -15,11 +12,15 @@ using Microsoft.WindowsAzure.Storage.Table;
 using SosCafe.Admin.Csv;
 using SosCafe.Admin.Entities;
 using SosCafe.Admin.Models.Api;
+using System.Text.RegularExpressions;
+using PhoneNumbers;
 
 namespace SosCafe.Admin
 {
     public static class VendorAdmin
     {
+        private static readonly PhoneNumberUtil PhoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+
         [FunctionName("AdminGetVendor")]
         public static IActionResult AdminGetVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "internal/vendors/{vendorId}")] HttpRequest req,
@@ -244,6 +245,26 @@ namespace SosCafe.Admin
             }
 
             return myQuery;
+        }
+
+        private static string FormatBankAccountNumber(string bankAccountNumber)
+        {
+            string bankAccountNumberWithNumbersOnly = string.Concat(bankAccountNumber.Where(char.IsDigit));
+            if (bankAccountNumberWithNumbersOnly.Length < 15 || bankAccountNumberWithNumbersOnly.Length > 16) return bankAccountNumberWithNumbersOnly;
+            return Regex.Replace(bankAccountNumberWithNumbersOnly, @"(\w{2})(\w{4})(\w{7})(\w{2,3})", @"$1-$2-$3-$4");
+        }
+
+        private static string FormatPhoneNumber(string phoneNumber)
+        {
+            try
+            {
+                var phoneNumberParsed = PhoneNumberUtil.Parse(phoneNumber.Trim(), "NZ");
+                return PhoneNumberUtil.Format(phoneNumberParsed, PhoneNumberFormat.NATIONAL);
+            }
+            catch (NumberParseException)
+            {
+                return phoneNumber.Trim();
+            }
         }
     }
 }
