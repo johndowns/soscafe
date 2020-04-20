@@ -212,9 +212,9 @@ namespace SosCafe.Admin
                 BusinessName = entity.BusinessName,
                 RegisteredDate = entity.RegisteredDate,
                 ContactName = entity.ContactName,
-                PhoneNumber = entity.PhoneNumber,
+                PhoneNumber = FormatPhoneNumber(entity.PhoneNumber),
                 EmailAddress = entity.EmailAddress,
-                BankAccountNumber = entity.BankAccountNumber,
+                BankAccountNumber = FormatBankAccountNumber(entity.BankAccountNumber),
                 IsClickAndCollect = entity.IsClickAndCollect,
                 InternalTag = entity.InternalTag
             })
