@@ -12,11 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 using SosCafe.Admin.Entities;
 using System.Linq;
 using SosCafe.Admin.Csv;
+using System.Text.RegularExpressions;
+using PhoneNumbers;
 
 namespace SosCafe.Admin
 {
     public static class VendorExport
     {
+        private static readonly PhoneNumberUtil PhoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+
         [FunctionName("ExportVendorList")]
         public static async Task<IActionResult> ExportVendorList(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
@@ -41,9 +45,9 @@ namespace SosCafe.Admin
                 BusinessName = entity.BusinessName,
                 RegisteredDate = entity.RegisteredDate,
                 ContactName = entity.ContactName,
-                PhoneNumber = entity.PhoneNumber,
+                PhoneNumber = FormatPhoneNumber(entity.PhoneNumber),
                 EmailAddress = entity.EmailAddress,
-                BankAccountNumber = entity.BankAccountNumber,
+                BankAccountNumber = FormatBankAccountNumber(entity.BankAccountNumber),
                 IsClickAndCollect = entity.IsClickAndCollect
             });
 
@@ -55,6 +59,26 @@ namespace SosCafe.Admin
             }
 
             return new AcceptedResult();
+        }
+
+        private static string FormatBankAccountNumber(string bankAccountNumber)
+        {
+            string bankAccountNumberWithNumbersOnly = string.Concat(bankAccountNumber.Where(char.IsDigit));
+            if (bankAccountNumberWithNumbersOnly.Length < 15 || bankAccountNumberWithNumbersOnly.Length > 16) return bankAccountNumberWithNumbersOnly;
+            return Regex.Replace(bankAccountNumberWithNumbersOnly, @"(\w{2})(\w{4})(\w{7})(\w{2,3})", @"$1-$2-$3-$4");
+        }
+
+        private static string FormatPhoneNumber(string phoneNumber)
+        {
+            try
+            {
+                var phoneNumberParsed = PhoneNumberUtil.Parse(phoneNumber.Trim(), "NZ");
+                return PhoneNumberUtil.Format(phoneNumberParsed, PhoneNumberFormat.NATIONAL);
+            }
+            catch (NumberParseException)
+            {
+                return phoneNumber.Trim();
+            }
         }
     }
 }
