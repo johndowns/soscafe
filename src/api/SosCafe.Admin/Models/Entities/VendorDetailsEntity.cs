@@ -39,6 +39,10 @@ namespace SosCafe.Admin.Entities
 
         public bool IsClickAndCollect { get; set; }
 
+        public bool IsPickup { get; set; }
+
+        public bool IsDelivery { get; set; }
+
         public string InternalTag { get; set; }
     }
 }

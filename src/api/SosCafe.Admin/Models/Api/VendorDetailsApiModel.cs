@@ -21,5 +21,7 @@ namespace SosCafe.Admin.Models.Api
         public bool HasAgreedToTerms { get; set; }
 
         public bool IsClickAndCollect { get; set; }
+        public bool IsPickup { get; set; }
+        public bool IsDelivery { get; set; }
     }
 }

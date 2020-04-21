@@ -16,5 +16,7 @@ namespace SosCafe.Admin.Models.Queue
         public string ContactName { get; set; }
         public DateTime RegisteredDate { get; set; }
         public bool IsClickAndCollect { get; set; }
+        public bool IsPickup { get; set; }
+        public bool IsDelivery { get; set; }
     }
 }

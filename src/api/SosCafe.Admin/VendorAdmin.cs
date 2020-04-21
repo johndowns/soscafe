@@ -56,6 +56,8 @@ namespace SosCafe.Admin
                 BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
                 HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null),
                 IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect,
+                IsPickup = vendorDetailsEntity.IsPickup,
+                IsDelivery = vendorDetailsEntity.IsDelivery,
                 InternalTag = vendorDetailsEntity.InternalTag
             };
 
@@ -92,6 +94,8 @@ namespace SosCafe.Admin
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
+            vendorDetailsEntity.IsPickup = vendorDetailsApiModel.IsPickup;
+            vendorDetailsEntity.IsDelivery = vendorDetailsApiModel.IsDelivery;
             vendorDetailsEntity.InternalTag = vendorDetailsApiModel.InternalTag;
 
             // Submit entity update to table.
@@ -204,6 +208,8 @@ namespace SosCafe.Admin
                 EmailAddress = entity.EmailAddress,
                 BankAccountNumber = FormatBankAccountNumber(entity.BankAccountNumber),
                 IsClickAndCollect = entity.IsClickAndCollect,
+                IsPickup = entity.IsPickup,
+                IsDelivery = entity.IsDelivery,
                 InternalTag = entity.InternalTag
             })
                 .OrderBy(d => d.BusinessName);

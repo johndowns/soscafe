@@ -87,7 +87,9 @@ namespace SosCafe.Admin
                 PhoneNumber = vendorDetailsEntity.PhoneNumber,
                 BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
                 HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null),
-                IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect
+                IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect,
+                IsPickup = vendorDetailsEntity.IsPickup,
+                IsDelivery = vendorDetailsEntity.IsDelivery
             };
 
             // Return the vendor details.
@@ -128,6 +130,8 @@ namespace SosCafe.Admin
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
+            vendorDetailsEntity.IsPickup = vendorDetailsApiModel.IsPickup;
+            vendorDetailsEntity.IsDelivery = vendorDetailsApiModel.IsDelivery;
             if (vendorDetailsApiModel.DateAcceptedTerms != null)
             {
                 vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms.Value.ToString("o");
@@ -359,6 +363,8 @@ namespace SosCafe.Admin
                 BusinessPhotoUrl = requestModel.BusinessPhotoUrl,
                 BankAccountNumber = requestModel.BankAccountNumber,
                 IsClickAndCollect = requestModel.IsClickAndCollect,
+                IsPickup = requestModel.IsPickup,
+                IsDelivery = requestModel.IsDelivery,
                 DateAcceptedTerms = registrationTime,
                 EmailAddress = emailAddress,
                 ContactName = contactName,

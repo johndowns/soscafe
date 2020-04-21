@@ -15,5 +15,7 @@ namespace SosCafe.Admin.Models.Api
         public string BankAccountNumber { get; set; }
         public DateTime DateAcceptedTerms { get; set; }
         public bool IsClickAndCollect { get; set; }
+        public bool IsPickup { get; set; }
+        public bool IsDelivery { get; set; }
     }
 }
