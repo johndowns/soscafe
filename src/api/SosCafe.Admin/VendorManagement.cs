@@ -56,7 +56,7 @@ namespace SosCafe.Admin
         private static string[] AllowedTypes = new string[]
         {
             "Food/Beverage",
-            "Services"
+            "Service"
         };
 
         [FunctionName("GetVendor")]
