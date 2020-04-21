@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using SosCafe.Admin.Csv;
 using SosCafe.Admin.Entities;
 using System.Collections.Generic;
+using System;
 
 namespace SosCafe.Admin.Models
 {
@@ -38,6 +39,13 @@ namespace SosCafe.Admin.Models
             ILogger log)
         {
             log.LogInformation("Processing vendor ID {VendorShopifyId}.", vendorToImport.ShopifyId);
+
+            // Validate the vendor ID, as Excel can sometimes screw around with it.
+            if (!long.TryParse(vendorToImport.ShopifyId, out _))
+            {
+                log.LogError("Vendor ID {VendorShopifyId} is invalid.", vendorToImport.ShopifyId);
+                throw new ArgumentException($"Invalid vendor ID {vendorToImport.ShopifyId}");
+            }
 
             // Convert the data to the entity format.
             var vendorEntity = new VendorDetailsEntity
@@ -109,6 +117,13 @@ namespace SosCafe.Admin.Models
         {
             log.LogInformation("Processing vendor payment with payment ID {PaymentId}.", vendorPaymentToImport.PaymentId);
 
+            // Validate the vendor ID, as Excel can sometimes screw around with it.
+            if (!long.TryParse(vendorPaymentToImport.VendorId, out _))
+            {
+                log.LogError("Vendor ID {VendorShopifyId} is invalid.", vendorPaymentToImport.VendorId);
+                throw new ArgumentException($"Invalid vendor ID {vendorPaymentToImport.VendorId}");
+            }
+
             // Special case handling.
             if (vendorPaymentToImport.NetPayment.Trim() == "$-")
             {
@@ -162,6 +177,13 @@ namespace SosCafe.Admin.Models
             ILogger log)
         {
             log.LogInformation("Processing vendor voucher with order ID {OrderId}.", vendorVoucherToImport.OrderId);
+
+            // Validate the vendor ID, as Excel can sometimes screw around with it.
+            if (!long.TryParse(vendorVoucherToImport.VendorId, out _))
+            {
+                log.LogError("Vendor ID {VendorShopifyId} is invalid.", vendorVoucherToImport.VendorId);
+                throw new ArgumentException($"Invalid vendor ID {vendorVoucherToImport.VendorId}");
+            }
 
             // Special case handling.
             if (vendorVoucherToImport.VoucherGross.Trim() == "$-")
