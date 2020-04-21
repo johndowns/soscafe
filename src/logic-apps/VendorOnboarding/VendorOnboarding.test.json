@@ -45,6 +45,8 @@
                         "DateAcceptedTerms": "@{body('Parse_JSON')?['registeredDate']}",
                         "EmailAddress": "@{body('Parse_JSON')?['emailAddress']}",
                         "IsClickAndCollect": "@{body('Parse_Json').isClickAndCollect}",
+                        "IsDelivery": "@{body('Parse_Json').isDelivery}",
+                        "IsPickup": "@{body('Parse_Json').isPickup}",
                         "PartitionKey": "Vendors",
                         "PhoneNumber": "@{body('Parse_JSON')?['phoneNumber']}",
                         "RegisteredDate": "@{body('Parse_JSON')?['registeredDate']}",
@@ -120,6 +122,12 @@
                                 "type": "boolean"
                             },
                             "isClickAndCollect": {
+                                "type": "boolean"
+                            },
+                            "isDelivery": {
+                                "type": "boolean"
+                            },
+                            "isPickup": {
                                 "type": "boolean"
                             },
                             "phoneNumber": {
