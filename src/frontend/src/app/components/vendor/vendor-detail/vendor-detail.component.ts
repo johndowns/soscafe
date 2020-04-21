@@ -30,6 +30,8 @@ export class VendorDetailComponent implements OnInit {
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
     hasAgreedToTerms: new FormControl(''),
     isClickAndCollect: new FormControl(''),
+    isPickup: new FormControl(''),
+    isDelivery: new FormControl(''),
   });
 
   constructor(
@@ -55,6 +57,8 @@ export class VendorDetailComponent implements OnInit {
           bankAccountNumber: res.bankAccountNumber,
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
+          isPickup: res.isPickup,
+          isDelivery: res.isDelivery,
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
       },

@@ -36,6 +36,8 @@ export class AdminBusinessDetailComponent implements OnInit {
     hasAgreedToTerms: new FormControl(''),
     isClickAndCollect: new FormControl(''),
     internalTag: new FormControl(''),
+    isPickup: new FormControl(''),
+    isDelivery: new FormControl(''),
   });
 
   constructor(
@@ -94,6 +96,8 @@ export class AdminBusinessDetailComponent implements OnInit {
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
           internalTag: res.internalTag,
+          isPickup: res.isPickup,
+          isDelivery: res.isDelivery,
         });
         this.hasAgreedToTerms = res.hasAgreedToTerms;
       },

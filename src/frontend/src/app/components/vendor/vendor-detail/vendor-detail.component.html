@@ -34,8 +34,9 @@
               Please enter a valid bank account number, e.g. 12-1234-1234567-12 or 12-1234-1234567-012.
             </mat-error>
           </mat-form-field>
-          <br/><br/>
-          <mat-checkbox formControlName="isClickAndCollect">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
+          <p><mat-checkbox formControlName="isClickAndCollect">I'm interested in setting up <i>Click & Collect</i></mat-checkbox></p>
+          <p><mat-checkbox formControlName="isPickup">I can do <i>Pickup</i></mat-checkbox></p>
+          <p><mat-checkbox formControlName="isDelivery">I can do <i>Delivery</i></mat-checkbox></p>
           <ng-container *ngIf="hasAgreedToTerms != true">
             <p><strong>Terms and conditions</strong></p>
             <p>
