@@ -9,4 +9,6 @@ export class VendorDetail {
   public hasAgreedToTerms: boolean;
   public isClickAndCollect: boolean;
   public internalTag: string;
+  public isPickup: boolean;
+  public isDelivery: boolean;
 }
