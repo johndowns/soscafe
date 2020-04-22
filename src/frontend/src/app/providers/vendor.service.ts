@@ -7,6 +7,7 @@ import {
   VendorSummary,
   VendorDetail,
   UpdateVendorDetails,
+  UpdateVoucherDetails,
   VendorPaymentSummary,
   VendorVouchersSummary,
 } from 'src/app/model';
@@ -65,6 +66,18 @@ export class VendorService {
     return this.http.put<UpdateVendorDetails>(
       `${this.vendorsBaseUrl}/vendors/${vendorId}`,
       updateVendorDetails
+    );
+  }
+
+  updateVoucher(
+    vendorId: string,
+    voucherId: string,
+    dateRedeemed: Date,
+    updateVoucherDetails: UpdateVoucherDetails
+  ): Observable<VendorVouchersSummary> {
+    return this.http.put<UpdateVoucherDetails>(
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/${voucherId}`,
+      updateVoucherDetails
     );
   }
 

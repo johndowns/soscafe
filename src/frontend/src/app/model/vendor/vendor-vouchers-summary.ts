@@ -13,4 +13,6 @@ export class VendorVouchersSummary {
   voucherGross: number ;
   voucherFees: number ;
   voucherNet: number;
+  isRedeemed: boolean;
+  dateRedeemed: Date;
 }
