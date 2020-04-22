@@ -52,5 +52,8 @@ namespace SosCafe.Admin.Csv
 
         [Name("Voucher Net")]
         public string VoucherNet { get; set; }
+
+        [Name("Redemption Date")]
+        public DateTime? RedemptionDate { get; set; }
     }
 }
