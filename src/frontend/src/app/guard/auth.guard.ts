@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment'
 import { ConstantService } from '../services/constant.service';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import * as jwt from 'jwt-decode';
 
 
 @Injectable({
@@ -34,7 +35,7 @@ export class AuthGuard implements CanActivate {
           // Access token acquired
           localStorage.setItem('access_token',params['access_token']);
           // Subtracting 3 seconds for precaution
-          localStorage.setItem('expires', Math.ceil(Date.now()/1000) + (params['expires_in']-2).toString());          
+          localStorage.setItem('expires', this.getDecodedAccessToken().exp.toString());          
           // Signed in
           this.signedIn = true;
         }
@@ -58,6 +59,16 @@ export class AuthGuard implements CanActivate {
       window.location.href = encodeURI(auth_url);      
     }
     return this.signedIn;
+  }
+
+  getDecodedAccessToken(): any {
+    try {
+      return jwt(localStorage.getItem('access_token'));
+    }
+    catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 
 }

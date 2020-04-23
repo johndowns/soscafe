@@ -21,7 +21,7 @@ export class VendorNewComponent implements OnInit {
   public newVendorForm: FormGroup;
   public workInProgress = false;
   private vendorId: string;
-  private
+  private httpOptions;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
@@ -47,7 +47,13 @@ export class VendorNewComponent implements OnInit {
       bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
       hasAgreedToTerms: new FormControl('', [Validators.required]),
       isClickAndCollect: new FormControl(false),
-    })
+    });
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+localStorage.getItem('access_token')
+      })
+    }
   }
 
   ngOnInit() {
@@ -64,14 +70,8 @@ export class VendorNewComponent implements OnInit {
 
   onSubmit() {
     this.workInProgress = true;
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+localStorage.getItem('access_token')
-      })
-    };
 
-    this.http.post(`${env.apiBaseUrl}vendors`, this.newVendorForm.value, httpOptions).subscribe(
+    this.http.post(`${env.apiBaseUrl}vendors`, this.newVendorForm.value, this.httpOptions).subscribe(
         () => {
           this.workInProgress = false;
         },
