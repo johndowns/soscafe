@@ -6,7 +6,6 @@ import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
-import { MsalService, BroadcastService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-admin-business-detail',
@@ -43,41 +42,39 @@ export class AdminBusinessDetailComponent implements OnInit {
     private snackBar: MatSnackBar,
     private vendorService: VendorService,
     private errorService: ErrorHandlerService,
-    private broadcastService: BroadcastService,
-    private authService: MsalService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}
 
   checkAccount() {
-    const userAccount = this.authService.getAccount();
-    this.loggedIn = !!userAccount;
-    if (this.loggedIn) {
-      if (userAccount.idToken.extension_IsAdmin === null) {
-        this.isAdmin = false;
-        this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-      }
-      else {
-        this.isAdmin = userAccount.idToken.extension_IsAdmin;
-        if (this.isAdmin) {
-          //DO NOTHING
-        }
-        else {
-          this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-        }
-      }
-    }
-    else {
-      this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-    }
+    // const userAccount = this.authService.getAccount();
+    // this.loggedIn = !!userAccount;
+    // if (this.loggedIn) {
+    //   if (userAccount.idToken.extension_IsAdmin === null) {
+    //     this.isAdmin = false;
+    //     this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+    //   }
+    //   else {
+    //     this.isAdmin = userAccount.idToken.extension_IsAdmin;
+    //     if (this.isAdmin) {
+    //       //DO NOTHING
+    //     }
+    //     else {
+    //       this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+    //     }
+    //   }
+    // }
+    // else {
+    //   this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+    // }
   }
 
   ngOnInit(): void {
     this.checkAccount();
 
-    this.broadcastService.subscribe('msal:loginSuccess', payload => {
-      this.checkAccount();
-    });
+    // this.broadcastService.subscribe('msal:loginSuccess', payload => {
+    //   this.checkAccount();
+    // });
 
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;

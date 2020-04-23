@@ -18,7 +18,9 @@ export class VendorListComponent implements OnInit {
   sort: MatSort;
   public workInProgress = false;
 
-  constructor(private vendorService: VendorService) {}
+  constructor(private vendorService: VendorService) {
+    console.log('Vendors - HERE!');
+  }
   ngOnInit() {
     this.workInProgress = true;
     this.vendorService.getVendors().subscribe(
