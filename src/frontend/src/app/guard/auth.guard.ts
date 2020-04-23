@@ -20,17 +20,24 @@ export class AuthGuard implements CanActivate {
     public activatedRoute: ActivatedRoute
   ) {
     console.log(this.router.url);
-    if (localStorage.hasOwnProperty('token')) {
+    if (localStorage.hasOwnProperty('access_token')) {
       // Check for token validity
       this.signedIn = true;
     }
     else {
-      this.activatedRoute.queryParams.subscribe(params => {
+      this.activatedRoute.queryParams.subscribe(params => {        
         if(_.has(params,'id_token')){
-          const id_token = params['id_token'];
-          let tokenInfo = this.getDecodedAccessToken(id_token); // decode token
-          console.log('Token Info', tokenInfo);
-          localStorage.setItem('token', JSON.stringify(tokenInfo));
+          // Use token to get access token
+          // TODO Check nonce for token hijacking
+          localStorage.setItem('id_token', params['id_token']);
+          this.signedIn = false;
+        }
+        else if(_.has(params, 'access_token')){
+          // Access token acquired
+          localStorage.setItem('access_token',params['access_token']);
+          // Subtracting 3 seconds for precaution
+          localStorage.setItem('expires', Math.ceil(Date.now()/1000) + (params['expires_in']-2).toString());
+          // Signed in
           this.signedIn = true;
         }
         else{
@@ -41,10 +48,16 @@ export class AuthGuard implements CanActivate {
   }
 
   canActivate() {
-    alert(this.signedIn + '---->' + this.router.url);
+    let auth_url = '';
     if (!this.signedIn) {
-      let auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=id_token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
-      window.location.href = encodeURI(auth_url);
+      // Checking step 1 or Step 2
+      if(localStorage.hasOwnProperty('id_token')){
+        auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=id_token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
+      }
+      else{
+        auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
+      }
+      window.location.href = encodeURI(auth_url);      
     }
     return this.signedIn;
   }

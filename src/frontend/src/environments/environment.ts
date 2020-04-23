@@ -18,6 +18,7 @@ export const environment = {
     consentScopes: [
       'openid',
       'profile',
+      'offline_access',
       'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'
     ],
     appScope: 'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'
