@@ -25,15 +25,25 @@ a:hover,
 a:focus,
 a {
   color: $themecolor;
-  text-decoration: none;
+  text-decoration: underline;
   &:hover,
   &:focus {
-    color: $themecolor-alt;
+    color: $accentColor;
+    &:visited {
+      color: $accentColor;
+    }
   }
   &:visited {
     color: $themecolor;
   }
 }
+
+.mat-table {
+  a {
+    text-decoration: none !important;
+  }
+}
+
 a.link {
   color: $themecolor;
   text-decoration: none;
