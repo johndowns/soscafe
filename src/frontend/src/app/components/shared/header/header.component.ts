@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import * as jwt from 'jwt-decode';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-header',
@@ -10,13 +12,13 @@ export class HeaderComponent implements OnInit {
 
   loggedIn = false;
   userName = '';
-  userEmail= '';
+  userEmail = '';
   isAdmin;
 
   constructor(
     private router: Router,
     private location: Location,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.checkAccount();
@@ -27,13 +29,14 @@ export class HeaderComponent implements OnInit {
   }
 
   checkAccount() {
-    // const userAccount = this.authService.getAccount();
-    // this.loggedIn = !!userAccount;
-    // if (this.loggedIn) {
-    //   this.userName = userAccount.name;
-    //   this.userEmail = userAccount.idToken.emails[0];
-    //   this.isAdmin = userAccount.idToken.extension_IsAdmin;
-    // }
+    let t = this.getDecodedAccessToken();
+    // Loose validation
+    if (_.has(t, 'iss')) {
+      this.userName = _.get(t, 'name');
+      this.userEmail = _.get(t, 'emails.0');
+      this.isAdmin = _.get(t, 'extension_IsAdmin', false);
+      this.loggedIn = true;
+    }
   }
 
   onSignIn() {
@@ -55,5 +58,15 @@ export class HeaderComponent implements OnInit {
 
   onNewVendor() {
     this.router.navigate(['/new-vendor']);
+  }
+
+  getDecodedAccessToken(): any {
+    try {
+      return jwt(localStorage.getItem('access_token'));
+    }
+    catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 }
