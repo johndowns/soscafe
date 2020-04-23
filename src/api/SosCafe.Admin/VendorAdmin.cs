@@ -91,7 +91,7 @@ namespace SosCafe.Admin
             vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
-            vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect; // TODO is this working?
+            vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
             vendorDetailsEntity.InternalTag = vendorDetailsApiModel.InternalTag;
 
             // Submit entity update to table.
@@ -124,52 +124,47 @@ namespace SosCafe.Admin
                 return new NotFoundResult();
             }
 
-            // Assemble the query filters.
-            var filters = new List<string>();
+            // Perform the search.
+            var allVendorEntities = new List<VendorDetailsEntity>();
 
             string vendorId = req.Query["vendorId"];
             if (!string.IsNullOrEmpty(vendorId))
             {
-                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.RowKey), QueryComparisons.Equal, vendorId));
+                // If a vendor ID is specified, treat this as a point read and don't do any further searching.
+                // Read the vendor details from table storage.
+                var findOperation = TableOperation.Retrieve<VendorDetailsEntity>("Vendors", vendorId);
+                var findResult = await vendorsTable.ExecuteAsync(findOperation);
+                if (findResult.Result != null)
+                {
+                    allVendorEntities.Add((VendorDetailsEntity)findResult.Result);
+                }
             }
-
-            string name = req.Query["name"];
-            if (!string.IsNullOrEmpty(name))
+            else
             {
-                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.BusinessName), QueryComparisons.Equal, name));
+                // Otherwise, pull down the whole set of vendors and do an in-memory search.
+                allVendorEntities = await GetAllVendors(vendorsTable);
+
+                string name = req.Query["name"];
+                if (!string.IsNullOrEmpty(name))
+                {
+                    allVendorEntities = allVendorEntities.Where(v => v.BusinessName.Contains(name, System.StringComparison.InvariantCultureIgnoreCase)).ToList();
+                }
+
+                string emailAddress = req.Query["emailAddress"];
+                if (!string.IsNullOrEmpty(emailAddress))
+                {
+                    allVendorEntities = allVendorEntities.Where(v => v.EmailAddress.Contains(emailAddress, System.StringComparison.InvariantCultureIgnoreCase)).ToList();
+                }
+
+                string tag = req.Query["tag"];
+                if (!string.IsNullOrEmpty(tag))
+                {
+                    allVendorEntities = allVendorEntities.Where(v => v.InternalTag != null && v.InternalTag.Contains(tag, System.StringComparison.InvariantCultureIgnoreCase)).ToList();
+                }
             }
-
-            string emailAddress = req.Query["emailAddress"];
-            if (!string.IsNullOrEmpty(emailAddress))
-            {
-                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.EmailAddress), QueryComparisons.Equal, emailAddress));
-            }
-
-            string tag = req.Query["tag"];
-            if (!string.IsNullOrEmpty(tag))
-            {
-                filters.Add(TableQuery.GenerateFilterCondition(nameof(VendorDetailsEntity.InternalTag), QueryComparisons.Equal, tag));
-            }
-
-            if (!filters.Any())
-            {
-                return new BadRequestErrorMessageResult("You must specify at least one filter criteria.");
-            }
-
-            var filter = CombineTableFilters(filters);
-
-            // Execute the query.
-            TableContinuationToken token = null;
-            var searchResults = new List<VendorDetailsEntity>();
-            do
-            {
-                var queryResult = await vendorsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorDetailsEntity>().Where(filter), token);
-                searchResults.AddRange(queryResult.Results);
-                token = queryResult.ContinuationToken;
-            } while (token != null);
 
             // Map the results to a response model.
-            var mappedResults = searchResults.Select(entity => new VendorSummaryApiModel
+            var mappedResults = allVendorEntities.Select(entity => new VendorSummaryApiModel
             {
                 Id = entity.ShopifyId,
                 BusinessName = entity.BusinessName
@@ -196,17 +191,10 @@ namespace SosCafe.Admin
             }
 
             // Read all records from table storage.
-            TableContinuationToken token = null;
-            var allVendorDetails = new List<VendorDetailsEntity>();
-            do
-            {
-                var queryResult = await vendorDetailsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorDetailsEntity>(), token);
-                allVendorDetails.AddRange(queryResult.Results);
-                token = queryResult.ContinuationToken;
-            } while (token != null);
+            var allVendorEntities = await GetAllVendors(vendorDetailsTable);
 
             // Transform into VendorDetailsCsv objects so that we can roundtrip successfully.
-            var allVendorDetailsCsv = allVendorDetails.Select(entity => new VendorDetailsCsv
+            var allVendorDetailsCsv = allVendorEntities.Select(entity => new VendorDetailsCsv
             {
                 ShopifyId = entity.ShopifyId,
                 BusinessName = entity.BusinessName,
@@ -226,6 +214,20 @@ namespace SosCafe.Admin
             {
                 FileDownloadName = "SOSCafe-AllVendors.csv"
             };
+        }
+
+        private static async Task<List<VendorDetailsEntity>> GetAllVendors(CloudTable vendorsTable)
+        {
+            TableContinuationToken token = null;
+            var allVendorDetails = new List<VendorDetailsEntity>();
+            do
+            {
+                var queryResult = await vendorsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorDetailsEntity>(), token);
+                allVendorDetails.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
+
+            return allVendorDetails;
         }
 
         private static string CombineTableFilters(List<string> filters)
