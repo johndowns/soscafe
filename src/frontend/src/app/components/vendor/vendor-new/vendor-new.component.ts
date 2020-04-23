@@ -2,7 +2,7 @@ import { environment as env } from 'src/environments/environment';
 import { Component, OnInit, Inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Location } from '@angular/common';
 import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
@@ -21,6 +21,7 @@ export class VendorNewComponent implements OnInit {
   public newVendorForm: FormGroup;
   public workInProgress = false;
   private vendorId: string;
+  private
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
@@ -63,8 +64,14 @@ export class VendorNewComponent implements OnInit {
 
   onSubmit() {
     this.workInProgress = true;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+localStorage.getItem('access_token')
+      })
+    };
 
-    this.http.post(`${env.apiBaseUrl}/vendors`, this.newVendorForm.value).subscribe(
+    this.http.post(`${env.apiBaseUrl}vendors`, this.newVendorForm.value, httpOptions).subscribe(
         () => {
           this.workInProgress = false;
         },
