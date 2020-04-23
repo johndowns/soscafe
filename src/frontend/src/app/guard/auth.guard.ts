@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
         this.signedIn = false;
       }
       else{
-        let decoded_token = this.getDecodedAccessToken();
+        this.getDecodedAccessToken();
         this.signedIn = true;
       }
     }

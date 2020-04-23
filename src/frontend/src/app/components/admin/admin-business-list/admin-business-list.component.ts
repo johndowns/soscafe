@@ -8,6 +8,8 @@ import { VendorSummary } from 'src/app/model';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 import { saveAs } from 'file-saver';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ConstantService } from 'src/app/services/constant.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-admin-business-list',
@@ -40,38 +42,17 @@ export class AdminBusinessListComponent implements OnInit {
     private errorService: ErrorHandlerService,
     private route: ActivatedRoute,
     private router: Router,
+    private constantService: ConstantService
   ) {}
 
   checkAccount() {
-    // const userAccount = this.authService.getAccount();
-    // this.loggedIn = !!userAccount;
-    // if (this.loggedIn) {
-    //   if (userAccount.idToken.extension_IsAdmin === null) {
-    //     this.isAdmin = false;
-    //     this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-    //   }
-    //   else {
-    //     this.isAdmin = userAccount.idToken.extension_IsAdmin;
-    //     if (this.isAdmin) {
-    //       //DO NOTHING
-    //     }
-    //     else {
-    //       this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-    //     }
-    //   }
-    // }
-    // else {
-    //   this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-    // }
+    if(!_.get(this.constantService,'isAdmin',false)){
+      this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
+    }
   }
 
   ngOnInit() {
     this.checkAccount();
-
-    // this.broadcastService.subscribe('msal:loginSuccess', payload => {
-    //   this.checkAccount();
-    // });
-
     this.workInProgress = false;
   }
 
