@@ -18,14 +18,12 @@ export class VendorListComponent implements OnInit {
   sort: MatSort;
   public workInProgress = false;
 
-  constructor(private vendorService: VendorService) {
-    
-  }
+  constructor(private vendorService: VendorService) {}
+
   ngOnInit() {
     this.workInProgress = true;
     this.vendorService.getVendors().subscribe(
       (res) => {
-        console.log('Vendors Summary', res);
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
