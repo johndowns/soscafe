@@ -21,7 +21,13 @@ export class AuthGuard implements CanActivate {
     console.log(this.router.url);
     if (localStorage.hasOwnProperty('access_token')) {
       // Check for token validity
-      this.signedIn = true;
+      if(Number(localStorage.getItem('expires')) < Math.floor(Date.now()/1000)){
+        localStorage.clear();
+        this.signedIn = false;
+      }
+      else{
+        this.signedIn = true;
+      }
     }
     else {
       this.activatedRoute.queryParams.subscribe(params => {        
