@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import * as jwt from 'jwt-decode';
 import * as _ from 'lodash';
+import { ConstantService } from 'src/app/services/constant.service';
 
 @Component({
   selector: 'app-header',
@@ -15,29 +16,15 @@ export class HeaderComponent implements OnInit {
   userEmail = '';
   isAdmin;
 
+  _: any = _;
+
   constructor(
     private router: Router,
     private location: Location,
+    public constantService: ConstantService
   ) { }
 
-  ngOnInit(): void {
-    this.checkAccount();
-
-    // this.broadcastService.subscribe('msal:loginSuccess', payload => {
-    //   this.checkAccount();
-    // });
-  }
-
-  checkAccount() {
-    let t = this.getDecodedAccessToken();
-    // Loose validation
-    if (_.has(t, 'iss')) {
-      this.userName = _.get(t, 'name');
-      this.userEmail = _.get(t, 'emails.0');
-      this.isAdmin = _.get(t, 'extension_IsAdmin', false);
-      this.loggedIn = true;
-    }
-  }
+  ngOnInit(): void {}
 
   onSignIn() {
     // const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
@@ -58,15 +45,5 @@ export class HeaderComponent implements OnInit {
 
   onNewVendor() {
     this.router.navigate(['/new-vendor']);
-  }
-
-  getDecodedAccessToken(): any {
-    try {
-      return jwt(localStorage.getItem('access_token'));
-    }
-    catch (e) {
-      console.log(e);
-      return null;
-    }
   }
 }

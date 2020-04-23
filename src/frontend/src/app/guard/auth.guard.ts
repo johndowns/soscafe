@@ -26,6 +26,7 @@ export class AuthGuard implements CanActivate {
         this.signedIn = false;
       }
       else{
+        let decoded_token = this.getDecodedAccessToken();
         this.signedIn = true;
       }
     }
@@ -41,7 +42,8 @@ export class AuthGuard implements CanActivate {
           // Access token acquired
           localStorage.setItem('access_token',params['access_token']);
           // Subtracting 3 seconds for precaution
-          localStorage.setItem('expires', this.getDecodedAccessToken().exp.toString());          
+          let decoded_token = this.getDecodedAccessToken();
+          localStorage.setItem('expires', decoded_token.exp.toString());          
           // Signed in
           this.signedIn = true;
         }
@@ -69,7 +71,13 @@ export class AuthGuard implements CanActivate {
 
   getDecodedAccessToken(): any {
     try {
-      return jwt(localStorage.getItem('access_token'));
+      let j = jwt(localStorage.getItem('access_token'));
+      _.set(this.constantService, 'userName', _.get(j,'name'));
+      _.set(this.constantService, 'userEmail', _.get(j,'emails.0'));
+      _.set(this.constantService, 'isAdmin', _.get(j,'extension_IsAdmin', false));
+      _.set(this.constantService, 'loggedIn', true);
+      
+      return j;
     }
     catch (e) {
       console.log(e);

@@ -1,16 +1,16 @@
 <div fxFlex></div>
 <button [matMenuTriggerFor]="profile" mat-icon-button class="m-r-5"><mat-icon style="color: white;">account_circle</mat-icon></button>
 <mat-menu #profile="matMenu">
-  <button *ngIf="loggedIn" mat-menu-item disabled>
-    <mat-icon>email</mat-icon> {{ userEmail }}
+  <button *ngIf="_.get(constantService,'loggedIn', false)" mat-menu-item disabled>
+    <mat-icon>email</mat-icon> {{ _.get(constantService,'userEmail') }}
   </button>
-  <button *ngIf="loggedIn && isAdmin" mat-menu-item (click)="goToAdmin()">
+  <button *ngIf="_.get(constantService,'loggedIn', false) && _.get(constantService,'isAdmin', false)" mat-menu-item (click)="goToAdmin()">
     <mat-icon>verified_user</mat-icon> Admin View
   </button>
-  <button *ngIf="loggedIn" mat-menu-item (click)="onSignOut()">
+  <button *ngIf="_.get(constantService,'loggedIn', false)" mat-menu-item (click)="onSignOut()">
     <mat-icon>exit_to_app</mat-icon> Sign Out
   </button>
-  <button *ngIf="!loggedIn" mat-menu-item (click)="onSignIn()">
+  <button *ngIf="!_.get(constantService,'loggedIn', false)" mat-menu-item (click)="onSignIn()">
     <mat-icon>exit_to_app</mat-icon> Sign In
   </button>
 </mat-menu>
