@@ -5,6 +5,8 @@ export const environment = {
   appBaseUrl: 'https://vendors.soscafe.nz/',
   apiBaseUrl: 'https://vendorapi.soscafe.nz/',
   msal: {
+    tenant: 'soscafe', 
+    policy: 'b2c_1_signupsignin',
     auth: {
       clientId: '1cc0426e-f8d7-4ddb-94b5-18185c09a6bd',
       authority: 'https://soscafe.b2clogin.com/tfp/soscafe.onmicrosoft.com/b2c_1_signupsignin',
@@ -18,6 +20,7 @@ export const environment = {
     consentScopes: [
       'openid',
       'profile',
+      'offline_access',
       'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'
     ],
     appScope: 'https://soscafe.onmicrosoft.com/vendorfunctionsapis/user_impersonation'

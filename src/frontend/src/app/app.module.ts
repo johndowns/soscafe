@@ -4,8 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MsalModule, MsalInterceptor } from '@azure/msal-angular';
-import { LogLevel, Logger, CryptoUtils } from 'msal';
 import { isIE } from './config';
 
 import { environment as env, environment } from '../environments/environment';
@@ -74,54 +72,10 @@ export function loggerCallback(logLevel, message, piiEnabled) {
     AppRoutingModule,
     BrowserAnimationsModule,
     AppMaterialModule,
-    FlexLayoutModule,
-    MsalModule.forRoot(
-      {
-        auth: {
-          clientId: env.msal.auth.clientId,
-          authority: env.msal.auth.authority,
-          validateAuthority: env.msal.auth.validateAuthority,
-          redirectUri: env.appBaseUrl,
-          postLogoutRedirectUri: env.appBaseUrl,
-          navigateToLoginRequestUrl: env.msal.auth.navigateToLoginRequestUrl,
-        },
-        cache: {
-          cacheLocation: 'localStorage',
-          storeAuthStateInCookie: isIE
-        },
-        framework: {
-          isAngular: true,
-        },
-        system: {
-          logger: new Logger(loggerCallback, {
-              correlationId: CryptoUtils.createNewGuid(),
-              level: LogLevel.Verbose,
-              piiLoggingEnabled: true,
-          })
-        },
-      },
-      {
-        popUp: false,
-        consentScopes: env.msal.consentScopes,
-        protectedResourceMap: [
-          [
-            env.apiBaseUrl,
-            [
-              env.msal.appScope
-            ]
-          ]
-        ],
-        extraQueryParameters: {},
-      }
-    ),
+    FlexLayoutModule
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: MsalInterceptor,
-      multi: true,
-    },
-    VendorService,
+    VendorService
   ],
   bootstrap: [AppComponent],
 })

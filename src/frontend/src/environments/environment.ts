@@ -7,6 +7,8 @@ export const environment = {
   appBaseUrl: 'http://localhost:4200/',
   apiBaseUrl: 'https://soscafevendor-test.azurewebsites.net/',
   msal: {
+    tenant: 'soscafetest', 
+    policy: 'b2c_1_signupsignin',
     auth: {
       clientId: 'f6577358-0ee8-454b-9678-7d02519ede64',
       authority: 'https://soscafetest.b2clogin.com/tfp/soscafetest.onmicrosoft.com/b2c_1_signupsignin',
@@ -16,6 +18,7 @@ export const environment = {
     consentScopes: [
       'openid',
       'profile',
+      'offline_access',
       'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'
     ],
     appScope: 'https://soscafetest.onmicrosoft.com/vendorfunctionsapistest/user_impersonation'

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { MsalService, BroadcastService } from '@azure/msal-angular';
+import { environment } from '../../../../environments/environment'
+import * as _ from 'lodash';
+import { ConstantService } from 'src/app/services/constant.service';
 
 @Component({
   selector: 'app-header',
@@ -11,45 +13,28 @@ export class HeaderComponent implements OnInit {
 
   loggedIn = false;
   userName = '';
-  userEmail= '';
+  userEmail = '';
   isAdmin;
 
+  _: any = _;
+
   constructor(
-    private broadcastService: BroadcastService,
-    private authService: MsalService,
     private router: Router,
     private location: Location,
-  ) {}
+    public constantService: ConstantService
+  ) { }
 
-  ngOnInit(): void {
-    this.checkAccount();
-
-    this.broadcastService.subscribe('msal:loginSuccess', payload => {
-      this.checkAccount();
-    });
-  }
-
-  checkAccount() {
-    const userAccount = this.authService.getAccount();
-    this.loggedIn = !!userAccount;
-    if (this.loggedIn) {
-      this.userName = userAccount.name;
-      this.userEmail = userAccount.idToken.emails[0];
-      this.isAdmin = userAccount.idToken.extension_IsAdmin;
-    }
-  }
+  ngOnInit(): void {}
 
   onSignIn() {
-    const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
-    if (isIE) {
-      this.authService.loginRedirect();
-    } else {
-      this.authService.loginPopup();
-    }
   }
 
   onSignOut() {
-    this.authService.logout();
+    // Clearing local storage
+    localStorage.clear();
+    // Signing out of MS
+    let url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/logout?post_logout_redirect_uri=${environment.appBaseUrl}`;
+    window.location.href = encodeURI(url);
   }
 
   goToAdmin() {
