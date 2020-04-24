@@ -18,7 +18,6 @@ export class AuthGuard implements CanActivate {
     public constantService: ConstantService,
     public activatedRoute: ActivatedRoute
   ) {
-    console.log(this.router.url);
     if (localStorage.hasOwnProperty('access_token')) {
       // Check for token validity
       if(Number(localStorage.getItem('expires')) < Math.floor(Date.now()/1000)){
@@ -58,10 +57,10 @@ export class AuthGuard implements CanActivate {
     let auth_url = '';
     if (!this.signedIn) {
       // Checking step 1 or Step 2
-      if(localStorage.hasOwnProperty('id_token')){
+      if(localStorage.hasOwnProperty('id_token')) {
         auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=id_token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
       }
-      else{
+      else {
         auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
       }
       window.location.href = encodeURI(auth_url);      

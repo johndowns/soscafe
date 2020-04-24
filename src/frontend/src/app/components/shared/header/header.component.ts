@@ -27,12 +27,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {}
 
   onSignIn() {
-    // const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
-    // if (isIE) {
-    //   this.authService.loginRedirect();
-    // } else {
-    //   this.authService.loginPopup();
-    // }
   }
 
   onSignOut() {
