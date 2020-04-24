@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import * as jwt from 'jwt-decode';
+import { environment } from '../../../../environments/environment'
 import * as _ from 'lodash';
 import { ConstantService } from 'src/app/services/constant.service';
 
@@ -36,7 +36,11 @@ export class HeaderComponent implements OnInit {
   }
 
   onSignOut() {
-    // this.authService.logout();
+    // Clearing local storage
+    localStorage.clear();
+    // Signing out of MS
+    let url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/logout?post_logout_redirect_uri=${environment.appBaseUrl}`;
+    window.location.href = encodeURI(url);
   }
 
   goToAdmin() {
