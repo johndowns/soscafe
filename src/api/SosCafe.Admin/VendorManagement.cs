@@ -401,7 +401,7 @@ namespace SosCafe.Admin
                 Level3Delivery = requestModel.Level3Delivery,
                 Level3ClickAndCollect = requestModel.Level3ClickAndCollect,
                 Level3Open = requestModel.Level3Open,
-                ClickAndCollectUrl = requestModel.ClickAndCollectUrl
+                ClickAndCollectUrl = requestModel.ClickAndCollectUrl ?? string.Empty
             });
 
             return new AcceptedResult();
