@@ -18,10 +18,10 @@ export class AuthGuard implements CanActivate {
     public constantService: ConstantService,
     public activatedRoute: ActivatedRoute
   ) {
-    if (localStorage.hasOwnProperty('access_token')) {
+    if (sessionStorage.hasOwnProperty('access_token')) {
       // Check for token validity
-      if(Number(localStorage.getItem('expires')) < Math.floor(Date.now()/1000)){
-        localStorage.clear();
+      if(Number(sessionStorage.getItem('expires')) < Math.floor(Date.now()/1000)){
+        sessionStorage.clear();
         this.signedIn = false;
       }
       else{
@@ -33,10 +33,10 @@ export class AuthGuard implements CanActivate {
       this.activatedRoute.queryParams.subscribe(params => {        
         if(_.has(params, 'access_token')){
           // Access token acquired
-          localStorage.setItem('access_token',params['access_token']);
+          sessionStorage.setItem('access_token',params['access_token']);
           // Subtracting 3 seconds for precaution
           let decoded_token = this.getDecodedAccessToken();
-          localStorage.setItem('expires', decoded_token.exp.toString());          
+          sessionStorage.setItem('expires', decoded_token.exp.toString());          
           // Signed in
           this.signedIn = true;
         }
@@ -58,7 +58,7 @@ export class AuthGuard implements CanActivate {
 
   getDecodedAccessToken(): any {
     try {
-      let j = jwt(localStorage.getItem('access_token'));
+      let j = jwt(sessionStorage.getItem('access_token'));
       _.set(this.constantService, 'userName', _.get(j,'name'));
       _.set(this.constantService, 'userEmail', _.get(j,'emails.0'));
       _.set(this.constantService, 'isAdmin', _.get(j,'extension_IsAdmin', false));
