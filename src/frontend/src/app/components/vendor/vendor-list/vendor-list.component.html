@@ -40,12 +40,11 @@
                 <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
               </ng-container>
             </table>
-            <!-- Hiding pagination until fixed -->
-            <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator> -->
           </div>
         </div>
         <br>
         <a href="http://sosbusiness.nz/pages/vendor-portal" target="_blank">Having problems? Check out our frequently asked questions.</a>
+        <mat-paginator [class.visible]="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
       </mat-card-content>
     </mat-card>
   </div>
