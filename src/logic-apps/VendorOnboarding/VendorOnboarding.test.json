@@ -41,10 +41,23 @@
                     "body": {
                         "BankAccountNumber": "@{body('Parse_JSON')?['bankAccountNumber']}",
                         "BusinessName": "@{body('Parse_JSON')?['businessName']}",
+                        "ClickAndCollectUrl": "@{body('Parse_Json').clickAndCollectUrl}",
                         "ContactName": "@{body('Parse_JSON')?['contactName']}",
                         "DateAcceptedTerms": "@{body('Parse_JSON')?['registeredDate']}",
                         "EmailAddress": "@{body('Parse_JSON')?['emailAddress']}",
                         "IsClickAndCollect": "@{body('Parse_Json').isClickAndCollect}",
+                        "Level1Closed": "@{body('Parse_Json').level1Closed}",
+                        "Level1Delivery": "@{body('Parse_Json').level1Delivery}",
+                        "Level1ClickAndCollect": "@{body('Parse_Json').level1ClickAndCollect}",
+                        "Level1Open": "@{body('Parse_Json').level1Open}",
+                        "Level2Closed": "@{body('Parse_Json').level2Closed}",
+                        "Level2Delivery": "@{body('Parse_Json').level2Delivery}",
+                        "Level2ClickAndCollect": "@{body('Parse_Json').level2ClickAndCollect}",
+                        "Level2Open": "@{body('Parse_Json').level2Open}",
+                        "Level3Closed": "@{body('Parse_Json').level3Closed}",
+                        "Level3Delivery": "@{body('Parse_Json').level3Delivery}",
+                        "Level3ClickAndCollect": "@{body('Parse_Json').level3ClickAndCollect}",
+                        "Level3Open": "@{body('Parse_Json').level3Open}",                        
                         "PartitionKey": "Vendors",
                         "PhoneNumber": "@{body('Parse_JSON')?['phoneNumber']}",
                         "RegisteredDate": "@{body('Parse_JSON')?['registeredDate']}",
@@ -107,6 +120,9 @@
                             "city": {
                                 "type": "string"
                             },
+                            "clickAndCollectUrl": {
+                                "type": "boolean"
+                            },
                             "contactName": {
                                 "type": "string"
                             },
@@ -120,6 +136,42 @@
                                 "type": "boolean"
                             },
                             "isClickAndCollect": {
+                                "type": "boolean"
+                            },
+                            "level1Closed": {
+                                "type": "boolean"
+                            },
+                            "level1Delivery": {
+                                "type": "boolean"
+                            },
+                            "level1ClickAndCollect": {
+                                "type": "boolean"
+                            },
+                            "level1Open": {
+                                "type": "boolean"
+                            },
+                            "level2Closed": {
+                                "type": "boolean"
+                            },
+                            "level2Delivery": {
+                                "type": "boolean"
+                            },
+                            "level2ClickAndCollect": {
+                                "type": "boolean"
+                            },
+                            "level2Open": {
+                                "type": "boolean"
+                            },
+                            "level3Closed": {
+                                "type": "boolean"
+                            },
+                            "level3Delivery": {
+                                "type": "boolean"
+                            },
+                            "level3ClickAndCollect": {
+                                "type": "boolean"
+                            },
+                            "level3Open": {
                                 "type": "boolean"
                             },
                             "phoneNumber": {
