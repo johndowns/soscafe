@@ -13,14 +13,13 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
 })
 export class VendorDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
+  public level1Closed: boolean;
+  public level2Closed: boolean;
+  public level3Closed: boolean;
   public isClickAndCollect: boolean;
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
-
-  level3Closed = false;
-  level2Closed = false;
-  level1Closed = false;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
@@ -34,13 +33,10 @@ export class VendorDetailComponent implements OnInit {
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
     hasAgreedToTerms: new FormControl(''),
     isClickAndCollect: new FormControl(''),
-    clickAndCollectURL: new FormControl(''),
+    clickAndCollectUrl: new FormControl(''),
     level1Closed: new FormControl(''),
     level2Closed: new FormControl(''),
     level3Closed: new FormControl(''),
-    level1Status: new FormControl(''),
-    level2Status: new FormControl(''),
-    level3Status: new FormControl(''),
     level1Delivery: new FormControl(''),
     level2Delivery: new FormControl(''),
     level3Delivery: new FormControl(''),
@@ -66,6 +62,7 @@ export class VendorDetailComponent implements OnInit {
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendor(this.vendorId).subscribe(
       (res) => {
+        console.log(res);
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
@@ -76,7 +73,23 @@ export class VendorDetailComponent implements OnInit {
           bankAccountNumber: res.bankAccountNumber,
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
+          clickAndCollectUrl: res.clickAndCollectUrl,
+          level1Closed: res.level1Closed,
+          level2Closed: res.level2Closed,
+          level3Closed: res.level3Closed,
+          level1Delivery: res.level1Delivery,
+          level2Delivery: res.level2Delivery,
+          level3Delivery: res.level3Delivery,
+          level1ClickAndCollect: res.level1ClickAndCollect,
+          level2ClickAndCollect: res.level2ClickAndCollect,
+          level3ClickAndCollect: res.level3ClickAndCollect,
+          level1Open: res.level1Open,
+          level2Open: res.level2Open,
+          level3Open: res.level3Open,
         });
+        this.level1Closed = res.level1Closed;
+        this.level2Closed = res.level2Closed;
+        this.level3Closed = res.level3Closed;
         this.hasAgreedToTerms = res.hasAgreedToTerms;
       },
       (err) => {
@@ -87,6 +100,18 @@ export class VendorDetailComponent implements OnInit {
         this.workInProgress = false;
       }
     );
+  }
+
+  level3StatusChange(e) {
+    this.level3Closed = e.checked;
+  }
+
+  level2StatusChange(e) {
+    this.level2Closed = e.checked;
+  }
+
+  level1StatusChange(e) {
+    this.level1Closed = e.checked;
   }
 
   onCancelClick() {

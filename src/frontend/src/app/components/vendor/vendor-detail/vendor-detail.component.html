@@ -72,41 +72,43 @@
         </mat-card-header>
         <mat-card-content>
           <div fxLayout="row">
-            <div fxFlex.gt-sm="20%"></div>
-            <div fxFlex.gt-sm="20%">
+            <div fxFlex.gt-sm="5%"></div>
+            <div fxFlex.gt-sm="30%">
               <h4>Level 3</h4>
-              <p><mat-checkbox formControlName="level3Closed">Closed</mat-checkbox></p>
-              <ng-container *ngIf="level3Closed == false">
+              <p><mat-checkbox formControlName="level3Closed" (change)="level3StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level3Closed">
                 <p><mat-checkbox formControlName="level3Delivery">Open for Delivery</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level3ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level3Open">Fully Open</mat-checkbox></p>
               </ng-container>
             </div>
-            <div fxFlex.gt-sm="20%">
+            <div fxFlex.gt-sm="30%">
               <h4>Level 2</h4>
-              <p><mat-checkbox formControlName="level2Closed">Closed</mat-checkbox></p>
-              <ng-container *ngIf="level2Closed == false">
+              <p><mat-checkbox formControlName="level2Closed" (change)="level2StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level2Closed">
                 <p><mat-checkbox formControlName="level2Delivery">Open for Delivery</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level2ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level2Open">Fully Open</mat-checkbox></p>
               </ng-container>
             </div>
-            <div fxFlex.gt-sm="20%">
+            <div fxFlex.gt-sm="30%">
               <h4>Level 1</h4>
-              <p><mat-checkbox formControlName="level1Closed">Closed</mat-checkbox></p>
-              <ng-container *ngIf="level1Closed == false">
+              <p><mat-checkbox formControlName="level1Closed" (change)="level1StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level1Closed">
                 <p><mat-checkbox formControlName="level1Delivery">Open for Delivery</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level1ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level1Open">Fully Open</mat-checkbox></p>
               </ng-container>
             </div>
-            <div fxFlex.gt-sm="20%"></div>
+            <div fxFlex.gt-sm="5%"></div>
           </div>
           <br/>
-          <mat-form-field appearance="outline">
-            <mat-label>Click & Collect System URL</mat-label>
-            <input matInput formControlName="clickAndCollectURL" placeholder="e.g. https://mycafe.co.nz/click-&-collect" autocomplete="disabled">
-          </mat-form-field>
+          <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
+            <mat-form-field appearance="outline">
+              <mat-label>Click & Collect System URL</mat-label>
+              <input matInput formControlName="clickAndCollectUrl">
+            </mat-form-field>
+          </ng-container>
         </mat-card-content>
       </mat-card>
       <mat-card>
