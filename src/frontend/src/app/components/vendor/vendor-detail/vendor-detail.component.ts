@@ -62,7 +62,6 @@ export class VendorDetailComponent implements OnInit {
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendor(this.vendorId).subscribe(
       (res) => {
-        console.log(res);
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
