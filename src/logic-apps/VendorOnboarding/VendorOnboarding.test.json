@@ -121,7 +121,7 @@
                                 "type": "string"
                             },
                             "clickAndCollectUrl": {
-                                "type": "boolean"
+                                "type": "string"
                             },
                             "contactName": {
                                 "type": "string"
