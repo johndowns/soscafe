@@ -388,7 +388,20 @@ namespace SosCafe.Admin
                 DateAcceptedTerms = registrationTime,
                 EmailAddress = emailAddress,
                 ContactName = contactName,
-                RegisteredDate = registrationTime
+                RegisteredDate = registrationTime,
+                Level1Closed = requestModel.Level1Closed,
+                Level1Delivery = requestModel.Level1Delivery,
+                Level1ClickAndCollect = requestModel.Level1ClickAndCollect,
+                Level1Open = requestModel.Level1Open,
+                Level2Closed = requestModel.Level2Closed,
+                Level2Delivery = requestModel.Level2Delivery,
+                Level2ClickAndCollect = requestModel.Level2ClickAndCollect,
+                Level2Open = requestModel.Level2Open,
+                Level3Closed = requestModel.Level3Closed,
+                Level3Delivery = requestModel.Level3Delivery,
+                Level3ClickAndCollect = requestModel.Level3ClickAndCollect,
+                Level3Open = requestModel.Level3Open,
+                ClickAndCollectUrl = requestModel.ClickAndCollectUrl
             });
 
             return new AcceptedResult();
