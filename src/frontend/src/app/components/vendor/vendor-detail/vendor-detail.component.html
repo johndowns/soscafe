@@ -103,11 +103,21 @@
             <div fxFlex.gt-sm="5%"></div>
           </div>
           <br/>
-          <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
-            <mat-form-field appearance="outline">
-              <mat-label>Click & Collect System URL</mat-label>
-              <input matInput formControlName="clickAndCollectUrl">
-            </mat-form-field>
+          <ng-container *ngIf="!isAlreadyClickAndCollect || clickAndCollectUrl == ''">
+            <mat-checkbox formControlName="isClickAndCollect" (change)="isClickAndCollectChange($event)">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
+            <br/><br/>
+          </ng-container>
+          <ng-container *ngIf="!isClickAndCollect">
+            <mat-checkbox formControlName="isAlreadyClickAndCollect" (change)="isAlreadyClickAndCollectChange($event)">I already have Click & Collect setup</mat-checkbox>
+            <br/>
+          </ng-container>
+          <ng-container *ngIf="isAlreadyClickAndCollect">
+            <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
+              <mat-form-field appearance="outline">
+                <mat-label>Please let us know your Click & Collect URL.</mat-label>
+                <input matInput formControlName="clickAndCollectUrl">
+              </mat-form-field>
+            </ng-container>
           </ng-container>
         </mat-card-content>
       </mat-card>
