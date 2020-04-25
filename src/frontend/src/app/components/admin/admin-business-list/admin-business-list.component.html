@@ -35,8 +35,8 @@
             <button mat-stroked-button type="submit" style="height: 68%; width: 100%; margin: .25em 0;"><mat-icon>search</mat-icon></button>
           </div>
         </form>
-        <div *ngIf="!workInProgress">
-          <div class="mat-elevation-z8" *ngIf="!hideTable">
+        <div [hidden]="workInProgress">
+          <div class="mat-elevation-z8" [hidden]="hideTable">
             <table mat-table [dataSource]="dataSource" matSort>
               <!-- Business Name Column -->
               <ng-container matColumnDef="businessName">

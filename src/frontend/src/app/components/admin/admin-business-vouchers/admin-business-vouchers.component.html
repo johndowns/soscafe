@@ -15,7 +15,7 @@
           <mat-label>Search</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="Search for voucher by Order #, Voucher ID, Customer Name or Customer Email">
         </mat-form-field>
-        <div *ngIf="!workInProgress">
+        <div [hidden]="workInProgress">
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort>
               <!-- Business Name Column -->
@@ -78,7 +78,7 @@
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <ng-container *ngIf="dataSource.data.length === 0">
+              <ng-container *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0">
                 <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
               </ng-container>
             </table>

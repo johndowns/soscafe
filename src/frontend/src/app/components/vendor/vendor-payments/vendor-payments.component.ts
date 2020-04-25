@@ -22,7 +22,7 @@ export class VendorPaymentsComponent implements OnInit {
   dataSource: MatTableDataSource<VendorPaymentSummary>;
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true })
+  @ViewChild(MatSort, { static: false })
   sort: MatSort;
   public workInProgress = false;
   private vendorId: string;
