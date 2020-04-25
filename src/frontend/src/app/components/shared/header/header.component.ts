@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit {
 
   onSignOut() {
     // Clearing local storage
-    localStorage.clear();
+    sessionStorage.clear();
     // Signing out of MS
     let url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/logout?post_logout_redirect_uri=${environment.appBaseUrl}`;
     window.location.href = encodeURI(url);

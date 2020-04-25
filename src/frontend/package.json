@@ -30,7 +30,6 @@
     "file-saver": "^2.0.2",
     "hammerjs": "^2.0.8",
     "jwt-decode": "^2.2.0",
-    "passport-azure-ad": "^4.2.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

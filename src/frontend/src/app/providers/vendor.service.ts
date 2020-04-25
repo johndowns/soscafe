@@ -20,7 +20,7 @@ export class VendorService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+      'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
     })
   }
 
@@ -50,7 +50,7 @@ export class VendorService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -70,7 +70,7 @@ export class VendorService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -116,7 +116,7 @@ export class VendorService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -136,7 +136,7 @@ export class VendorService {
       {
           headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -160,7 +160,7 @@ export class VendorService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
