@@ -16,6 +16,9 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
 })
 export class VendorNewComponent implements OnInit {
   public hasAgreedToTerms = false;
+  public level1Closed: boolean;
+  public level2Closed: boolean;
+  public level3Closed: boolean;
   public isClickAndCollect = false;
   public bankAccountNumber: FormControl;
   public newVendorForm: FormGroup;
@@ -47,6 +50,19 @@ export class VendorNewComponent implements OnInit {
       bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
       hasAgreedToTerms: new FormControl('', [Validators.required]),
       isClickAndCollect: new FormControl(false),
+      clickAndCollectUrl: new FormControl(''),
+      level1Closed: new FormControl(''),
+      level2Closed: new FormControl(''),
+      level3Closed: new FormControl(''),
+      level1Delivery: new FormControl(''),
+      level2Delivery: new FormControl(''),
+      level3Delivery: new FormControl(''),
+      level1ClickAndCollect: new FormControl(''),
+      level2ClickAndCollect: new FormControl(''),
+      level3ClickAndCollect: new FormControl(''),
+      level1Open: new FormControl(''),
+      level2Open: new FormControl(''),
+      level3Open: new FormControl(''),
     });
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -60,6 +76,18 @@ export class VendorNewComponent implements OnInit {
     this.workInProgress = false;
   }
 
+  level3StatusChange(e) {
+    this.level3Closed = e.checked;
+  }
+
+  level2StatusChange(e) {
+    this.level2Closed = e.checked;
+  }
+
+  level1StatusChange(e) {
+    this.level1Closed = e.checked;
+  }
+
   onCancelClick() {
     this.goBack();
   }
@@ -71,7 +99,7 @@ export class VendorNewComponent implements OnInit {
   onSubmit() {
     this.workInProgress = true;
 
-    this.http.post(`${env.apiBaseUrl}vendors`, this.newVendorForm.value, this.httpOptions).subscribe(
+    this.http.post(`${env.apiBaseUrl}/vendors`, this.newVendorForm.value, this.httpOptions).subscribe(
         () => {
           this.workInProgress = false;
         },
