@@ -119,13 +119,21 @@
             <div fxFlex.gt-sm="5%"></div>
           </div>
           <br/>
-          <mat-checkbox formControlName="isClickAndCollect">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
-          <br/><br/>
-          <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
-            <mat-form-field appearance="outline">
-              <mat-label>If you already have Click & Collect setup, let us know the URL.</mat-label>
-              <input matInput formControlName="clickAndCollectUrl">
-            </mat-form-field>
+          <ng-container *ngIf="!isAlreadyClickAndCollect">
+            <mat-checkbox formControlName="isClickAndCollect" (change)="isClickAndCollectChange($event)">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
+            <br/><br/>
+          </ng-container>
+          <ng-container *ngIf="!isClickAndCollect">
+            <mat-checkbox (change)="isAlreadyClickAndCollectChange($event)">I already have Click & Collect setup</mat-checkbox>
+            <br/>
+          </ng-container>
+          <ng-container *ngIf="isAlreadyClickAndCollect">
+            <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
+              <mat-form-field appearance="outline">
+                <mat-label>Please let us know your Click & Collect URL.</mat-label>
+                <input matInput formControlName="clickAndCollectUrl">
+              </mat-form-field>
+            </ng-container>
           </ng-container>
           <p><strong>Terms and conditions</strong></p>
           <p><small>By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us to assist you in the online provision of vouchers for future products or services that you will offer the purchasers of those vouchers. We agree to act as your agent, and supply vouchers to your customers, and process payments for you, then remit those funds to you on a regular basis.</small></p>

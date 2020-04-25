@@ -16,10 +16,11 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
 })
 export class VendorNewComponent implements OnInit {
   public hasAgreedToTerms = false;
-  public level1Closed: boolean;
-  public level2Closed: boolean;
-  public level3Closed: boolean;
+  public level1Closed = false;
+  public level2Closed = false;
+  public level3Closed = false;
   public isClickAndCollect = false;
+  public isAlreadyClickAndCollect = false;
   public bankAccountNumber: FormControl;
   public newVendorForm: FormGroup;
   public workInProgress = false;
@@ -51,18 +52,18 @@ export class VendorNewComponent implements OnInit {
       hasAgreedToTerms: new FormControl('', [Validators.required]),
       isClickAndCollect: new FormControl(false),
       clickAndCollectUrl: new FormControl(''),
-      level1Closed: new FormControl(''),
-      level2Closed: new FormControl(''),
-      level3Closed: new FormControl(''),
-      level1Delivery: new FormControl(''),
-      level2Delivery: new FormControl(''),
-      level3Delivery: new FormControl(''),
-      level1ClickAndCollect: new FormControl(''),
-      level2ClickAndCollect: new FormControl(''),
-      level3ClickAndCollect: new FormControl(''),
-      level1Open: new FormControl(''),
-      level2Open: new FormControl(''),
-      level3Open: new FormControl(''),
+      level1Closed: new FormControl(false),
+      level2Closed: new FormControl(false),
+      level3Closed: new FormControl(false),
+      level1Delivery: new FormControl(false),
+      level2Delivery: new FormControl(false),
+      level3Delivery: new FormControl(false),
+      level1ClickAndCollect: new FormControl(false),
+      level2ClickAndCollect: new FormControl(false),
+      level3ClickAndCollect: new FormControl(false),
+      level1Open: new FormControl(false),
+      level2Open: new FormControl(false),
+      level3Open: new FormControl(false),
     });
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -86,6 +87,14 @@ export class VendorNewComponent implements OnInit {
 
   level1StatusChange(e) {
     this.level1Closed = e.checked;
+  }
+
+  isClickAndCollectChange(e) {
+    this.isClickAndCollect = e.checked;
+  }
+
+  isAlreadyClickAndCollectChange(e) {
+    this.isAlreadyClickAndCollect = e.checked;
   }
 
   onCancelClick() {
