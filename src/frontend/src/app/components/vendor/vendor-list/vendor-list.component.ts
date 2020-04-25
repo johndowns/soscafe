@@ -19,6 +19,7 @@ export class VendorListComponent implements OnInit {
   public workInProgress = false;
 
   constructor(private vendorService: VendorService) {}
+
   ngOnInit() {
     this.workInProgress = true;
     this.vendorService.getVendors().subscribe(
