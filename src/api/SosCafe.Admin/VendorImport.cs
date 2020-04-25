@@ -57,7 +57,8 @@ namespace SosCafe.Admin.Models
                 EmailAddress = vendorToImport.EmailAddress.Trim(),
                 PhoneNumber = vendorToImport.PhoneNumber,
                 BankAccountNumber = vendorToImport.BankAccountNumber,
-                DateAcceptedTerms = vendorToImport.DateAcceptedTerms?.ToString("o")
+                DateAcceptedTerms = vendorToImport.DateAcceptedTerms?.ToString("o"),
+                IsClickAndCollect = vendorToImport.IsClickAndCollect
             };
 
             // Upsert vendor table entity.

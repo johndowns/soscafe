@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
 
 import { DefaultLayoutComponent } from './components/layout';
 import { HomeComponent } from './components/home/home.component';
 import { VendorNewComponent, VendorNewSuccessComponent, VendorListComponent, VendorViewComponent } from './components/vendor';
 import { AdminBusinessListComponent, AdminBusinessViewComponent } from './components/admin';
 import { ErrorComponent } from './components/shared/error/error.component';
+import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
   {
@@ -16,32 +16,32 @@ const routes: Routes = [
       {
         path: 'vendors',
         component: VendorListComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'vendors/:id',
         component: VendorViewComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'new-vendor',
         component: VendorNewComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'new-vendor/success',
         component: VendorNewSuccessComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'admin/businesses',
         component: AdminBusinessListComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'admin/businesses/:id',
         component: AdminBusinessViewComponent,
-        canActivate: [MsalGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: '',
