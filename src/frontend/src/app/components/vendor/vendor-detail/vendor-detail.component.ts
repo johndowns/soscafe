@@ -129,10 +129,34 @@ export class VendorDetailComponent implements OnInit {
 
   isClickAndCollectChange(e) {
     this.isClickAndCollect = e.checked;
+    if (e.checked) {
+      this.vendorForm.patchValue({
+        isAlreadyClickAndCollect: false,
+      });
+      this.isAlreadyClickAndCollect = false;
+    }
+    else {
+      this.vendorForm.patchValue({
+        isAlreadyClickAndCollect: true,
+      });
+      this.isAlreadyClickAndCollect = true;
+    }
   }
 
   isAlreadyClickAndCollectChange(e) {
     this.isAlreadyClickAndCollect = e.checked;
+    if (e.checked) {
+      this.vendorForm.patchValue({
+        isClickAndCollect: false,
+      });
+      this.isClickAndCollect = false;
+    }
+    else {
+      this.vendorForm.patchValue({
+        isClickAndCollect: true,
+      });
+      this.isClickAndCollect = true;
+    }
   }
 
   onCancelClick() {

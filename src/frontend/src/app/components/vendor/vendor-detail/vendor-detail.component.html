@@ -107,10 +107,8 @@
             <mat-checkbox formControlName="isClickAndCollect" (change)="isClickAndCollectChange($event)">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
             <br/><br/>
           </ng-container>
-          <ng-container *ngIf="!isClickAndCollect">
-            <mat-checkbox formControlName="isAlreadyClickAndCollect" (change)="isAlreadyClickAndCollectChange($event)">I already have <i>Click & Collect</i> set up</mat-checkbox>
-            <br/>
-          </ng-container>
+          <mat-checkbox formControlName="isAlreadyClickAndCollect" (change)="isAlreadyClickAndCollectChange($event)">I already have <i>Click & Collect</i> set up</mat-checkbox>
+          <br/>
           <ng-container *ngIf="isAlreadyClickAndCollect">
             <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
               <mat-form-field appearance="outline">
