@@ -31,13 +31,7 @@ export class AuthGuard implements CanActivate {
     }
     else {
       this.activatedRoute.queryParams.subscribe(params => {        
-        if(_.has(params,'id_token')){
-          // Use token to get access token
-          // TODO Check nonce for token hijacking
-          localStorage.setItem('id_token', params['id_token']);
-          this.signedIn = false;
-        }
-        else if(_.has(params, 'access_token')){
+        if(_.has(params, 'access_token')){
           // Access token acquired
           localStorage.setItem('access_token',params['access_token']);
           // Subtracting 3 seconds for precaution
@@ -53,16 +47,10 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-  canActivate() {
-    let auth_url = '';
+  canActivate() {    
     if (!this.signedIn) {
-      // Checking step 1 or Step 2
-      if(localStorage.hasOwnProperty('id_token')) {
-        auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=id_token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
-      }
-      else {
-        auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
-      }
+      let auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
+
       window.location.href = encodeURI(auth_url);      
     }
     return this.signedIn;
