@@ -55,6 +55,8 @@ export class VendorVouchersComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
+        console.log(res);
+
         if (res.dateRedeemed === null){
           this.isRedeemed = false;
         }
@@ -69,15 +71,19 @@ export class VendorVouchersComponent implements OnInit {
     );
   }
 
-  redeemVoucher(value) {
+  redeemVoucher(value, vendorVouchersSummary: VendorVouchersSummary) {
     console.log(value);
     this.workInProgress = true;
 
+    const updateVoucherDetails: UpdateVoucherDetails = {
+      ...vendorVouchersSummary,
+      dateRedeemed: new Date().toISOString(),
+    };
+
     this.voucherId = value;
-    this.dateRedeemed = new Date().toISOString();
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.voucherId, this.dateRedeemed)
+      .updateVoucher(this.vendorId, this.voucherId, this.dateRedeemed, updateVoucherDetails)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
@@ -92,15 +98,12 @@ export class VendorVouchersComponent implements OnInit {
       );
   }
 
-  undoRedeemVoucher(value) {
+  undoRedeemVoucher(value, vendorVouchersSummary: VendorVouchersSummary) {
     this.workInProgress = true;
     const updateVoucherDetails: UpdateVoucherDetails = {
       ...vendorVouchersSummary,
-      dateAcceptedTerms: new Date().toISOString(),
+      dateRedeemed: null,
     };
-
-    this.voucherId = value;
-    this.dateRedeemed = null;
 
     this.vendorService
       .updateVoucher(this.vendorId, this.voucherId, this.dateRedeemed, updateVoucherDetails)

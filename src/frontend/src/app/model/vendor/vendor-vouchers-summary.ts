@@ -14,5 +14,5 @@ export class VendorVouchersSummary {
   voucherFees: number ;
   voucherNet: number;
   isRedeemed: boolean;
-  dateRedeemed: Date;
+  dateRedeemed: string;
 }
