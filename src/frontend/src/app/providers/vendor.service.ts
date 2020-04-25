@@ -92,12 +92,12 @@ export class VendorService {
   updateVoucher(
     vendorId: string,
     voucherId: string,
-    dateRedeemed: Date,
     updateVoucherDetails: UpdateVoucherDetails
   ): Observable<VendorVouchersSummary> {
     return this.http.put<UpdateVoucherDetails>(
       `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/${voucherId}`,
-      updateVoucherDetails
+      updateVoucherDetails,
+      this.httpOptions
     );
   }
 
@@ -126,12 +126,12 @@ export class VendorService {
   ): any {
     return this.http.get(
       `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments/csv`,
-      { 
+      {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
         }),
-        responseType: 'blob' 
+        responseType: 'blob'
       }
     );
   }
@@ -146,12 +146,12 @@ export class VendorService {
   downloadVendorVouchersCsvAdmin(vendorId: string): any {
     return this.http.get(
       `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/vouchers/csv`,
-      { 
+      {
           headers: new HttpHeaders({
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
         }),
-        responseType: 'blob' 
+        responseType: 'blob'
       }
     );
   }
@@ -174,7 +174,7 @@ export class VendorService {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('access_token')
-        }), 
+        }),
         responseType: 'blob'
       }
     );

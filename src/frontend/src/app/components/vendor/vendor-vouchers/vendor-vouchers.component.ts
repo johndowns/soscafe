@@ -37,8 +37,6 @@ export class VendorVouchersComponent implements OnInit {
   public workInProgress = false;
   private vendorId: string;
   private voucherId: string;
-  private isRedeemed: boolean;
-  private dateRedeemed: Date;
 
   constructor(
     private vendorService: VendorService,
@@ -56,13 +54,6 @@ export class VendorVouchersComponent implements OnInit {
         this.dataSource.sort = this.sort;
 
         console.log(res);
-
-        if (res.dateRedeemed === null){
-          this.isRedeemed = false;
-        }
-        else {
-          this.isRedeemed = true;
-        }
       },
       (err) => console.error('HTTP Error', err),
       () => {
@@ -71,19 +62,19 @@ export class VendorVouchersComponent implements OnInit {
     );
   }
 
-  redeemVoucher(value, vendorVouchersSummary: VendorVouchersSummary) {
-    console.log(value);
+  redeemVoucher(vendorVouchersSummary: VendorVouchersSummary) {
+    console.log(vendorVouchersSummary);
     this.workInProgress = true;
 
     const updateVoucherDetails: UpdateVoucherDetails = {
       ...vendorVouchersSummary,
-      dateRedeemed: new Date().toISOString(),
+      dateRedeemed: new Date(),
     };
 
-    this.voucherId = value;
+    this.voucherId = vendorVouchersSummary;
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.voucherId, this.dateRedeemed, updateVoucherDetails)
+      .updateVoucher(this.vendorId, this.voucherId, updateVoucherDetails)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
@@ -98,15 +89,17 @@ export class VendorVouchersComponent implements OnInit {
       );
   }
 
-  undoRedeemVoucher(value, vendorVouchersSummary: VendorVouchersSummary) {
+  undoRedeemVoucher(vendorVouchersSummary: VendorVouchersSummary) {
     this.workInProgress = true;
     const updateVoucherDetails: UpdateVoucherDetails = {
       ...vendorVouchersSummary,
       dateRedeemed: null,
     };
 
+    this.voucherId = vendorVouchersSummary;
+
     this.vendorService
-      .updateVoucher(this.vendorId, this.voucherId, this.dateRedeemed, updateVoucherDetails)
+      .updateVoucher(this.vendorId, this.voucherId, updateVoucherDetails)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
