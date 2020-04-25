@@ -18,6 +18,10 @@ export class VendorDetailComponent implements OnInit {
   public workInProgress = false;
   private vendorId: string;
 
+  level3Closed = false;
+  level2Closed = false;
+  level1Closed = false;
+
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
   public vendorForm = new FormGroup({
@@ -30,6 +34,22 @@ export class VendorDetailComponent implements OnInit {
     bankAccountNumber: new FormControl('', [Validators.required, Validators.pattern(this.BankAccountNumberRegExPattern)]),
     hasAgreedToTerms: new FormControl(''),
     isClickAndCollect: new FormControl(''),
+    clickAndCollectURL: new FormControl(''),
+    level1Closed: new FormControl(''),
+    level2Closed: new FormControl(''),
+    level3Closed: new FormControl(''),
+    level1Status: new FormControl(''),
+    level2Status: new FormControl(''),
+    level3Status: new FormControl(''),
+    level1Delivery: new FormControl(''),
+    level2Delivery: new FormControl(''),
+    level3Delivery: new FormControl(''),
+    level1ClickAndCollect: new FormControl(''),
+    level2ClickAndCollect: new FormControl(''),
+    level3ClickAndCollect: new FormControl(''),
+    level1Open: new FormControl(''),
+    level2Open: new FormControl(''),
+    level3Open: new FormControl(''),
   });
 
   constructor(
@@ -42,6 +62,7 @@ export class VendorDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.workInProgress = true;
+
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendor(this.vendorId).subscribe(
       (res) => {
