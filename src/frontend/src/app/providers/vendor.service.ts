@@ -112,7 +112,7 @@ export class VendorService {
     vendorId: string
   ): any {
     return this.http.get(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments/csv`,
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments/csv`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
