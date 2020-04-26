@@ -13,6 +13,7 @@ using SosCafe.Admin.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SosCafe;
 using SosCafe.Admin.Csv;
 using SosCafe.Admin.Models.Queue;
 
@@ -387,6 +388,7 @@ namespace SosCafe.Admin
                 IsClickAndCollect = requestModel.IsClickAndCollect,
                 DateAcceptedTerms = registrationTime,
                 EmailAddress = emailAddress,
+                EmailAddressCanonicalised = emailAddress.ToUpper().CleanStringForPartitionKey(),
                 ContactName = contactName,
                 RegisteredDate = registrationTime,
                 Level1Closed = requestModel.Level1Closed,
