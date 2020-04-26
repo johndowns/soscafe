@@ -39,7 +39,7 @@ export class VendorVouchersComponent implements OnInit {
   private vendorId: string;
   private voucherId: string;
   private lineItemId: string;
-  private dateRedeemed: Date;
+  private redemptionDate: Date;
   _=_;
 
   constructor(
@@ -69,12 +69,12 @@ export class VendorVouchersComponent implements OnInit {
   redeemVoucher(lineItemId) {
     this.workInProgress = true;
 
-    this.dateRedeemed = new Date();
+    this.redemptionDate = new Date();
 
     this.lineItemId = lineItemId;
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.lineItemId, this.dateRedeemed)
+      .updateVoucher(this.vendorId, this.lineItemId, this.redemptionDate)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
@@ -92,12 +92,12 @@ export class VendorVouchersComponent implements OnInit {
   undoRedeemVoucher(lineItemId) {
     this.workInProgress = true;
 
-    this.dateRedeemed = null;
+    this.redemptionDate = null;
 
     this.lineItemId = lineItemId;
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.lineItemId, this.dateRedeemed)
+      .updateVoucher(this.vendorId, this.lineItemId, this.redemptionDate)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);

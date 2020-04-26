@@ -89,9 +89,9 @@ export class VendorService {
     );
   }
 
-  updateVoucher(vendorId: string, lineItemId: string, dateRedeemed: Date): Observable<{}> {
+  updateVoucher(vendorId: string, lineItemId: string, redemptionDate: Date): Observable<{}> {
     const url = `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/${lineItemId}`;
-    return this.http.patch(url, { dateRedeemed: dateRedeemed }, this.httpOptions);
+    return this.http.patch(url, { redemptionDate: redemptionDate }, this.httpOptions);
   }
 
   //ADMIN VIEW FUCNTIONS
