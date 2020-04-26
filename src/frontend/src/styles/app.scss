@@ -822,3 +822,11 @@ list inline
     }
   }
 }
+mat-paginator{
+  margin-top: -50px;
+  visibility: hidden;
+}
+.visible{
+  margin-top: 30px;
+  visibility: visible;
+}

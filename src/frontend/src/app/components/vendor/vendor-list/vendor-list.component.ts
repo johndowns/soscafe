@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { VendorService } from 'src/app/providers';
 import { VendorSummary } from 'src/app/model';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-vendor-list',
@@ -17,6 +18,7 @@ export class VendorListComponent implements OnInit {
   @ViewChild(MatSort, { static: true })
   sort: MatSort;
   public workInProgress = false;
+  _ = _;
 
   constructor(private vendorService: VendorService) {}
 
