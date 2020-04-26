@@ -21,7 +21,7 @@ export class VendorService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+      'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
     })
   }
 
@@ -51,7 +51,7 @@ export class VendorService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -71,7 +71,7 @@ export class VendorService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -125,11 +125,11 @@ export class VendorService {
     vendorId: string
   ): any {
     return this.http.get(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments/csv`,
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments/csv`,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -145,11 +145,11 @@ export class VendorService {
 
   downloadVendorVouchersCsvAdmin(vendorId: string): any {
     return this.http.get(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/vouchers/csv`,
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/csv`,
       {
           headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }
@@ -173,7 +173,7 @@ export class VendorService {
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
         }),
         responseType: 'blob'
       }

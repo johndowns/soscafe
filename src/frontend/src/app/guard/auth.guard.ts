@@ -18,33 +18,36 @@ export class AuthGuard implements CanActivate {
     public constantService: ConstantService,
     public activatedRoute: ActivatedRoute
   ) {
-    if (localStorage.hasOwnProperty('access_token')) {
-      // Check for token validity
-      if(Number(localStorage.getItem('expires')) < Math.floor(Date.now()/1000)){
-        localStorage.clear();
+    
+    if (sessionStorage.hasOwnProperty('access_token')) {
+      // Freshness
+      if(this.tokenIsFresh()){
+        sessionStorage.clear();
         this.signedIn = false;
       }
       else{
-        this.getDecodedAccessToken();
+        this.setUser();
         this.signedIn = true;
       }
     }
     else {
       this.activatedRoute.queryParams.subscribe(params => {        
-        if(_.has(params,'id_token')){
-          // Use token to get access token
-          // TODO Check nonce for token hijacking
-          localStorage.setItem('id_token', params['id_token']);
-          this.signedIn = false;
-        }
-        else if(_.has(params, 'access_token')){
-          // Access token acquired
-          localStorage.setItem('access_token',params['access_token']);
-          // Subtracting 3 seconds for precaution
-          let decoded_token = this.getDecodedAccessToken();
-          localStorage.setItem('expires', decoded_token.exp.toString());          
-          // Signed in
-          this.signedIn = true;
+        if(_.has(params, 'access_token')){
+          // Checking nonce
+          if(this.tokenHasValidNonce(params['access_token'], sessionStorage.getItem('nonce'))){
+            // Access token acquired
+            sessionStorage.setItem('access_token',params['access_token']);
+            // Subtracting 3 seconds for precaution
+            let decoded_token = this.getDecodedAccessToken(params['access_token']);
+            sessionStorage.setItem('expires', decoded_token.exp.toString());  
+            // Set user
+            this.setUser();
+            // Signed in
+            this.signedIn = true;
+          }
+          else{
+            this.signedIn = false;
+          }
         }
         else{
           this.signedIn = false;
@@ -53,30 +56,36 @@ export class AuthGuard implements CanActivate {
     }
   }
 
-  canActivate() {
-    let auth_url = '';
+  canActivate() {    
     if (!this.signedIn) {
-      // Checking step 1 or Step 2
-      if(localStorage.hasOwnProperty('id_token')) {
-        auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=id_token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
-      }
-      else {
-        auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=d748356b-1aed-4894-968d-0c356c4ab077&nonce=${uuidv4()}`;
-      }
+      let nonce = uuidv4();
+      sessionStorage.setItem('nonce', nonce);
+      let auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=${nonce}&nonce=${nonce}`;
+
       window.location.href = encodeURI(auth_url);      
     }
     return this.signedIn;
   }
 
-  getDecodedAccessToken(): any {
+  tokenIsFresh(){
+    return Number(sessionStorage.getItem('expires')) < Math.floor(Date.now()/1000);
+  }
+
+  tokenHasValidNonce(token, nonce){
+    return nonce === _.get(this.getDecodedAccessToken(token), 'nonce', false);
+  }
+
+  setUser(){
+    let j = this.getDecodedAccessToken(sessionStorage.getItem('access_token'));
+    _.set(this.constantService, 'userName', _.get(j,'name'));
+    _.set(this.constantService, 'userEmail', _.get(j,'emails.0'));
+    _.set(this.constantService, 'isAdmin', _.get(j,'extension_IsAdmin', false));
+    _.set(this.constantService, 'loggedIn', true);
+  }
+
+  getDecodedAccessToken(token): any {
     try {
-      let j = jwt(localStorage.getItem('access_token'));
-      _.set(this.constantService, 'userName', _.get(j,'name'));
-      _.set(this.constantService, 'userEmail', _.get(j,'emails.0'));
-      _.set(this.constantService, 'isAdmin', _.get(j,'extension_IsAdmin', false));
-      _.set(this.constantService, 'loggedIn', true);
-      
-      return j;
+      return jwt(token);
     }
     catch (e) {
       console.log(e);
