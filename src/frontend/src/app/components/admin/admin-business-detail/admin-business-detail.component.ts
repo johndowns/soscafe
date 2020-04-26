@@ -6,7 +6,8 @@ import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
-import { MsalService, BroadcastService } from '@azure/msal-angular';
+import { ConstantService } from 'src/app/services/constant.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-admin-business-detail',
@@ -14,6 +15,9 @@ import { MsalService, BroadcastService } from '@azure/msal-angular';
 })
 export class AdminBusinessDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
+  public level1Closed: boolean;
+  public level2Closed: boolean;
+  public level3Closed: boolean;
   public isClickAndCollect: boolean;
   public bankAccountNumber: FormControl;
   public workInProgress = false;
@@ -36,6 +40,19 @@ export class AdminBusinessDetailComponent implements OnInit {
     hasAgreedToTerms: new FormControl(''),
     isClickAndCollect: new FormControl(''),
     internalTag: new FormControl(''),
+    clickAndCollectUrl: new FormControl(''),
+    level1Closed: new FormControl(''),
+    level2Closed: new FormControl(''),
+    level3Closed: new FormControl(''),
+    level1Delivery: new FormControl(''),
+    level2Delivery: new FormControl(''),
+    level3Delivery: new FormControl(''),
+    level1ClickAndCollect: new FormControl(''),
+    level2ClickAndCollect: new FormControl(''),
+    level3ClickAndCollect: new FormControl(''),
+    level1Open: new FormControl(''),
+    level2Open: new FormControl(''),
+    level3Open: new FormControl(''),
   });
 
   constructor(
@@ -43,41 +60,19 @@ export class AdminBusinessDetailComponent implements OnInit {
     private snackBar: MatSnackBar,
     private vendorService: VendorService,
     private errorService: ErrorHandlerService,
-    private broadcastService: BroadcastService,
-    private authService: MsalService,
     private route: ActivatedRoute,
     private router: Router,
+    private constantService: ConstantService
   ) {}
 
   checkAccount() {
-    const userAccount = this.authService.getAccount();
-    this.loggedIn = !!userAccount;
-    if (this.loggedIn) {
-      if (userAccount.idToken.extension_IsAdmin === null) {
-        this.isAdmin = false;
-        this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-      }
-      else {
-        this.isAdmin = userAccount.idToken.extension_IsAdmin;
-        if (this.isAdmin) {
-          //DO NOTHING
-        }
-        else {
-          this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
-        }
-      }
-    }
-    else {
+    if(!_.get(this.constantService,'isAdmin',false)){
       this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
     }
   }
 
   ngOnInit(): void {
     this.checkAccount();
-
-    this.broadcastService.subscribe('msal:loginSuccess', payload => {
-      this.checkAccount();
-    });
 
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
@@ -94,7 +89,23 @@ export class AdminBusinessDetailComponent implements OnInit {
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
           internalTag: res.internalTag,
+          clickAndCollectUrl: res.clickAndCollectUrl,
+          level1Closed: res.level1Closed,
+          level2Closed: res.level2Closed,
+          level3Closed: res.level3Closed,
+          level1Delivery: res.level1Delivery,
+          level2Delivery: res.level2Delivery,
+          level3Delivery: res.level3Delivery,
+          level1ClickAndCollect: res.level1ClickAndCollect,
+          level2ClickAndCollect: res.level2ClickAndCollect,
+          level3ClickAndCollect: res.level3ClickAndCollect,
+          level1Open: res.level1Open,
+          level2Open: res.level2Open,
+          level3Open: res.level3Open,
         });
+        this.level1Closed = res.level1Closed;
+        this.level2Closed = res.level2Closed;
+        this.level3Closed = res.level3Closed;
         this.hasAgreedToTerms = res.hasAgreedToTerms;
       },
       (err) => {
@@ -105,6 +116,18 @@ export class AdminBusinessDetailComponent implements OnInit {
         this.workInProgress = false;
       }
     );
+  }
+
+  level3StatusChange(e) {
+    this.level3Closed = e.checked;
+  }
+
+  level2StatusChange(e) {
+    this.level2Closed = e.checked;
+  }
+
+  level1StatusChange(e) {
+    this.level1Closed = e.checked;
   }
 
   onCancelClick() {

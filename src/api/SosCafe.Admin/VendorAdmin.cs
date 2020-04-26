@@ -56,7 +56,20 @@ namespace SosCafe.Admin
                 BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
                 HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null),
                 IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect,
-                InternalTag = vendorDetailsEntity.InternalTag
+                InternalTag = vendorDetailsEntity.InternalTag,
+                Level1Closed = vendorDetailsEntity.Level1Closed,
+                Level1Delivery = vendorDetailsEntity.Level1Delivery,
+                Level1ClickAndCollect = vendorDetailsEntity.Level1ClickAndCollect,
+                Level1Open = vendorDetailsEntity.Level1Open,
+                Level2Closed = vendorDetailsEntity.Level2Closed,
+                Level2Delivery = vendorDetailsEntity.Level2Delivery,
+                Level2ClickAndCollect = vendorDetailsEntity.Level2ClickAndCollect,
+                Level2Open = vendorDetailsEntity.Level2Open,
+                Level3Closed = vendorDetailsEntity.Level3Closed,
+                Level3Delivery = vendorDetailsEntity.Level3Delivery,
+                Level3ClickAndCollect = vendorDetailsEntity.Level3ClickAndCollect,
+                Level3Open = vendorDetailsEntity.Level3Open,
+                ClickAndCollectUrl = vendorDetailsEntity.ClickAndCollectUrl
             };
 
             // Return the vendor details.
@@ -93,6 +106,19 @@ namespace SosCafe.Admin
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
             vendorDetailsEntity.InternalTag = vendorDetailsApiModel.InternalTag;
+            vendorDetailsEntity.Level1Closed = vendorDetailsApiModel.Level1Closed;
+            vendorDetailsEntity.Level1Delivery = vendorDetailsApiModel.Level1Delivery;
+            vendorDetailsEntity.Level1ClickAndCollect = vendorDetailsApiModel.Level1ClickAndCollect;
+            vendorDetailsEntity.Level1Open = vendorDetailsApiModel.Level1Open;
+            vendorDetailsEntity.Level2Closed = vendorDetailsApiModel.Level2Closed;
+            vendorDetailsEntity.Level2Delivery = vendorDetailsApiModel.Level2Delivery;
+            vendorDetailsEntity.Level2ClickAndCollect = vendorDetailsApiModel.Level2ClickAndCollect;
+            vendorDetailsEntity.Level2Open = vendorDetailsApiModel.Level2Open;
+            vendorDetailsEntity.Level3Closed = vendorDetailsApiModel.Level3Closed;
+            vendorDetailsEntity.Level3Delivery = vendorDetailsApiModel.Level3Delivery;
+            vendorDetailsEntity.Level3ClickAndCollect = vendorDetailsApiModel.Level3ClickAndCollect;
+            vendorDetailsEntity.Level3Open = vendorDetailsApiModel.Level3Open;
+            vendorDetailsEntity.ClickAndCollectUrl = vendorDetailsApiModel.ClickAndCollectUrl;
 
             // Submit entity update to table.
             var replaceVendorDetailsEntityOperation = TableOperation.Replace(vendorDetailsEntity);
@@ -204,7 +230,20 @@ namespace SosCafe.Admin
                 EmailAddress = entity.EmailAddress,
                 BankAccountNumber = FormatBankAccountNumber(entity.BankAccountNumber),
                 IsClickAndCollect = entity.IsClickAndCollect,
-                InternalTag = entity.InternalTag
+                InternalTag = entity.InternalTag,
+                Level1Closed = entity.Level1Closed,
+                Level1Delivery = entity.Level1Delivery,
+                Level1ClickAndCollect = entity.Level1ClickAndCollect,
+                Level1Open = entity.Level1Open,
+                Level2Closed = entity.Level2Closed,
+                Level2Delivery = entity.Level2Delivery,
+                Level2ClickAndCollect = entity.Level2ClickAndCollect,
+                Level2Open = entity.Level2Open,
+                Level3Closed = entity.Level3Closed,
+                Level3Delivery = entity.Level3Delivery,
+                Level3ClickAndCollect = entity.Level3ClickAndCollect,
+                Level3Open = entity.Level3Open,
+                ClickAndCollectUrl = entity.ClickAndCollectUrl
             })
                 .OrderBy(d => d.BusinessName);
 

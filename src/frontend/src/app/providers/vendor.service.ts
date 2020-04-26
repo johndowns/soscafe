@@ -1,7 +1,7 @@
 import { environment as env } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import {
   VendorSummary,
@@ -17,22 +17,28 @@ import {
 export class VendorService {
 
   private vendorsBaseUrl = env.apiBaseUrl;
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+    })
+  }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getVendors(): Observable<VendorSummary[]> {
-    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/vendors`);
+    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/vendors`, this.httpOptions);
   }
 
   getVendor(vendorId: string): Observable<VendorDetail> {
-    return this.http.get<VendorDetail>(
-      `${this.vendorsBaseUrl}/vendors/${vendorId}`
-    );
+    return this.http.get<VendorDetail>(`${this.vendorsBaseUrl}/vendors/${vendorId}`, this.httpOptions);
   }
 
   getVendorPayments(vendorId: string): Observable<VendorPaymentSummary[]> {
     return this.http.get<VendorPaymentSummary[]>(
-      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments`
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments`,
+      this.httpOptions
     );
   }
 
@@ -41,20 +47,33 @@ export class VendorService {
   ): any {
     return this.http.get(
       `${this.vendorsBaseUrl}/vendors/${vendorId}/payments/csv`,
-      { responseType: 'blob' }
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+        }),
+        responseType: 'blob'
+      }
     );
   }
 
   getVendorVouchers(vendorId: string): Observable<VendorVouchersSummary[]> {
     return this.http.get<VendorVouchersSummary[]>(
-      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers`
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers`,
+      this.httpOptions
     );
   }
 
   downloadVendorVouchersCsv(vendorId: string): any {
     return this.http.get(
       `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/csv`,
-      { responseType: 'blob' }
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+        }),
+        responseType: 'blob'
+      }
     );
   }
 
@@ -64,25 +83,28 @@ export class VendorService {
   ): Observable<VendorDetail> {
     return this.http.put<UpdateVendorDetails>(
       `${this.vendorsBaseUrl}/vendors/${vendorId}`,
-      updateVendorDetails
+      updateVendorDetails,
+      this.httpOptions
     );
   }
 
   //ADMIN VIEW FUCNTIONS
 
   searchVendorAdmin(searchTerm: string, searchType: string): Observable<VendorSummary[]> {
-    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors?${searchType}=${searchTerm}`);
+    return this.http.get<VendorSummary[]>(`${this.vendorsBaseUrl}/internal/vendors?${searchType}=${searchTerm}`, this.httpOptions);
   }
 
   getVendorAdmin(vendorId: string): Observable<VendorDetail> {
     return this.http.get<VendorDetail>(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}`
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}`,
+      this.httpOptions
     );
   }
 
   getVendorPaymentsAdmin(vendorId: string): Observable<VendorPaymentSummary[]> {
     return this.http.get<VendorPaymentSummary[]>(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments`
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments`,
+      this.httpOptions
     );
   }
 
@@ -90,21 +112,34 @@ export class VendorService {
     vendorId: string
   ): any {
     return this.http.get(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/payments/csv`,
-      { responseType: 'blob' }
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/payments/csv`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+        }),
+        responseType: 'blob'
+      }
     );
   }
 
   getVendorVouchersAdmin(vendorId: string): Observable<VendorVouchersSummary[]> {
     return this.http.get<VendorVouchersSummary[]>(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/vouchers`
+      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/vouchers`,
+      this.httpOptions
     );
   }
 
   downloadVendorVouchersCsvAdmin(vendorId: string): any {
     return this.http.get(
-      `${this.vendorsBaseUrl}/internal/vendors/${vendorId}/vouchers/csv`,
-      { responseType: 'blob' }
+      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/csv`,
+      {
+          headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+        }),
+        responseType: 'blob'
+      }
     );
   }
 
@@ -114,14 +149,21 @@ export class VendorService {
   ): Observable<VendorDetail> {
     return this.http.put<UpdateVendorDetails>(
       `${this.vendorsBaseUrl}/internal/vendors/${vendorId}`,
-      updateVendorDetails
+      updateVendorDetails,
+      this.httpOptions
     );
   }
 
   getVendorListAdmin() {
     return this.http.get(
       `${this.vendorsBaseUrl}/internal/vendors/csv`,
-      { responseType: 'blob' }
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+        }),
+        responseType: 'blob'
+      }
     );
   }
 

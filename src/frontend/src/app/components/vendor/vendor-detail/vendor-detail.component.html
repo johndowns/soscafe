@@ -1,11 +1,11 @@
 <div fxLayout="row">
   <div fxFlex.gt-sm="100%">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Business Details</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
+    <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Business Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
           <mat-form-field appearance="none">
             <mat-label>Business Name</mat-label>
             <input matInput formControlName="businessName" readonly>
@@ -34,10 +34,8 @@
               Please enter a valid bank account number, e.g. 12-1234-1234567-12 or 12-1234-1234567-012.
             </mat-error>
           </mat-form-field>
-          <br/><br/>
-          <mat-checkbox formControlName="isClickAndCollect">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
           <ng-container *ngIf="hasAgreedToTerms != true">
-            <p><strong>Terms and conditions</strong></p>
+            <p>Terms and conditions</p>
             <p>
               <small>
                 By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
@@ -52,7 +50,7 @@
             </p>
           </ng-container>
           <ng-container *ngIf="hasAgreedToTerms == true">
-            <p><strong>Terms and conditions</strong></p>
+            <p>Terms and conditions</p>
             <p>
               <small>
                 By signing up, you agree that we are acting as your agent for selling vouchers online. You are asking us
@@ -66,13 +64,70 @@
               <mat-checkbox formControlName="hasAgreedToTerms" disabled>I agree to the above terms</mat-checkbox>
             </p>
           </ng-container>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Click & Collect/ Delivery</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div fxLayout="row">
+            <div fxFlex.gt-sm="5%"></div>
+            <div fxFlex.gt-sm="30%">
+              <h4>Level 3</h4>
+              <p><mat-checkbox formControlName="level3Closed" (change)="level3StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level3Closed">
+                <p><mat-checkbox formControlName="level3Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level3ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level3Open">Fully Open</mat-checkbox></p>
+              </ng-container>
+            </div>
+            <div fxFlex.gt-sm="30%">
+              <h4>Level 2</h4>
+              <p><mat-checkbox formControlName="level2Closed" (change)="level2StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level2Closed">
+                <p><mat-checkbox formControlName="level2Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level2ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level2Open">Fully Open</mat-checkbox></p>
+              </ng-container>
+            </div>
+            <div fxFlex.gt-sm="30%">
+              <h4>Level 1</h4>
+              <p><mat-checkbox formControlName="level1Closed" (change)="level1StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level1Closed">
+                <p><mat-checkbox formControlName="level1Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level1ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level1Open">Fully Open</mat-checkbox></p>
+              </ng-container>
+            </div>
+            <div fxFlex.gt-sm="5%"></div>
+          </div>
+          <br/>
+          <ng-container *ngIf="!isAlreadyClickAndCollect || clickAndCollectUrl == ''">
+            <mat-checkbox formControlName="isClickAndCollect" (change)="isClickAndCollectChange($event)">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
+            <br/><br/>
+          </ng-container>
+          <mat-checkbox formControlName="isAlreadyClickAndCollect" (change)="isAlreadyClickAndCollectChange($event)">I already have <i>Click & Collect</i> set up</mat-checkbox>
+          <br/>
+          <ng-container *ngIf="isAlreadyClickAndCollect">
+            <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
+              <mat-form-field appearance="outline">
+                <mat-label>Please let us know your Click & Collect URL.</mat-label>
+                <input matInput formControlName="clickAndCollectUrl">
+              </mat-form-field>
+            </ng-container>
+          </ng-container>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
           <div class="button-row">
             <button mat-raised-button color="primary" [disabled]="!vendorForm.valid || workInProgress" type="submit">Save</button>
             <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
           </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </form>
   </div>
 </div>
 <div class="loading-indicator" *ngIf="workInProgress">
