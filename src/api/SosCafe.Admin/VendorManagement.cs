@@ -87,7 +87,20 @@ namespace SosCafe.Admin
                 PhoneNumber = vendorDetailsEntity.PhoneNumber,
                 BankAccountNumber = vendorDetailsEntity.BankAccountNumber,
                 HasAgreedToTerms = (vendorDetailsEntity.DateAcceptedTerms != null),
-                IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect
+                IsClickAndCollect = vendorDetailsEntity.IsClickAndCollect,
+                Level1Closed = vendorDetailsEntity.Level1Closed,
+                Level1Delivery = vendorDetailsEntity.Level1Delivery,
+                Level1ClickAndCollect = vendorDetailsEntity.Level1ClickAndCollect,
+                Level1Open = vendorDetailsEntity.Level1Open,
+                Level2Closed = vendorDetailsEntity.Level2Closed,
+                Level2Delivery = vendorDetailsEntity.Level2Delivery,
+                Level2ClickAndCollect = vendorDetailsEntity.Level2ClickAndCollect,
+                Level2Open = vendorDetailsEntity.Level2Open,
+                Level3Closed = vendorDetailsEntity.Level3Closed,
+                Level3Delivery = vendorDetailsEntity.Level3Delivery,
+                Level3ClickAndCollect = vendorDetailsEntity.Level3ClickAndCollect,
+                Level3Open = vendorDetailsEntity.Level3Open,
+                ClickAndCollectUrl = vendorDetailsEntity.ClickAndCollectUrl
             };
 
             // Return the vendor details.
@@ -128,6 +141,19 @@ namespace SosCafe.Admin
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
+            vendorDetailsEntity.Level1Closed = vendorDetailsApiModel.Level1Closed;
+            vendorDetailsEntity.Level1Delivery = vendorDetailsApiModel.Level1Delivery;
+            vendorDetailsEntity.Level1ClickAndCollect = vendorDetailsApiModel.Level1ClickAndCollect;
+            vendorDetailsEntity.Level1Open = vendorDetailsApiModel.Level1Open;
+            vendorDetailsEntity.Level2Closed = vendorDetailsApiModel.Level2Closed;
+            vendorDetailsEntity.Level2Delivery = vendorDetailsApiModel.Level2Delivery;
+            vendorDetailsEntity.Level2ClickAndCollect = vendorDetailsApiModel.Level2ClickAndCollect;
+            vendorDetailsEntity.Level2Open = vendorDetailsApiModel.Level2Open;
+            vendorDetailsEntity.Level3Closed = vendorDetailsApiModel.Level3Closed;
+            vendorDetailsEntity.Level3Delivery = vendorDetailsApiModel.Level3Delivery;
+            vendorDetailsEntity.Level3ClickAndCollect = vendorDetailsApiModel.Level3ClickAndCollect;
+            vendorDetailsEntity.Level3Open = vendorDetailsApiModel.Level3Open;
+            vendorDetailsEntity.ClickAndCollectUrl = vendorDetailsApiModel.ClickAndCollectUrl;
             if (vendorDetailsApiModel.DateAcceptedTerms != null)
             {
                 vendorDetailsEntity.DateAcceptedTerms = vendorDetailsApiModel.DateAcceptedTerms.Value.ToString("o");
@@ -362,7 +388,20 @@ namespace SosCafe.Admin
                 DateAcceptedTerms = registrationTime,
                 EmailAddress = emailAddress,
                 ContactName = contactName,
-                RegisteredDate = registrationTime
+                RegisteredDate = registrationTime,
+                Level1Closed = requestModel.Level1Closed,
+                Level1Delivery = requestModel.Level1Delivery,
+                Level1ClickAndCollect = requestModel.Level1ClickAndCollect,
+                Level1Open = requestModel.Level1Open,
+                Level2Closed = requestModel.Level2Closed,
+                Level2Delivery = requestModel.Level2Delivery,
+                Level2ClickAndCollect = requestModel.Level2ClickAndCollect,
+                Level2Open = requestModel.Level2Open,
+                Level3Closed = requestModel.Level3Closed,
+                Level3Delivery = requestModel.Level3Delivery,
+                Level3ClickAndCollect = requestModel.Level3ClickAndCollect,
+                Level3Open = requestModel.Level3Open,
+                ClickAndCollectUrl = requestModel.ClickAndCollectUrl ?? string.Empty
             });
 
             return new AcceptedResult();

@@ -1,52 +1,100 @@
 <div fxLayout="row">
   <div fxFlex.gt-sm="100%">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title><mat-icon>verified_user</mat-icon> Business Details</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
-          <mat-form-field appearance="none">
-            <mat-label>Business Name</mat-label>
-            <input matInput formControlName="businessName" readonly>
-          </mat-form-field>
-          <mat-form-field appearance="none">
-            <mat-label>Business ID</mat-label>
-            <input matInput formControlName="id" readonly>
-          </mat-form-field>
-          <mat-form-field appearance="none">
-            <mat-label>Registered Date</mat-label>
-            <input matInput formControlName="registeredDate" readonly>
-          </mat-form-field>
-          <mat-form-field appearance="none">
-            <mat-label>Email Address</mat-label>
-            <input matInput formControlName="emailAddress" readonly>
-          </mat-form-field>
-          <mat-form-field appearance="none">
-            <mat-label>Contact Name</mat-label>
-            <input matInput formControlName="contactName">
-          </mat-form-field>
-          <mat-form-field appearance="none">
-            <mat-label>Phone Number</mat-label>
-            <input matInput formControlName="phoneNumber">
-          </mat-form-field>
-          <mat-form-field appearance="none">
-            <mat-label>Bank Account Number</mat-label>
-            <input matInput formControlName="bankAccountNumber">
-          </mat-form-field>
-          <p><mat-checkbox formControlName="isClickAndCollect">Is interested in setting up <i>Click & Collect</i></mat-checkbox></p>
-          <p><mat-checkbox formControlName="hasAgreedToTerms" disabled>Has agreed to terms and conditions</mat-checkbox></p>
-          <mat-form-field appearance="outline">
-            <mat-label>Tag</mat-label>
-            <input matInput formControlName="internalTag">
-          </mat-form-field>
+    <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title><mat-icon>verified_user</mat-icon> Business Details</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field appearance="outline">
+              <mat-label>Business Name</mat-label>
+              <input matInput formControlName="businessName">
+            </mat-form-field>
+            <mat-form-field appearance="none">
+              <mat-label>Business ID</mat-label>
+              <input matInput formControlName="id" readonly>
+            </mat-form-field>
+            <mat-form-field appearance="none">
+              <mat-label>Registered Date</mat-label>
+              <input matInput formControlName="registeredDate" readonly>
+            </mat-form-field>
+            <mat-form-field appearance="none">
+              <mat-label>Email Address</mat-label>
+              <input matInput formControlName="emailAddress" readonly>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Name</mat-label>
+              <input matInput formControlName="contactName">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Phone Number</mat-label>
+              <input matInput formControlName="phoneNumber">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Bank Account Number</mat-label>
+              <input matInput formControlName="bankAccountNumber">
+            </mat-form-field>
+            <p><mat-checkbox formControlName="hasAgreedToTerms" disabled>Has agreed to terms and conditions</mat-checkbox></p>
+            <mat-form-field appearance="outline">
+              <mat-label>Tag</mat-label>
+              <input matInput formControlName="internalTag">
+            </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Click & Collect/ Delivery</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div fxLayout="row">
+            <div fxFlex.gt-sm="5%"></div>
+            <div fxFlex.gt-sm="30%">
+              <h4>Level 3</h4>
+              <p><mat-checkbox formControlName="level3Closed" (change)="level3StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level3Closed">
+                <p><mat-checkbox formControlName="level3Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level3ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level3Open">Fully Open</mat-checkbox></p>
+              </ng-container>
+            </div>
+            <div fxFlex.gt-sm="30%">
+              <h4>Level 2</h4>
+              <p><mat-checkbox formControlName="level2Closed" (change)="level2StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level2Closed">
+                <p><mat-checkbox formControlName="level2Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level2ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level2Open">Fully Open</mat-checkbox></p>
+              </ng-container>
+            </div>
+            <div fxFlex.gt-sm="30%">
+              <h4>Level 1</h4>
+              <p><mat-checkbox formControlName="level1Closed" (change)="level1StatusChange($event)">Closed</mat-checkbox></p>
+              <ng-container *ngIf="!level1Closed">
+                <p><mat-checkbox formControlName="level1Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level1ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level1Open">Fully Open</mat-checkbox></p>
+              </ng-container>
+            </div>
+            <div fxFlex.gt-sm="5%"></div>
+          </div>
+          <br/>
+          <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
+            <mat-form-field appearance="outline">
+              <mat-label>Click & Collect System URL</mat-label>
+              <input matInput formControlName="clickAndCollectUrl">
+            </mat-form-field>
+          </ng-container>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
           <div class="button-row">
             <button mat-raised-button color="primary" [disabled]="!vendorForm.valid || workInProgress" type="submit">Save</button>
             <button mat-raised-button color="warn" (click)="onCancelClick()" type="button">Cancel</button>
           </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </form>
   </div>
 </div>
 <div class="loading-indicator" *ngIf="workInProgress">

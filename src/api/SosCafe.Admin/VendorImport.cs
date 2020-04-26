@@ -58,7 +58,20 @@ namespace SosCafe.Admin.Models
                 PhoneNumber = vendorToImport.PhoneNumber,
                 BankAccountNumber = vendorToImport.BankAccountNumber,
                 DateAcceptedTerms = vendorToImport.DateAcceptedTerms?.ToString("o"),
-                IsClickAndCollect = vendorToImport.IsClickAndCollect
+                IsClickAndCollect = vendorToImport.IsClickAndCollect,
+                Level1Closed = vendorToImport.Level1Closed,
+                Level1Delivery = vendorToImport.Level1Delivery,
+                Level1ClickAndCollect = vendorToImport.Level1ClickAndCollect,
+                Level1Open = vendorToImport.Level1Open,
+                Level2Closed = vendorToImport.Level2Closed,
+                Level2Delivery = vendorToImport.Level2Delivery,
+                Level2ClickAndCollect = vendorToImport.Level2ClickAndCollect,
+                Level2Open = vendorToImport.Level2Open,
+                Level3Closed = vendorToImport.Level3Closed,
+                Level3Delivery = vendorToImport.Level3Delivery,
+                Level3ClickAndCollect = vendorToImport.Level3ClickAndCollect,
+                Level3Open = vendorToImport.Level3Open,
+                ClickAndCollectUrl = vendorToImport.ClickAndCollectUrl
             };
 
             // Upsert vendor table entity.
