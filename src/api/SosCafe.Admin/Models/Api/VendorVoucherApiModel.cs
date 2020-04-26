@@ -33,5 +33,7 @@ namespace SosCafe.Admin.Models.Api
         public decimal VoucherFees { get; set; }
 
         public decimal VoucherNet { get; set; }
+
+        public DateTime? RedemptionDate { get; set; }
     }
 }

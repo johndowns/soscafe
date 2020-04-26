@@ -251,6 +251,7 @@ namespace SosCafe.Admin
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("VendorVoucherRedemptions", Connection = "SosCafeStorage")] CloudTable vendorVoucherRedemptionsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
@@ -263,8 +264,8 @@ namespace SosCafe.Admin
             }
 
             // Get the vouchers and map the results to a response model.
-            var allVouchersForVendor = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable);
-            var mappedResults = allVouchersForVendor.Select(entity => new VendorVoucherApiModel
+            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable, vendorVoucherRedemptionsTable);
+            var mappedResults = allVouchers.Select(entity => new VendorVoucherApiModel
             {
                 LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
@@ -280,7 +281,8 @@ namespace SosCafe.Admin
                 VoucherIsDonation = entity.VoucherIsDonation,
                 VoucherGross = entity.VoucherGross,
                 VoucherFees = entity.VoucherFees,
-                VoucherNet = entity.VoucherNet
+                VoucherNet = entity.VoucherNet,
+                RedemptionDate = allVoucherRedemptions.SingleOrDefault(redemptionEntity => redemptionEntity.LineItemId == entity.LineItemId)?.RedemptionDate
             })
                 .OrderByDescending(d => d.OrderDate);
 
@@ -294,6 +296,7 @@ namespace SosCafe.Admin
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("VendorVoucherRedemptions", Connection = "SosCafeStorage")] CloudTable vendorVoucherRedemptionsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
@@ -306,8 +309,8 @@ namespace SosCafe.Admin
             }
 
             // Get the vouchers and map the results to a response model.
-            var allVouchersForVendor = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable);
-            var mappedResults = allVouchersForVendor.Select(entity => new VendorVoucherCsv
+            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable, vendorVoucherRedemptionsTable);
+            var mappedResults = allVouchers.Select(entity => new VendorVoucherCsv
             {
                 VendorId = entity.VendorId,
                 LineItemId = entity.LineItemId,
@@ -324,7 +327,8 @@ namespace SosCafe.Admin
                 VoucherIsDonation = entity.VoucherIsDonation.ToString(),
                 VoucherGross = entity.VoucherGross.ToString(),
                 VoucherFees = entity.VoucherFees.ToString(),
-                VoucherNet = entity.VoucherNet.ToString()
+                VoucherNet = entity.VoucherNet.ToString(),
+                RedemptionDate = allVoucherRedemptions.SingleOrDefault(redemptionEntity => redemptionEntity.LineItemId == entity.LineItemId)?.RedemptionDate
             })
                 .OrderByDescending(d => d.OrderDate);
 
@@ -423,20 +427,30 @@ namespace SosCafe.Admin
             return allPaymentsForVendor;
         }
 
-        private static async Task<List<VendorVoucherEntity>> GetVouchersForVendorAsync(string vendorId, CloudTable vendorVouchersTable)
+        private static async Task<(List<VendorVoucherEntity>, List<VendorVoucherRedemptionEntity>)> GetVouchersForVendorAsync(string vendorId, CloudTable vendorVouchersTable, CloudTable vendorVoucherRedemptionsTable)
+        {
+            var voucherEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherEntity>(vendorId, vendorVouchersTable);
+            var voucherRedemptionEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherRedemptionEntity>(vendorId, vendorVouchersTable);
+
+            await Task.WhenAll(voucherEntitiesTask, voucherRedemptionEntitiesTask);
+
+            return (voucherEntitiesTask.Result, voucherRedemptionEntitiesTask.Result);
+        }
+
+        private static async Task<List<T>> GetAllEntitiesForVendorAsync<T>(string vendorId, CloudTable table) where T : ITableEntity, new()
         {
             // Read all records from table storage where the partition key is the vendor's ID.
             TableContinuationToken token = null;
-            var allVouchersForVendor = new List<VendorVoucherEntity>();
+            var allEntitiesForVendor = new List<T>();
             var filterToVendorPartition = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, vendorId);
             do
             {
-                var queryResult = await vendorVouchersTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorVoucherEntity>().Where(filterToVendorPartition), token);
-                allVouchersForVendor.AddRange(queryResult.Results);
+                var queryResult = await table.ExecuteQuerySegmentedAsync(new TableQuery<T>().Where(filterToVendorPartition), token);
+                allEntitiesForVendor.AddRange(queryResult.Results);
                 token = queryResult.ContinuationToken;
             } while (token != null);
 
-            return allVouchersForVendor;
+            return allEntitiesForVendor;
         }
     }
 }
