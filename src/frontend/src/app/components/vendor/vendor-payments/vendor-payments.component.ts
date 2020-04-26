@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { VendorPaymentSummary } from 'src/app/model';
 import { VendorService } from 'src/app/providers';
 import { saveAs } from 'file-saver';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-vendor-payments',
@@ -21,15 +22,17 @@ export class VendorPaymentsComponent implements OnInit {
   dataSource: MatTableDataSource<VendorPaymentSummary>;
   @ViewChild(MatPaginator, { static: true })
   paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true })
+  @ViewChild(MatSort, { static: false })
   sort: MatSort;
   public workInProgress = false;
   private vendorId: string;
+  _ = _;
 
   constructor(
     private vendorService: VendorService,
     private route: ActivatedRoute
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.workInProgress = true;
