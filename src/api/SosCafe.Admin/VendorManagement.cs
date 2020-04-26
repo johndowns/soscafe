@@ -340,6 +340,70 @@ namespace SosCafe.Admin
             };
         }
 
+        [FunctionName("UpdateVoucher")]
+        public static async Task<IActionResult> UpdateVoucher(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "PATCH", Route = "vendors/{vendorId}/vouchers/{voucherId}")] UpdateVoucherApiModel updateVoucherApiModel,
+            ClaimsPrincipal claimsPrincipal,
+            string vendorId, string voucherId,
+            [Table("VendorVoucherRedemptions", Connection = "SosCafeStorage")] CloudTable vendorVoucherRedemptionsTable,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
+            ILogger log)
+        {
+            // Authorise the request.
+            log.LogInformation("Received PATCH vouchers request for vendor {VendorId} and voucher ID {VoucherId}.", vendorId, voucherId);
+            if (!await UserManagement.IsUserAuthorisedForVendor(vendorUserAssignmentsTable, claimsPrincipal, vendorId))
+            {
+                log.LogInformation("Received unauthorised request for vendor {VendorId}. Denying request.", vendorId);
+                return new NotFoundResult();
+            }
+
+            // Create a voucher redemption entity so that we can track it.
+            var voucherRedemptionEntity = new VendorVoucherRedemptionEntity
+            {
+                VendorId = vendorId,
+                LineItemId = voucherId
+            };
+
+            if (updateVoucherApiModel.RedemptionDate == null)
+            {
+                // Delete the redemption.
+                var deleteVoucherRedemptionEntityOperation = TableOperation.Delete(voucherRedemptionEntity);
+                var deleteVoucherRedemptionEntityOperationResult = await vendorVoucherRedemptionsTable.ExecuteAsync(deleteVoucherRedemptionEntityOperation);
+                if (deleteVoucherRedemptionEntityOperationResult.HttpStatusCode == 404)
+                {
+                    log.LogInformation("Did not found a VendorVoucherRedemptions entity to delete.");
+                }
+                else if (deleteVoucherRedemptionEntityOperationResult.HttpStatusCode < 200 || deleteVoucherRedemptionEntityOperationResult.HttpStatusCode > 299)
+                {
+                    log.LogError("Failed to delete entity from VendorVoucherRedemptions table. Status code={UpsertStatusCode}, Result={DeleteResult}", deleteVoucherRedemptionEntityOperationResult.HttpStatusCode, deleteVoucherRedemptionEntityOperationResult.Result);
+                }
+                else
+                {
+                    log.LogInformation("Deleted entity from VendorVoucherRedemptions table.");
+                }
+            }
+            else
+            {
+                // Note the redemption date on the voucher.
+                voucherRedemptionEntity.RedemptionDate = updateVoucherApiModel.RedemptionDate.Value;
+
+                // Create or update the redemption.
+                var upsertVoucherRedemptionEntityOperation = TableOperation.InsertOrReplace(voucherRedemptionEntity);
+                var upsertVoucherRedemptionEntityOperationResult = await vendorVoucherRedemptionsTable.ExecuteAsync(upsertVoucherRedemptionEntityOperation);
+                if (upsertVoucherRedemptionEntityOperationResult.HttpStatusCode < 200 || upsertVoucherRedemptionEntityOperationResult.HttpStatusCode > 299)
+                {
+                    log.LogError("Failed to upsert entity into VendorVoucherRedemptions table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVoucherRedemptionEntityOperationResult.HttpStatusCode, upsertVoucherRedemptionEntityOperationResult.Result);
+                }
+                else
+                {
+                    log.LogInformation("Upserted entity into VendorVoucherRedemptions table.");
+                }
+            }
+
+            // Return the voucher list.
+            return new OkResult();
+        }
+
         [FunctionName("CreateVendor")]
         public static IActionResult CreateVendor(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "vendors")] AddVendorRequestApiModel requestModel,
