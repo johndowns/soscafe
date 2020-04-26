@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { saveAs } from 'file-saver';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-vendor-vouchers',
@@ -36,10 +37,15 @@ export class VendorVouchersComponent implements OnInit {
   sort: MatSort;
   public workInProgress = false;
   private vendorId: string;
+<<<<<<< HEAD
   private voucherId: string;
   private lineItemId: string;
   private dateRedeemed: Date;
 
+=======
+  _ = _;
+  
+>>>>>>> master
   constructor(
     private vendorService: VendorService,
     private route: ActivatedRoute,
