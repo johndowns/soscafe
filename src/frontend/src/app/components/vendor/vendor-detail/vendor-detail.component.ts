@@ -17,7 +17,6 @@ export class VendorDetailComponent implements OnInit {
   public level2Closed: boolean;
   public level3Closed: boolean;
   public isClickAndCollect: boolean;
-  public isAlreadyClickAndCollect = false;
   public clickAndCollectUrl: string;
   public bankAccountNumber: FormControl;
   public workInProgress = false;
@@ -60,24 +59,18 @@ export class VendorDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.workInProgress = true;
+    this.workInProgress = true
 
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendor(this.vendorId).subscribe(
       (res) => {
+        console.log(res);
         this.clickAndCollectUrl = res.clickAndCollectUrl;
         this.isClickAndCollect = res.isClickAndCollect;
         this.level1Closed = res.level1Closed;
         this.level2Closed = res.level2Closed;
         this.level3Closed = res.level3Closed;
         this.hasAgreedToTerms = res.hasAgreedToTerms;
-
-        if (this.clickAndCollectUrl === null || this.clickAndCollectUrl === ""){
-          this.isAlreadyClickAndCollect = false;
-        }
-        else {
-          this.isAlreadyClickAndCollect = true;
-        }
 
         this.vendorForm.patchValue({
           id: res.id,
@@ -89,7 +82,6 @@ export class VendorDetailComponent implements OnInit {
           bankAccountNumber: res.bankAccountNumber,
           hasAgreedToTerms: res.hasAgreedToTerms,
           isClickAndCollect: res.isClickAndCollect,
-          isAlreadyClickAndCollect: this.isAlreadyClickAndCollect,
           clickAndCollectUrl: res.clickAndCollectUrl,
           level1Closed: res.level1Closed,
           level2Closed: res.level2Closed,
@@ -127,36 +119,8 @@ export class VendorDetailComponent implements OnInit {
     this.level1Closed = e.checked;
   }
 
-  isClickAndCollectChange(e) {
+  clickAndCollectChange(e) {
     this.isClickAndCollect = e.checked;
-    if (e.checked) {
-      this.vendorForm.patchValue({
-        isAlreadyClickAndCollect: false,
-      });
-      this.isAlreadyClickAndCollect = false;
-    }
-    else {
-      this.vendorForm.patchValue({
-        isAlreadyClickAndCollect: true,
-      });
-      this.isAlreadyClickAndCollect = true;
-    }
-  }
-
-  isAlreadyClickAndCollectChange(e) {
-    this.isAlreadyClickAndCollect = e.checked;
-    if (e.checked) {
-      this.vendorForm.patchValue({
-        isClickAndCollect: false,
-      });
-      this.isClickAndCollect = false;
-    }
-    else {
-      this.vendorForm.patchValue({
-        isClickAndCollect: true,
-      });
-      this.isClickAndCollect = true;
-    }
   }
 
   onCancelClick() {
