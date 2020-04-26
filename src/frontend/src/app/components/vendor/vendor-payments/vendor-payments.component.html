@@ -45,6 +45,7 @@
           </div>
         </div>
         <mat-paginator [class.visible]="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+        <p *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length == 0">There are no payment records for this business.</p>
       </mat-card-content>
     </mat-card>
   </div>

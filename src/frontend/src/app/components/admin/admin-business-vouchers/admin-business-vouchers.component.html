@@ -71,20 +71,13 @@
                 <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Donation</th>
                 <td class="cell-right" mat-cell *matCellDef="let row">{{ row.voucherIsDonation | yesNo }}</td>
               </ng-container>
-              <ng-container matColumnDef="noData">
-                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                  No voucher records.
-                </mat-footer-cell>
-              </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <ng-container *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0">
-                <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
-              </ng-container>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>              
             </table>
           </div>
         </div>
         <mat-paginator [class.visible]="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+        <p *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length == 0">There are no vouchers for this business.</p>
       </mat-card-content>
     </mat-card>
   </div>

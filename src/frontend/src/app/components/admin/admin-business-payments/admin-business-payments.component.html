@@ -31,20 +31,13 @@
                 <th class="cell-right" mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
                 <td class="cell-right" mat-cell *matCellDef="let row">{{ row.netPayment | currency }}</td>
               </ng-container>
-              <ng-container matColumnDef="noData">
-                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                  There are no payment records for this business.
-                </mat-footer-cell>
-              </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <ng-container *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0">
-                <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
-              </ng-container>
             </table>
           </div>
         </div>
         <mat-paginator [class.visible]="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+        <p *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length == 0">There are no payment records for this business.</p>
       </mat-card-content>
     </mat-card>
   </div>

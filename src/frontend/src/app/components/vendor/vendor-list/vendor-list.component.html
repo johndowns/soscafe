@@ -28,23 +28,15 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="noData">
-                <mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-                  <p>You don't have any businesses linked to your account yet. <a href="/new-vendor">Click here to register a new one. </a>If this isn't what you expect, please email <a href="mailto:portal@sosbusiness.nz" target="_blank">portal@sosbusiness.nz</a> and we will help.</p>
-                </mat-footer-cell>
-              </ng-container>
-
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              <ng-container *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0">
-                <mat-footer-row *matFooterRowDef="['noData']" ></mat-footer-row>
-              </ng-container>
             </table>
           </div>
         </div>
         <br>
         <a href="http://sosbusiness.nz/pages/vendor-portal" target="_blank">Having problems? Check out our frequently asked questions.</a>
         <mat-paginator [class.visible]="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length > 0" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
+        <p *ngIf="!_.isUndefined(dataSource) && _.get(dataSource,'data',[]).length == 0">You don't have any businesses linked to your account yet. <a href="/new-vendor">Click here to register a new one. </a>If this isn't what you expect, please email <a href="mailto:portal@sosbusiness.nz" target="_blank">portal@sosbusiness.nz</a> and we will help.</p>
       </mat-card-content>
     </mat-card>
   </div>
