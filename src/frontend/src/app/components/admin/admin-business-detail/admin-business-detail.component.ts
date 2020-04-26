@@ -149,6 +149,7 @@ export class AdminBusinessDetailComponent implements OnInit {
       .updateVendorAdmin(this.vendorId, updateVendorDetails)
       .subscribe(
         () => {
+          document.getElementsByTagName('mat-sidenav-content')[0].scrollTop = 0;
           this.onSubmitConfirmation(true);
         },
         (err) => {

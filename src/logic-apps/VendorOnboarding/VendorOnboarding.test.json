@@ -83,7 +83,7 @@
             "Insert_vendor_user_assignment_entity": {
                 "inputs": {
                     "body": {
-                        "PartitionKey": "@{toUpper(body('Parse_JSON')?['emailAddress'])}",
+                        "PartitionKey": "@{body('Parse_JSON')?['emailAddressCanonicalised']}",
                         "RowKey": "@{body('Add_vendor_to_Shopify').shopifyId}",
                         "Source": "Registration",
                         "UserId": "@{body('Parse_JSON')?['emailAddress']}",
@@ -130,6 +130,9 @@
                                 "type": "string"
                             },
                             "emailAddress": {
+                                "type": "string"
+                            },
+                            "emailAddressCanonicalised": {
                                 "type": "string"
                             },
                             "hasAcceptedTerms": {
