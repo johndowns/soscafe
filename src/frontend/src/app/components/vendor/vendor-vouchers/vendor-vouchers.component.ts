@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { saveAs } from 'file-saver';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-vendor-vouchers',
@@ -37,6 +38,9 @@ export class VendorVouchersComponent implements OnInit {
   public workInProgress = false;
   private vendorId: string;
   private voucherId: string;
+  private lineItemId: string;
+  private redemptionDate: Date;
+  _=_;
 
   constructor(
     private vendorService: VendorService,
@@ -51,7 +55,7 @@ export class VendorVouchersComponent implements OnInit {
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort
 
         console.log(res);
       },
@@ -62,19 +66,15 @@ export class VendorVouchersComponent implements OnInit {
     );
   }
 
-  redeemVoucher(vendorVouchersSummary: VendorVouchersSummary) {
-    console.log(vendorVouchersSummary);
+  redeemVoucher(lineItemId) {
     this.workInProgress = true;
 
-    const updateVoucherDetails: UpdateVoucherDetails = {
-      ...vendorVouchersSummary,
-      dateRedeemed: new Date(),
-    };
+    this.redemptionDate = new Date();
 
-    this.voucherId = vendorVouchersSummary;
+    this.lineItemId = lineItemId;
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.voucherId, updateVoucherDetails)
+      .updateVoucher(this.vendorId, this.lineItemId, this.redemptionDate)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
@@ -89,17 +89,15 @@ export class VendorVouchersComponent implements OnInit {
       );
   }
 
-  undoRedeemVoucher(vendorVouchersSummary: VendorVouchersSummary) {
+  undoRedeemVoucher(lineItemId) {
     this.workInProgress = true;
-    const updateVoucherDetails: UpdateVoucherDetails = {
-      ...vendorVouchersSummary,
-      dateRedeemed: null,
-    };
 
-    this.voucherId = vendorVouchersSummary;
+    this.redemptionDate = null;
+
+    this.lineItemId = lineItemId;
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.voucherId, updateVoucherDetails)
+      .updateVoucher(this.vendorId, this.lineItemId, this.redemptionDate)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);

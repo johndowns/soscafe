@@ -11,7 +11,8 @@ export class VendorVouchersSummary {
   voucherQuantity: number ;
   voucherIsDonation: boolean;
   voucherId: string;
-  voucherGross: number ;
-  voucherFees: number ;
+  voucherGross: number;
+  voucherFees: number;
   voucherNet: number;
+  lineItemId: string;
 }

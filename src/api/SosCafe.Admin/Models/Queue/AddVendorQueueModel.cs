@@ -13,6 +13,7 @@ namespace SosCafe.Admin.Models.Queue
         public string BankAccountNumber { get; set; }
         public DateTime DateAcceptedTerms { get; set; }
         public string EmailAddress { get; set; }
+        public string EmailAddressCanonicalised { get; set; }
         public string ContactName { get; set; }
         public DateTime RegisteredDate { get; set; }
         public bool IsClickAndCollect { get; set; }

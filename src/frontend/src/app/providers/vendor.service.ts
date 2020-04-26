@@ -89,16 +89,9 @@ export class VendorService {
     );
   }
 
-  updateVoucher(
-    vendorId: string,
-    voucherId: string,
-    updateVoucherDetails: UpdateVoucherDetails
-  ): Observable<VendorVouchersSummary> {
-    return this.http.put<UpdateVoucherDetails>(
-      `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/${voucherId}`,
-      updateVoucherDetails,
-      this.httpOptions
-    );
+  updateVoucher(vendorId: string, lineItemId: string, redemptionDate: Date): Observable<{}> {
+    const url = `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/${lineItemId}`;
+    return this.http.patch(url, { redemptionDate: redemptionDate }, this.httpOptions);
   }
 
   //ADMIN VIEW FUCNTIONS

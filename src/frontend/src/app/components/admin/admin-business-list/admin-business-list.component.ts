@@ -31,6 +31,7 @@ export class AdminBusinessListComponent implements OnInit {
   userName = '';
   userEmail= '';
   isAdmin;
+  _ = _;
 
   public businessSearchForm = new FormGroup({
     search: new FormControl(''),
@@ -69,6 +70,8 @@ export class AdminBusinessListComponent implements OnInit {
         }
         else {
           this.dataSource = new MatTableDataSource(res);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
           this.notFound = false;
         }
       },
