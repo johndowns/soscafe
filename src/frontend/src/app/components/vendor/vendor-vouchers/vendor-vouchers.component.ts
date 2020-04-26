@@ -37,6 +37,8 @@ export class VendorVouchersComponent implements OnInit {
   public workInProgress = false;
   private vendorId: string;
   private voucherId: string;
+  private lineItemId: string;
+  private dateRedeemed: Date;
 
   constructor(
     private vendorService: VendorService,
@@ -51,7 +53,7 @@ export class VendorVouchersComponent implements OnInit {
       (res) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.sort
 
         console.log(res);
       },
@@ -62,19 +64,15 @@ export class VendorVouchersComponent implements OnInit {
     );
   }
 
-  redeemVoucher(vendorVouchersSummary: VendorVouchersSummary) {
-    console.log(vendorVouchersSummary);
+  redeemVoucher(lineItemId) {
     this.workInProgress = true;
 
-    const updateVoucherDetails: UpdateVoucherDetails = {
-      ...vendorVouchersSummary,
-      dateRedeemed: new Date(),
-    };
+    this.dateRedeemed = new Date();
 
-    this.voucherId = vendorVouchersSummary;
+    this.lineItemId = lineItemId;
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.voucherId, updateVoucherDetails)
+      .updateVoucher(this.vendorId, this.lineItemId, this.dateRedeemed)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
@@ -89,17 +87,15 @@ export class VendorVouchersComponent implements OnInit {
       );
   }
 
-  undoRedeemVoucher(vendorVouchersSummary: VendorVouchersSummary) {
+  undoRedeemVoucher(lineItemId) {
     this.workInProgress = true;
-    const updateVoucherDetails: UpdateVoucherDetails = {
-      ...vendorVouchersSummary,
-      dateRedeemed: null,
-    };
 
-    this.voucherId = vendorVouchersSummary;
+    this.dateRedeemed = null;
+
+    this.lineItemId = lineItemId;
 
     this.vendorService
-      .updateVoucher(this.vendorId, this.voucherId, updateVoucherDetails)
+      .updateVoucher(this.vendorId, this.lineItemId, this.dateRedeemed)
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);

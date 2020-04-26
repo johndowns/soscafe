@@ -19,24 +19,18 @@
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort>
               <ng-container matColumnDef="redeemVoucher">
-                <!-- <th mat-header-cell *matHeaderCellDef mat-sort-header>Redeem Voucher</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Redeem Voucher</th>
                 <td mat-cell *matCellDef="let row">
                   <ng-container *ngIf="row.dateRedeemed === null">
-                    <button mat-stroked-button color="primary" (click)="redeemVoucher(row.voucherId)">
+                    <button mat-stroked-button color="primary" (click)="redeemVoucher(row.lineItemId)">
                       Redeem
                     </button>
                   </ng-container>
                   <ng-container *ngIf="row.dateRedeemed != null">
-                    <button mat-stroked-button color="primary" (click)="undoRedeemVoucher(row.voucherId)">
+                    <button mat-stroked-button color="primary" (click)="undoRedeemVoucher(row.lineItemId)">
                       Undo
                     </button>
                   </ng-container>
-                </td> -->
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Redeem Voucher</th>
-                <td mat-cell *matCellDef="let row">
-                  <button mat-stroked-button color="primary" (click)="redeemVoucher(row.voucherId)">
-                    Redeem
-                  </button>
                 </td>
               </ng-container>
               <ng-container matColumnDef="orderRef">
