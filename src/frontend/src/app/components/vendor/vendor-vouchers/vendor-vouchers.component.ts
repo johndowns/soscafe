@@ -66,6 +66,22 @@ export class VendorVouchersComponent implements OnInit {
     );
   }
 
+  refreshData() {
+    this.vendorService.getVendorVouchers(this.vendorId).subscribe(
+      (res) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort
+
+        console.log(res);
+      },
+      (err) => console.error('HTTP Error', err),
+      () => {
+        this.workInProgress = false;
+      }
+    );
+  }
+
   redeemVoucher(lineItemId) {
     this.workInProgress = true;
 
@@ -78,6 +94,7 @@ export class VendorVouchersComponent implements OnInit {
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
+          this.refreshData();
         },
         (err) => {
           console.error('HTTP Error', err);
@@ -87,7 +104,6 @@ export class VendorVouchersComponent implements OnInit {
           this.workInProgress = false;
         }
       );
-    this.dataSource.paginator._changePageSize(this.dataSource.paginator.pageSize);
   }
 
   undoRedeemVoucher(lineItemId) {
@@ -102,6 +118,7 @@ export class VendorVouchersComponent implements OnInit {
       .subscribe(
         () => {
           this.onSubmitConfirmation(true);
+          this.refreshData();
         },
         (err) => {
           console.error('HTTP Error', err);
@@ -111,7 +128,6 @@ export class VendorVouchersComponent implements OnInit {
           this.workInProgress = false;
         }
       );
-    this.dataSource.paginator._changePageSize(this.dataSource.paginator.pageSize);
   }
 
   onSubmitConfirmation(isSucess: boolean) {
