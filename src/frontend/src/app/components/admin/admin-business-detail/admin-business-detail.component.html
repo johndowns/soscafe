@@ -34,11 +34,12 @@
               <mat-label>Bank Account Number</mat-label>
               <input matInput formControlName="bankAccountNumber">
             </mat-form-field>
-            <p><mat-checkbox formControlName="hasAgreedToTerms" disabled>Has agreed to terms and conditions</mat-checkbox></p>
             <mat-form-field appearance="outline">
               <mat-label>Tag</mat-label>
               <input matInput formControlName="internalTag">
             </mat-form-field>
+            <br/><br/>
+            <mat-checkbox formControlName="hasAgreedToTerms" disabled>Has agreed to terms and conditions</mat-checkbox>
         </mat-card-content>
       </mat-card>
       <mat-card>
@@ -77,7 +78,9 @@
             </div>
             <div fxFlex.gt-sm="5%"></div>
           </div>
-          <br/>
+          <br/><br/>
+          <mat-checkbox formControlName="isClickAndCollect" >Interested in setting up <i>Click & Collect</i></mat-checkbox>
+          <br/><br/>
           <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
             <mat-form-field appearance="outline">
               <mat-label>Click & Collect System URL</mat-label>
