@@ -27,6 +27,7 @@ namespace SosCafe.Admin
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("Vendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
+            [Table("HiddenVendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] HiddenVendorEntity hiddenVendorEntity,
             ILogger log)
         {
             // Check the authorisation.
@@ -48,6 +49,7 @@ namespace SosCafe.Admin
             var vendorDetailsResponse = new InternalVendorDetailsApiModel
             {
                 Id = vendorDetailsEntity.ShopifyId,
+                IsHidden = (hiddenVendorEntity != null),
                 RegisteredDate = vendorDetailsEntity.RegisteredDate,
                 BusinessName = vendorDetailsEntity.BusinessName,
                 ContactName = vendorDetailsEntity.ContactName,
