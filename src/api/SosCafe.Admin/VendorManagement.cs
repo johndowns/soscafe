@@ -367,6 +367,9 @@ namespace SosCafe.Admin
 
             if (updateVoucherApiModel.RedemptionDate == null)
             {
+                // Note the ETag on the entity, which is required to delete the entity from the table.
+                voucherRedemptionEntity.ETag = "*";
+
                 // Delete the redemption.
                 var deleteVoucherRedemptionEntityOperation = TableOperation.Delete(voucherRedemptionEntity);
                 var deleteVoucherRedemptionEntityOperationResult = await vendorVoucherRedemptionsTable.ExecuteAsync(deleteVoucherRedemptionEntityOperation);
