@@ -20,6 +20,7 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
+            [Table("HiddenVendors", Connection = "SosCafeStorage")] CloudTable hiddenVendorsTable,
             ILogger log)
         {
             // Get the user principal ID.
@@ -36,8 +37,13 @@ namespace SosCafe.Admin
                 token = queryResult.ContinuationToken;
             } while (token != null);
 
+            // Get all of the hidden vendors.
+            var hiddenVendors = await GetAllHiddenVendors(hiddenVendorsTable);
+
             // Map the results to a response model.
-            var mappedResults = availableVendorAssignments.Select(entity => new VendorSummaryApiModel
+            var mappedResults = availableVendorAssignments
+                .Where(v => ! hiddenVendors.Any(hv => hv.VendorShopifyId == v.VendorShopifyId))
+                .Select(entity => new VendorSummaryApiModel
             {
                 Id = entity.VendorShopifyId,
                 BusinessName = entity.VendorName
@@ -46,6 +52,20 @@ namespace SosCafe.Admin
 
             // Return the results.
             return new OkObjectResult(mappedResults);
+        }
+
+        private static async Task<List<HiddenVendorEntity>> GetAllHiddenVendors(CloudTable hiddenVendorsTable)
+        {
+            TableContinuationToken token = null;
+            var hiddenVendors = new List<HiddenVendorEntity>();
+            do
+            {
+                var queryResult = await hiddenVendorsTable.ExecuteQuerySegmentedAsync(new TableQuery<HiddenVendorEntity>(), token);
+                hiddenVendors.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
+
+            return hiddenVendors;
         }
 
         internal static string GetUserId(ClaimsPrincipal claimsPrincipal)

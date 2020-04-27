@@ -3,5 +3,7 @@
     public class InternalUpdateVendorDetailsApiModel : UpdateVendorDetailsApiModel
     {
         public string InternalTag { get; set; }
+
+        public bool IsHidden { get; set; }
     }
 }
