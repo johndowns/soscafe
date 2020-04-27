@@ -10,12 +10,14 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   imports: [
@@ -30,6 +32,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatPaginatorModule,
     MatSortModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
     MatSelectModule,
     MatRadioModule,
     MatCheckboxModule,
@@ -49,6 +53,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatPaginatorModule,
     MatSortModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
     MatSelectModule,
     MatRadioModule,
     MatCheckboxModule,

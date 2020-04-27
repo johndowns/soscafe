@@ -2,16 +2,34 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 import { ConstantService } from 'src/app/services/constant.service';
 import * as _ from 'lodash';
+import * as moment from 'moment';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-admin-business-detail',
   templateUrl: './admin-business-detail.component.html',
+  providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'en-nz'},
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 export class AdminBusinessDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
@@ -32,7 +50,7 @@ export class AdminBusinessDetailComponent implements OnInit {
   public vendorForm = new FormGroup({
     id: new FormControl(''),
     businessName: new FormControl(''),
-    registeredDate: new FormControl(''),
+    registeredDate: new FormControl(moment()),
     contactName: new FormControl(''),
     emailAddress: new FormControl(''),
     phoneNumber: new FormControl(''),
@@ -62,7 +80,8 @@ export class AdminBusinessDetailComponent implements OnInit {
     private errorService: ErrorHandlerService,
     private route: ActivatedRoute,
     private router: Router,
-    private constantService: ConstantService
+    private constantService: ConstantService,
+    private _adapter: DateAdapter<any>,
   ) {}
 
   checkAccount() {
@@ -72,16 +91,17 @@ export class AdminBusinessDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.checkAccount();
+    this.checkAccount
 
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendorAdmin(this.vendorId).subscribe(
       (res) => {
+        console.log(res);
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
-          registeredDate: new Date(res.registeredDate).toLocaleDateString('en-NZ'),
+          registeredDate: moment(res.registeredDate),
           contactName: res.contactName,
           emailAddress: res.emailAddress,
           phoneNumber: res.phoneNumber,
@@ -107,6 +127,7 @@ export class AdminBusinessDetailComponent implements OnInit {
         this.level2Closed = res.level2Closed;
         this.level3Closed = res.level3Closed;
         this.hasAgreedToTerms = res.hasAgreedToTerms;
+        this._adapter.setLocale('nz');
       },
       (err) => {
         console.log('LOG HTTP Error', err);
