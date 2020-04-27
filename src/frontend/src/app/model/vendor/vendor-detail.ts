@@ -22,4 +22,5 @@ export class VendorDetail {
   public level1Open: boolean;
   public level2Open: boolean;
   public level3Open: boolean;
+  public isHidden: boolean;
 }

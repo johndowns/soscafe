@@ -9,7 +9,12 @@
             </mat-card-header>
           </div>
           <div fxFlex.gt-sm="50%" style="margin: 24px;">
-            <a mat-stroked-button mat-tooltip="Hide Business" style="float: right;"><mat-icon>visibility_off</mat-icon> Hide Business</a>
+            <ng-container *ngIf="!isHidden">
+              <a mat-stroked-button mat-tooltip="Hide Business" style="float: right;" (click)="hideBusiness()"><mat-icon>visibility_off</mat-icon> Hide Business</a>
+            </ng-container>
+            <ng-container *ngIf="isHidden">
+              <a mat-stroked-button mat-tooltip="Hide Business" style="float: right;" (click)="undoHideBusiness()"><mat-icon>visibility_on</mat-icon> Undo Hide Business</a>
+            </ng-container>
           </div>
         </div>
         <mat-card-content>
