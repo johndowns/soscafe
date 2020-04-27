@@ -283,7 +283,7 @@ namespace SosCafe.Admin
                 VoucherGross = entity.VoucherGross,
                 VoucherFees = entity.VoucherFees,
                 VoucherNet = entity.VoucherNet,
-                RedemptionDate = GetRedemptionDateForVoucher(entity.LineItemId, allVoucherRedemptions)
+                RedemptionDate = allVoucherRedemptions.SingleOrDefault(redemptionEntity => redemptionEntity.LineItemId == entity.LineItemId)?.RedemptionDate
             })
                 .OrderByDescending(d => d.OrderDate);
 
@@ -329,7 +329,7 @@ namespace SosCafe.Admin
                 VoucherGross = entity.VoucherGross.ToString(),
                 VoucherFees = entity.VoucherFees.ToString(),
                 VoucherNet = entity.VoucherNet.ToString(),
-                RedemptionDate = GetRedemptionDateForVoucher(entity.LineItemId, allVoucherRedemptions)
+                RedemptionDate = allVoucherRedemptions.SingleOrDefault(redemptionEntity => redemptionEntity.LineItemId == entity.LineItemId)?.RedemptionDate
             })
                 .OrderByDescending(d => d.OrderDate);
 
@@ -496,17 +496,11 @@ namespace SosCafe.Admin
         private static async Task<(List<VendorVoucherEntity>, List<VendorVoucherRedemptionEntity>)> GetVouchersForVendorAsync(string vendorId, CloudTable vendorVouchersTable, CloudTable vendorVoucherRedemptionsTable)
         {
             var voucherEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherEntity>(vendorId, vendorVouchersTable);
-            var voucherRedemptionEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherRedemptionEntity>(vendorId, vendorVouchersTable);
+            var voucherRedemptionEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherRedemptionEntity>(vendorId, vendorVoucherRedemptionsTable);
 
             await Task.WhenAll(voucherEntitiesTask, voucherRedemptionEntitiesTask);
 
             return (voucherEntitiesTask.Result, voucherRedemptionEntitiesTask.Result);
-        }
-
-        private static DateTime? GetRedemptionDateForVoucher(string lineItemId, List<VendorVoucherRedemptionEntity> allVoucherRedemptions)
-        {
-            var redemptionEntity = allVoucherRedemptions.SingleOrDefault(redemptionEntity => redemptionEntity.LineItemId == lineItemId);
-            return redemptionEntity == null ? null : (DateTime?)redemptionEntity.RedemptionDate;
         }
 
         private static async Task<List<T>> GetAllEntitiesForVendorAsync<T>(string vendorId, CloudTable table) where T : ITableEntity, new()
