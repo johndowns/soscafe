@@ -87,6 +87,7 @@ export class VendorVouchersComponent implements OnInit {
           this.workInProgress = false;
         }
       );
+    this.dataSource.paginator._changePageSize(this.dataSource.paginator.pageSize);
   }
 
   undoRedeemVoucher(lineItemId) {
@@ -110,6 +111,7 @@ export class VendorVouchersComponent implements OnInit {
           this.workInProgress = false;
         }
       );
+    this.dataSource.paginator._changePageSize(this.dataSource.paginator.pageSize);
   }
 
   onSubmitConfirmation(isSucess: boolean) {
