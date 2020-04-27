@@ -9,7 +9,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 import { ConstantService } from 'src/app/services/constant.service';
 import * as _ from 'lodash';
-import * as moment from 'moment';
+import * as _moment from 'moment';
+import {default as _rollupMoment, Moment} from 'moment';
+
+const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
   parse: {
