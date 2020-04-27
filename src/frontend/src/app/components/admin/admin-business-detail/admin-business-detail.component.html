@@ -77,7 +77,9 @@
             </div>
             <div fxFlex.gt-sm="5%"></div>
           </div>
-          <br/>
+          <br/><br/>
+          <mat-checkbox formControlName="isClickAndCollect" >Interested in setting up <i>Click & Collect</i></mat-checkbox>
+          <br/><br/>
           <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
             <mat-form-field appearance="outline">
               <mat-label>Click & Collect System URL</mat-label>

@@ -104,7 +104,7 @@
           </div>
           <br/>
           <mat-checkbox formControlName="isClickAndCollect" (change)="clickAndCollectChange($event)">I'm interested in setting up <i>Click & Collect</i></mat-checkbox>
-          <br/>
+          <br/><br/>
           <ng-container *ngIf="!level3Closed || !level2Closed || !level1Closed">
             <mat-form-field appearance="outline">
               <mat-label>Already have <i>Click & Collect</i> setup? Let us know your Click & Collect URL.</mat-label>
