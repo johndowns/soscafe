@@ -19,6 +19,7 @@ export class AdminBusinessDetailComponent implements OnInit {
   public level2Closed: boolean;
   public level3Closed: boolean;
   public isClickAndCollect: boolean;
+  public isHidden: boolean;
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
@@ -53,6 +54,7 @@ export class AdminBusinessDetailComponent implements OnInit {
     level1Open: new FormControl(''),
     level2Open: new FormControl(''),
     level3Open: new FormControl(''),
+    isHidden: new FormControl(''),
   });
 
   constructor(
@@ -102,7 +104,9 @@ export class AdminBusinessDetailComponent implements OnInit {
           level1Open: res.level1Open,
           level2Open: res.level2Open,
           level3Open: res.level3Open,
+          isHidden: res.isHidden,
         });
+        this.isHidden = res.isHidden;
         this.level1Closed = res.level1Closed;
         this.level2Closed = res.level2Closed;
         this.level3Closed = res.level3Closed;
@@ -168,5 +172,21 @@ export class AdminBusinessDetailComponent implements OnInit {
     this.snackBar.open(message, 'OK', {
       duration: 3000,
     });
+  }
+
+  hideBusiness() {
+    this.vendorForm.patchValue({
+      isHidden: true,
+    });
+    this.isHidden = true;
+    this.onSubmit(this.vendorForm.value);
+  }
+
+  undoHideBusiness() {
+    this.vendorForm.patchValue({
+      isHidden: false,
+    });
+    this.isHidden = false;
+    this.onSubmit(this.vendorForm.value);
   }
 }
