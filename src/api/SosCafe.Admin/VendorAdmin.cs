@@ -84,6 +84,7 @@ namespace SosCafe.Admin
             string vendorId,
             [Table("Vendors", "Vendors", "{vendorId}", Connection= "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
+            [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
             // Check the authorisation.
@@ -100,8 +101,37 @@ namespace SosCafe.Admin
                 return new BadRequestErrorMessageResult("The bank account number is invalid.");
             }
 
-            // Update entity.
+            // Detect if email address has changed.
+            if (vendorDetailsApiModel.EmailAddress != vendorDetailsEntity.EmailAddress)
+            {
+                // Create vendor role assignment for this user.
+                var vendorUserAssignmentEntity = new VendorUserAssignmentEntity
+                {
+                    VendorShopifyId = vendorId,
+                    VendorName = vendorDetailsEntity.BusinessName,
+                    UserId = vendorDetailsEntity.EmailAddress.Trim()
+                };
+
+                // Upsert vendor user assignment entity.
+                var upsertVendorUserAssignmentEntityOperation = TableOperation.InsertOrReplace(vendorUserAssignmentEntity);
+                var upsertVendorUserAssignmentEntityOperationResult = await vendorUserAssignmentsTable.ExecuteAsync(upsertVendorUserAssignmentEntityOperation);
+                if (upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode < 200 || upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode > 299)
+                {
+                    log.LogError("Failed to upsert entity into VendorUserAssignments table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode, upsertVendorUserAssignmentEntityOperationResult.Result);
+                }
+                else
+                {
+                    log.LogInformation("Upserted entity into VendorUserAssignments table.");
+                }
+
+                // Update vendor entity with new email address.
+                vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
+            }
+
+            // Update vendor entity with other details.
+            vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
             vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
+            vendorDetailsEntity.RegisteredDate = vendorDetailsApiModel.RegisteredDate;
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
             vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;

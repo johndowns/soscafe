@@ -10,6 +10,8 @@ namespace SosCafe.Admin.Models.Api
 
         public string ContactName { get; set; }
 
+        public DateTime RegisteredDate { get; set; }
+
         public string EmailAddress { get; set; }
 
         public string PhoneNumber { get; set; }
