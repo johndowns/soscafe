@@ -10,7 +10,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler/error-handle
 import { ConstantService } from 'src/app/services/constant.service';
 import * as _ from 'lodash';
 import * as _moment from 'moment';
-import {default as _rollupMoment, Moment} from 'moment';
+import { default as _rollupMoment } from 'moment';
 
 const moment = _rollupMoment || _moment;
 
