@@ -1,6 +1,7 @@
 export class VendorVouchersSummary {
   orderId: string;
   orderRef: string;
+  dateRedeemed: Date;
   orderDate: Date;
   customerName: string;
   customerEmailAddress: string;
@@ -10,7 +11,8 @@ export class VendorVouchersSummary {
   voucherQuantity: number ;
   voucherIsDonation: boolean;
   voucherId: string;
-  voucherGross: number ;
-  voucherFees: number ;
+  voucherGross: number;
+  voucherFees: number;
   voucherNet: number;
+  lineItemId: string;
 }
