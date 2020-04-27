@@ -2,9 +2,16 @@
   <div fxFlex.gt-sm="100%">
     <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
       <mat-card>
-        <mat-card-header>
-          <mat-card-title><mat-icon>verified_user</mat-icon> Business Details</mat-card-title>
-        </mat-card-header>
+        <div fxLayout="row">
+          <div fxFlex.gt-sm="50%">
+            <mat-card-header>
+              <mat-card-title><mat-icon>verified_user</mat-icon> Business Details</mat-card-title>
+            </mat-card-header>
+          </div>
+          <div fxFlex.gt-sm="50%" style="margin: 24px;">
+            <a mat-stroked-button mat-tooltip="Hide Business" style="float: right;"><mat-icon>visibility_off</mat-icon> Hide Business</a>
+          </div>
+        </div>
         <mat-card-content>
             <mat-form-field appearance="outline">
               <mat-label>Business Name</mat-label>
@@ -14,13 +21,17 @@
               <mat-label>Business ID</mat-label>
               <input matInput formControlName="id" readonly>
             </mat-form-field>
-            <mat-form-field appearance="none">
-              <mat-label>Registered Date</mat-label>
-              <input matInput formControlName="registeredDate" readonly>
-            </mat-form-field>
-            <mat-form-field appearance="none">
+            <a (click)="picker.open()">
+              <mat-form-field appearance="outline">
+                <mat-label>Registered Date</mat-label>
+                <input matInput formControlName="registeredDate" [matDatepicker]="picker" disabled style="color: #000000 !important;">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker disabled="false"></mat-datepicker>
+              </mat-form-field>
+            </a>
+            <mat-form-field appearance="outline">
               <mat-label>Email Address</mat-label>
-              <input matInput formControlName="emailAddress" readonly>
+              <input matInput formControlName="emailAddress">
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Contact Name</mat-label>
@@ -38,8 +49,8 @@
               <mat-label>Tag</mat-label>
               <input matInput formControlName="internalTag">
             </mat-form-field>
-            <br/><br/>
             <mat-checkbox formControlName="hasAgreedToTerms" disabled>Has agreed to terms and conditions</mat-checkbox>
+            <br/>
         </mat-card-content>
       </mat-card>
       <mat-card>
