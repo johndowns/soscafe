@@ -7,6 +7,7 @@ import {
   VendorSummary,
   VendorDetail,
   UpdateVendorDetails,
+  UpdateVoucherDetails,
   VendorPaymentSummary,
   VendorVouchersSummary,
 } from 'src/app/model';
@@ -86,6 +87,11 @@ export class VendorService {
       updateVendorDetails,
       this.httpOptions
     );
+  }
+
+  updateVoucher(vendorId: string, lineItemId: string, redemptionDate: Date): Observable<{}> {
+    const url = `${this.vendorsBaseUrl}/vendors/${vendorId}/vouchers/${lineItemId}`;
+    return this.http.patch(url, { redemptionDate: redemptionDate }, this.httpOptions);
   }
 
   //ADMIN VIEW FUCNTIONS

@@ -44,6 +44,12 @@ a {
   }
 }
 
+.navbar-brand {
+  a {
+    text-decoration: none !important;
+  }
+}
+
 a.link {
   color: $themecolor;
   text-decoration: none;
