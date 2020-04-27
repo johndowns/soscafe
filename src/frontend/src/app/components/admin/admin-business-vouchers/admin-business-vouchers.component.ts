@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { VendorService } from 'src/app/providers';
 import { saveAs } from 'file-saver';
 import * as _ from 'lodash';
@@ -14,6 +15,7 @@ import * as _ from 'lodash';
 })
 export class AdminBusinessVouchersComponent implements OnInit {
   displayedColumns: string[] = [
+    'redeemVoucher',
     'orderRef',
     'orderDate',
     'customerName',
@@ -35,11 +37,15 @@ export class AdminBusinessVouchersComponent implements OnInit {
   sort: MatSort;
   public workInProgress = false;
   private vendorId: string;
+  private voucherId: string;
+  private lineItemId: string;
+  private redemptionDate: Date;
   _ = _;
 
   constructor(
     private vendorService: VendorService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -56,6 +62,78 @@ export class AdminBusinessVouchersComponent implements OnInit {
         this.workInProgress = false;
       }
     );
+  }
+
+  refreshData() {
+    this.vendorService.getVendorVouchers(this.vendorId).subscribe(
+      (res) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort
+
+        console.log(res);
+      },
+      (err) => console.error('HTTP Error', err),
+      () => {
+        this.workInProgress = false;
+      }
+    );
+  }
+
+  redeemVoucher(lineItemId) {
+    this.workInProgress = true;
+
+    this.redemptionDate = new Date();
+
+    this.lineItemId = lineItemId;
+
+    this.vendorService
+      .updateVoucher(this.vendorId, this.lineItemId, this.redemptionDate)
+      .subscribe(
+        () => {
+          this.onSubmitConfirmation(true);
+          this.refreshData();
+        },
+        (err) => {
+          console.error('HTTP Error', err);
+          this.onSubmitConfirmation(false);
+        },
+        () => {
+          this.workInProgress = false;
+        }
+      );
+  }
+
+  undoRedeemVoucher(lineItemId) {
+    this.workInProgress = true;
+
+    this.redemptionDate = null;
+
+    this.lineItemId = lineItemId;
+
+    this.vendorService
+      .updateVoucher(this.vendorId, this.lineItemId, this.redemptionDate)
+      .subscribe(
+        () => {
+          this.onSubmitConfirmation(true);
+          this.refreshData();
+        },
+        (err) => {
+          console.error('HTTP Error', err);
+          this.onSubmitConfirmation(false);
+        },
+        () => {
+          this.workInProgress = false;
+        }
+      );
+  }
+
+  onSubmitConfirmation(isSucess: boolean) {
+    window.scroll(0,0);
+    const message = isSucess ? 'Voucher details have been updated.' : 'Failed to update.';
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+    });
   }
 
   applyFilter(event: Event) {

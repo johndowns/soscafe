@@ -20,7 +20,6 @@ export class VendorNewComponent implements OnInit {
   public level2Closed = false;
   public level3Closed = false;
   public isClickAndCollect = false;
-  public isAlreadyClickAndCollect = false;
   public bankAccountNumber: FormControl;
   public newVendorForm: FormGroup;
   public workInProgress = false;
@@ -89,12 +88,8 @@ export class VendorNewComponent implements OnInit {
     this.level1Closed = e.checked;
   }
 
-  isClickAndCollectChange(e) {
+  clickAndCollectChange(e) {
     this.isClickAndCollect = e.checked;
-  }
-
-  isAlreadyClickAndCollectChange(e) {
-    this.isAlreadyClickAndCollect = e.checked;
   }
 
   onCancelClick() {
