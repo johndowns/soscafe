@@ -27,6 +27,7 @@ namespace SosCafe.Admin
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
             [Table("Vendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
+            [Table("HiddenVendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] HiddenVendorEntity hiddenVendorEntity,
             ILogger log)
         {
             // Check the authorisation.
@@ -48,6 +49,7 @@ namespace SosCafe.Admin
             var vendorDetailsResponse = new InternalVendorDetailsApiModel
             {
                 Id = vendorDetailsEntity.ShopifyId,
+                IsHidden = (hiddenVendorEntity != null),
                 RegisteredDate = vendorDetailsEntity.RegisteredDate,
                 BusinessName = vendorDetailsEntity.BusinessName,
                 ContactName = vendorDetailsEntity.ContactName,
@@ -84,6 +86,8 @@ namespace SosCafe.Admin
             string vendorId,
             [Table("Vendors", "Vendors", "{vendorId}", Connection= "SosCafeStorage")] VendorDetailsEntity vendorDetailsEntity,
             [Table("Vendors", Connection = "SosCafeStorage")] CloudTable vendorDetailsTable,
+            [Table("HiddenVendors", Connection = "SosCafeStorage")] CloudTable hiddenVendorsTable,
+            [Table("HiddenVendors", "Vendors", "{vendorId}", Connection = "SosCafeStorage")] HiddenVendorEntity hiddenVendorEntity,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
         {
@@ -99,6 +103,48 @@ namespace SosCafe.Admin
             if (!VendorManagement.BankAccountRegex.IsMatch(vendorDetailsApiModel.BankAccountNumber))
             {
                 return new BadRequestErrorMessageResult("The bank account number is invalid.");
+            }
+
+            // Handle hidden vendors.
+            if (vendorDetailsApiModel.IsHidden && hiddenVendorEntity == null)
+            {
+                hiddenVendorEntity = new HiddenVendorEntity
+                {
+                    VendorShopifyId = vendorId
+                };
+
+                // Create or update the hidden vendor.
+                var upsertHiddenVendorEntityOperation = TableOperation.InsertOrReplace(hiddenVendorEntity);
+                var upsertHiddenVendorEntityOperationResult = await hiddenVendorsTable.ExecuteAsync(upsertHiddenVendorEntityOperation);
+                if (upsertHiddenVendorEntityOperationResult.HttpStatusCode < 200 || upsertHiddenVendorEntityOperationResult.HttpStatusCode > 299)
+                {
+                    log.LogError("Failed to upsert entity into HiddenVendors table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertHiddenVendorEntityOperationResult.HttpStatusCode, upsertHiddenVendorEntityOperationResult.Result);
+                }
+                else
+                {
+                    log.LogInformation("Upserted entity into HiddenVendors table.");
+                }
+            }
+            else if (! vendorDetailsApiModel.IsHidden && hiddenVendorEntity != null)
+            {
+                // Note the ETag on the entity, which is required to delete the entity from the table.
+                hiddenVendorEntity.ETag = "*";
+
+                // Delete the hidden vendor.
+                var deleteHiddenVendorEntityOperation = TableOperation.Delete(hiddenVendorEntity);
+                var deleteHiddenVendorEntityOperationResult = await hiddenVendorsTable.ExecuteAsync(deleteHiddenVendorEntityOperation);
+                if (deleteHiddenVendorEntityOperationResult.HttpStatusCode == 404)
+                {
+                    log.LogInformation("Did not found a HiddenVendors entity to delete.");
+                }
+                else if (deleteHiddenVendorEntityOperationResult.HttpStatusCode < 200 || deleteHiddenVendorEntityOperationResult.HttpStatusCode > 299)
+                {
+                    log.LogError("Failed to delete entity from HiddenVendors table. Status code={UpsertStatusCode}, Result={DeleteResult}", deleteHiddenVendorEntityOperationResult.HttpStatusCode, deleteHiddenVendorEntityOperationResult.Result);
+                }
+                else
+                {
+                    log.LogInformation("Deleted entity from HiddenVendors table.");
+                }
             }
 
             // Detect if email address has changed.
@@ -128,8 +174,8 @@ namespace SosCafe.Admin
                 vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
             }
 
-            // Update vendor entity with other details.
-            vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
+            // Update entity.
+            vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName; // TODO needs to propagate to user assignments too
             vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
             vendorDetailsEntity.RegisteredDate = vendorDetailsApiModel.RegisteredDate;
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
