@@ -174,8 +174,16 @@ namespace SosCafe.Admin
                 vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
             }
 
+            // Detect if the business name has changed.
+            if (vendorDetailsApiModel.BusinessName != vendorDetailsEntity.BusinessName)
+            {
+                // TODO update all vendor user assignments for this business
+
+                // Update vendor entity with new business name.
+                vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
+            }
+
             // Update entity.
-            vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName; // TODO needs to propagate to user assignments too
             vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
             vendorDetailsEntity.RegisteredDate = vendorDetailsApiModel.RegisteredDate;
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
