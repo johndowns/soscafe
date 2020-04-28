@@ -2,9 +2,21 @@
   <div fxFlex.gt-sm="100%">
     <form class="vendor-form" [formGroup]="vendorForm" (ngSubmit)="onSubmit(vendorForm.value)">
       <mat-card>
-        <mat-card-header>
-          <mat-card-title><mat-icon>verified_user</mat-icon> Business Details</mat-card-title>
-        </mat-card-header>
+        <div fxLayout="row">
+          <div fxFlex.gt-sm="50%">
+            <mat-card-header>
+              <mat-card-title><mat-icon>verified_user</mat-icon> Business Details</mat-card-title>
+            </mat-card-header>
+          </div>
+          <div fxFlex.gt-sm="50%" style="margin: 24px;">
+            <ng-container *ngIf="!isHidden">
+              <a mat-stroked-button mat-tooltip="Hide Business" style="float: right;" (click)="hideBusiness()"><mat-icon>visibility_off</mat-icon> Hide Business</a>
+            </ng-container>
+            <ng-container *ngIf="isHidden">
+              <a mat-stroked-button mat-tooltip="Hide Business" style="float: right;" (click)="undoHideBusiness()"><mat-icon>visibility_on</mat-icon> Undo Hide Business</a>
+            </ng-container>
+          </div>
+        </div>
         <mat-card-content>
             <mat-form-field appearance="outline">
               <mat-label>Business Name</mat-label>
@@ -38,8 +50,8 @@
               <mat-label>Tag</mat-label>
               <input matInput formControlName="internalTag">
             </mat-form-field>
-            <br/><br/>
             <mat-checkbox formControlName="hasAgreedToTerms" disabled>Has agreed to terms and conditions</mat-checkbox>
+            <br/>
         </mat-card-content>
       </mat-card>
       <mat-card>
