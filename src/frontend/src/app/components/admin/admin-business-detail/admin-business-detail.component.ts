@@ -2,37 +2,37 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 import { ConstantService } from 'src/app/services/constant.service';
 import * as _ from 'lodash';
-import * as _moment from 'moment';
-import { default as _rollupMoment } from 'moment';
-
-const moment = _rollupMoment || _moment;
-
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+// import * as _moment from 'moment';
+// import { default as _rollupMoment } from 'moment';
+//
+// const moment = _rollupMoment || _moment;
+//
+// export const MY_FORMATS = {
+//   parse: {
+//     dateInput: 'LL',
+//   },
+//   display: {
+//     dateInput: 'LL',
+//     monthYearLabel: 'MMM YYYY',
+//     dateA11yLabel: 'LL',
+//     monthYearA11yLabel: 'MMMM YYYY',
+//   },
+// };
 
 @Component({
   selector: 'app-admin-business-detail',
   templateUrl: './admin-business-detail.component.html',
-  providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'en-nz'},
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
-  ],
+  // providers: [
+  //   {provide: MAT_DATE_LOCALE, useValue: 'en-nz'},
+  //   {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  // ],
 })
 export class AdminBusinessDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
@@ -53,7 +53,7 @@ export class AdminBusinessDetailComponent implements OnInit {
   public vendorForm = new FormGroup({
     id: new FormControl(''),
     businessName: new FormControl(''),
-    registeredDate: new FormControl(moment()),
+    registeredDate: new FormControl(''),
     contactName: new FormControl(''),
     emailAddress: new FormControl(''),
     phoneNumber: new FormControl(''),
@@ -84,7 +84,7 @@ export class AdminBusinessDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private constantService: ConstantService,
-    private _adapter: DateAdapter<any>,
+    // private _adapter: DateAdapter<any>,
   ) {}
 
   checkAccount() {
@@ -104,7 +104,7 @@ export class AdminBusinessDetailComponent implements OnInit {
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
-          registeredDate: moment(res.registeredDate),
+          registeredDate: new Date(res.registeredDate).toLocaleString('en-NZ'),
           contactName: res.contactName,
           emailAddress: res.emailAddress,
           phoneNumber: res.phoneNumber,
@@ -130,7 +130,7 @@ export class AdminBusinessDetailComponent implements OnInit {
         this.level2Closed = res.level2Closed;
         this.level3Closed = res.level3Closed;
         this.hasAgreedToTerms = res.hasAgreedToTerms;
-        this._adapter.setLocale('nz');
+        // this._adapter.setLocale('nz');
       },
       (err) => {
         console.log('LOG HTTP Error', err);
