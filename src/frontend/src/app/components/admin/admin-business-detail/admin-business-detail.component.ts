@@ -104,7 +104,7 @@ export class AdminBusinessDetailComponent implements OnInit {
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
-          registeredDate: new Date(res.registeredDate).toLocaleString('en-NZ'),
+          registeredDate: new Date(res.registeredDate).toLocaleDateString('en-NZ'),
           contactName: res.contactName,
           emailAddress: res.emailAddress,
           phoneNumber: res.phoneNumber,
