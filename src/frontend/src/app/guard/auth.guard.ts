@@ -11,23 +11,25 @@ import * as jwt from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  signedIn: boolean = false;
 
   constructor(
     public router: Router,
     public constantService: ConstantService,
     public activatedRoute: ActivatedRoute
-  ) {
-    
+  ) {}
+
+  canActivate() {    
+    let signedIn = false;
+
     if (sessionStorage.hasOwnProperty('access_token')) {
       // Freshness
       if(this.tokenIsFresh()){
         sessionStorage.clear();
-        this.signedIn = false;
+        signedIn = false;
       }
       else{
         this.setUser();
-        this.signedIn = true;
+        signedIn = true;
       }
     }
     else {
@@ -43,28 +45,27 @@ export class AuthGuard implements CanActivate {
             // Set user
             this.setUser();
             // Signed in
-            this.signedIn = true;
+            signedIn = true;
           }
           else{
-            this.signedIn = false;
+            signedIn = false;
           }
         }
         else{
-          this.signedIn = false;
+          signedIn = false;
         }
       });
     }
-  }
 
-  canActivate() {    
-    if (!this.signedIn) {
+
+    if (!signedIn) {
       let nonce = uuidv4();
       sessionStorage.setItem('nonce', nonce);
       let auth_url = `https://${environment.msal.tenant}.b2clogin.com/${environment.msal.tenant}.onmicrosoft.com/${environment.msal.policy}/oauth2/v2.0/authorize?client_id=${environment.msal.auth.clientId}&response_type=token&redirect_uri=${environment.appBaseUrl}&response_mode=query&scope=${environment.msal.consentScopes.join(' ')}&state=${nonce}&nonce=${nonce}`;
-
-      window.location.href = encodeURI(auth_url);      
+      
+      window.location.href = encodeURI(auth_url);
     }
-    return this.signedIn;
+    return signedIn;
   }
 
   tokenIsFresh(){
