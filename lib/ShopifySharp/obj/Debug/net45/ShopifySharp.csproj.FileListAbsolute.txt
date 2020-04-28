@@ -1,0 +1,13 @@
+C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\net45\ShopifySharp.dll
+C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\net45\ShopifySharp.pdb
+C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\net45\Microsoft.Extensions.Primitives.dll
+C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\net45\Newtonsoft.Json.dll
+C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\net45\System.Runtime.CompilerServices.Unsafe.dll
+C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\net45\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\net45\ShopifySharp.csprojAssemblyReference.cache
+C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\net45\ShopifySharp.csproj.CoreCompileInputs.cache
+C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\net45\ShopifySharp.AssemblyInfoInputs.cache
+C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\net45\ShopifySharp.AssemblyInfo.cs
+C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\net45\ShopifySharp.csproj.CopyComplete
+C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\net45\ShopifySharp.dll
+C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\net45\ShopifySharp.pdb
