@@ -177,7 +177,7 @@ namespace SosCafe.Admin
             // Detect if the business name has changed.
             if (vendorDetailsApiModel.BusinessName != vendorDetailsEntity.BusinessName)
             {
-                // TODO update all vendor user assignments for this business
+                await UpdateVendorUserAssignmentBusinessNames(vendorUserAssignmentsTable, vendorId, vendorDetailsApiModel.BusinessName, log);
 
                 // Update vendor entity with new business name.
                 vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
@@ -390,6 +390,37 @@ namespace SosCafe.Admin
             catch (NumberParseException)
             {
                 return phoneNumber.Trim();
+            }
+        }
+
+        private static async Task UpdateVendorUserAssignmentBusinessNames(CloudTable vendorUserAssignmentsTable, string vendorId, string businessName, ILogger log)
+        {
+            // Find all vendor user assignments for this vendor ID.
+            TableContinuationToken token = null;
+            var vendorUserAssignments = new List<VendorUserAssignmentEntity>();
+            var filterToUserRows = TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, vendorId);
+            do
+            {
+                var queryResult = await vendorUserAssignmentsTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorUserAssignmentEntity>().Where(filterToUserRows), token);
+                vendorUserAssignments.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
+
+            // Update each assignment's business name.
+            foreach (var vendorUserAssignment in vendorUserAssignments)
+            {
+                vendorUserAssignment.VendorName = businessName;
+
+                var upsertVendorUserAssignmentEntityOperation = TableOperation.InsertOrReplace(vendorUserAssignment);
+                var upsertVendorUserAssignmentEntityOperationResult = await vendorUserAssignmentsTable.ExecuteAsync(upsertVendorUserAssignmentEntityOperation);
+                if (upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode < 200 || upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode > 299)
+                {
+                    log.LogError("Failed to upsert entity into VendorUserAssignments table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode, upsertVendorUserAssignmentEntityOperationResult.Result);
+                }
+                else
+                {
+                    log.LogInformation("Upserted entity into VendorUserAssignments table.");
+                }
             }
         }
     }
