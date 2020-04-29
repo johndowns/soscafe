@@ -159,13 +159,13 @@ namespace SosCafe.Admin
             switch (paymentGatewayName)
             {
                 case "shopify_payments":
-                    percentageFees = voucherGross * 0.035M;
+                    percentageFees = voucherGross * 0.02M;
                     break;
                 case "poli_internet_banking":
                     percentageFees = voucherGross * 0.01M;
                     break;
                 default:
-                    percentageFees = voucherGross * 0.04M;
+                    percentageFees = voucherGross * 0.034M;
                     break;
             }
 
