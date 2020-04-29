@@ -9,7 +9,9 @@
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="3.0.10" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.3" />
     <PackageReference Include="Sendgrid" Version="9.13.2" />
-    <PackageReference Include="ShopifySharp" Version="5.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\lib\ShopifySharp\ShopifySharp.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
