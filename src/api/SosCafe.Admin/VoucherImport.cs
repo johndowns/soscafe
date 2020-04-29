@@ -77,13 +77,13 @@ namespace SosCafe.Admin
                     {
                         voucherEntities.AddRange(MapShopifyOrderToEntities(order));
                     }
-                }
 
-                // Keep track of the highest date we've received.
-                var pageUpdatedAtHighWaterMark = responsePage.Items.Max(i => i.UpdatedAt).Value;
-                if (pageUpdatedAtHighWaterMark > updatedAtHighWaterMark)
-                {
-                    updatedAtHighWaterMark = pageUpdatedAtHighWaterMark;
+                    // Keep track of the highest date we've received.
+                    var pageUpdatedAtHighWaterMark = responsePage.Items.Max(i => i.UpdatedAt).Value;
+                    if (pageUpdatedAtHighWaterMark > updatedAtHighWaterMark)
+                    {
+                        updatedAtHighWaterMark = pageUpdatedAtHighWaterMark;
+                    }
                 }
 
                 // Check if we are done with processing this batch.
@@ -112,7 +112,7 @@ namespace SosCafe.Admin
                 }
             }
 
-            log.LogInformation($"The continuation token should now be set to {updatedAtHighWaterMark.ToString()}.");
+            log.LogInformation($"The continuation token should now be set to {updatedAtHighWaterMark}.");
             return updatedAtHighWaterMark.ToString();
         }
 
