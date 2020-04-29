@@ -9,6 +9,11 @@ namespace ShopifySharp
     /// </summary>
     public class Order : ShopifyObject
     {
+        #region SOS Cafe Edits
+        [JsonProperty("gateway")]
+        public string Gateway { get; set; }
+        #endregion
+
         /// <summary>
         /// Unique identifier of the app who created the order.
         /// </summary>
