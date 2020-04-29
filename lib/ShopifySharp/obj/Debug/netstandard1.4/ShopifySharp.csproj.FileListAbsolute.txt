@@ -1,9 +1,0 @@
-C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\netstandard1.4\ShopifySharp.deps.json
-C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\netstandard1.4\ShopifySharp.dll
-C:\src\soscafe\soscafe\lib\ShopifySharp\bin\Debug\netstandard1.4\ShopifySharp.pdb
-C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\netstandard1.4\ShopifySharp.csprojAssemblyReference.cache
-C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\netstandard1.4\ShopifySharp.csproj.CoreCompileInputs.cache
-C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\netstandard1.4\ShopifySharp.AssemblyInfoInputs.cache
-C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\netstandard1.4\ShopifySharp.AssemblyInfo.cs
-C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\netstandard1.4\ShopifySharp.dll
-C:\src\soscafe\soscafe\lib\ShopifySharp\obj\Debug\netstandard1.4\ShopifySharp.pdb
