@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+﻿using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -132,6 +129,7 @@ namespace SosCafe.Admin
                     OrderDate = order.CreatedAt.Value.UtcDateTime,
                     OrderId = order.Id.Value.ToString(),
                     OrderRef = order.Name,
+                    Gateway = order.Gateway,
                     VendorId = lineItem.ProductId.ToString(),
                     VoucherDescription = lineItem.VariantTitle,
                     VoucherId = lineItem.Properties.SingleOrDefault(p => string.Equals(p.Name.ToString(), "Voucher id", StringComparison.InvariantCultureIgnoreCase))?.Value.ToString() ?? string.Empty,

@@ -63,5 +63,7 @@ namespace SosCafe.Admin.Entities
         public string VoucherType { get; set; }
 
         public bool IsRefunded { get; set; }
+
+        public string Gateway { get; set; }
     }
 }
