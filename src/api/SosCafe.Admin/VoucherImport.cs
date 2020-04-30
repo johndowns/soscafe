@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+﻿using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -53,7 +50,7 @@ namespace SosCafe.Admin
             DateTimeOffset? updatedAtHighWaterMark = continuationToken == null ? new DateTimeOffset(new DateTime(2020, 1, 1)) : DateTimeOffset.Parse(continuationToken);
             ListFilter<Order> filter = new MyCustomOrderListFilter
             {
-                CreatedAtMin = updatedAtHighWaterMark,
+                UpdatedAtMin = updatedAtHighWaterMark,
                 Limit = LimitPerPage,
                 Status = "any",
                 Fields = FieldList,
@@ -132,6 +129,7 @@ namespace SosCafe.Admin
                     OrderDate = order.CreatedAt.Value.UtcDateTime,
                     OrderId = order.Id.Value.ToString(),
                     OrderRef = order.Name,
+                    Gateway = order.Gateway,
                     VendorId = lineItem.ProductId.ToString(),
                     VoucherDescription = lineItem.VariantTitle,
                     VoucherId = lineItem.Properties.SingleOrDefault(p => string.Equals(p.Name.ToString(), "Voucher id", StringComparison.InvariantCultureIgnoreCase))?.Value.ToString() ?? string.Empty,
@@ -143,8 +141,15 @@ namespace SosCafe.Admin
                 entity.IsRefunded = order.Refunds.Any(r => r.RefundLineItems.Any(rli => rli.LineItemId == lineItem.Id));
 
                 // We calculate the fees separately using specific logic.
-                entity.VoucherGross = decimal.Round(lineItem.Price.Value * lineItem.Quantity.Value, 2);
-                entity.VoucherFees = CalculateFees(order.LineItems.Count(), order.Gateway, entity.VoucherGross);
+                entity.VoucherGross = decimal.Round(lineItem.Price.Value * lineItem.Quantity.Value, 2);
+                if (lineItem.GiftCard.HasValue && lineItem.GiftCard.Value == true)
+                {
+                    entity.VoucherFees = 0;
+                }
+                else
+                {
+                    entity.VoucherFees = CalculateFees(order.LineItems.Count(), order.Gateway, entity.VoucherGross);
+                }
                 entity.VoucherNet = entity.VoucherGross - entity.VoucherFees;
 
                 entities.Add(entity);
@@ -158,11 +163,14 @@ namespace SosCafe.Admin
             decimal percentageFees;
             switch (paymentGatewayName)
             {
+                case "gift_card":
+                    percentageFees = voucherGross * 0.02M;
+                    break;
                 case "shopify_payments":
                     percentageFees = voucherGross * 0.02M;
                     break;
                 case "poli_internet_banking":
-                    percentageFees = voucherGross * 0.01M;
+                    percentageFees = 0;
                     break;
                 default:
                     percentageFees = voucherGross * 0.034M;
@@ -172,6 +180,9 @@ namespace SosCafe.Admin
             decimal fixedFees;
             switch (paymentGatewayName)
             {
+                case "gift_card":
+                    fixedFees = (0.3M / numberLineItemsInOrder);
+                    break;
                 case "shopify_payments":
                     fixedFees = (0.3M / numberLineItemsInOrder);
                     break;
