@@ -251,7 +251,7 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("ShopifyVouchers", Connection = "SosCafeStorage")] CloudTable shopifyVouchersTable,
             [Table("VendorVoucherRedemptions", Connection = "SosCafeStorage")] CloudTable vendorVoucherRedemptionsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
@@ -265,7 +265,7 @@ namespace SosCafe.Admin
             }
 
             // Get the vouchers and map the results to a response model.
-            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable, vendorVoucherRedemptionsTable);
+            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, shopifyVouchersTable, vendorVoucherRedemptionsTable);
             var mappedResults = allVouchers.Select(entity => new VendorVoucherApiModel
             {
                 LineItemId = entity.LineItemId,
@@ -296,7 +296,7 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers/csv")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("ShopifyVouchers", Connection = "SosCafeStorage")] CloudTable shopifyVouchersTable,
             [Table("VendorVoucherRedemptions", Connection = "SosCafeStorage")] CloudTable vendorVoucherRedemptionsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
@@ -310,7 +310,7 @@ namespace SosCafe.Admin
             }
 
             // Get the vouchers and map the results to a response model.
-            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable, vendorVoucherRedemptionsTable);
+            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, shopifyVouchersTable, vendorVoucherRedemptionsTable);
             var mappedResults = allVouchers.Select(entity => new VendorVoucherCsv
             {
                 VendorId = entity.VendorId,
@@ -496,9 +496,9 @@ namespace SosCafe.Admin
             return allPaymentsForVendor;
         }
 
-        private static async Task<(List<VendorVoucherEntity>, List<VendorVoucherRedemptionEntity>)> GetVouchersForVendorAsync(string vendorId, CloudTable vendorVouchersTable, CloudTable vendorVoucherRedemptionsTable)
+        private static async Task<(List<VendorVoucherEntity>, List<VendorVoucherRedemptionEntity>)> GetVouchersForVendorAsync(string vendorId, CloudTable shopifyVouchersTable, CloudTable vendorVoucherRedemptionsTable)
         {
-            var voucherEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherEntity>(vendorId, vendorVouchersTable);
+            var voucherEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherEntity>(vendorId, shopifyVouchersTable);
             var voucherRedemptionEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherRedemptionEntity>(vendorId, vendorVoucherRedemptionsTable);
 
             await Task.WhenAll(voucherEntitiesTask, voucherRedemptionEntitiesTask);
