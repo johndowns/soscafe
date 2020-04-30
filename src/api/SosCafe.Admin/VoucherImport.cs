@@ -50,7 +50,7 @@ namespace SosCafe.Admin
             DateTimeOffset? updatedAtHighWaterMark = continuationToken == null ? new DateTimeOffset(new DateTime(2020, 1, 1)) : DateTimeOffset.Parse(continuationToken);
             ListFilter<Order> filter = new MyCustomOrderListFilter
             {
-                CreatedAtMin = updatedAtHighWaterMark,
+                UpdatedAtMin = updatedAtHighWaterMark,
                 Limit = LimitPerPage,
                 Status = "any",
                 Fields = FieldList,
