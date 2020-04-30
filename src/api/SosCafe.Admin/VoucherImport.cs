@@ -141,8 +141,15 @@ namespace SosCafe.Admin
                 entity.IsRefunded = order.Refunds.Any(r => r.RefundLineItems.Any(rli => rli.LineItemId == lineItem.Id));
 
                 // We calculate the fees separately using specific logic.
-                entity.VoucherGross = decimal.Round(lineItem.Price.Value * lineItem.Quantity.Value, 2);
-                entity.VoucherFees = CalculateFees(order.LineItems.Count(), order.Gateway, entity.VoucherGross);
+                entity.VoucherGross = decimal.Round(lineItem.Price.Value * lineItem.Quantity.Value, 2);
+                if (lineItem.GiftCard.HasValue && lineItem.GiftCard.Value == true)
+                {
+                    entity.VoucherFees = 0;
+                }
+                else
+                {
+                    entity.VoucherFees = CalculateFees(order.LineItems.Count(), order.Gateway, entity.VoucherGross);
+                }
                 entity.VoucherNet = entity.VoucherGross - entity.VoucherFees;
 
                 entities.Add(entity);
@@ -156,11 +163,14 @@ namespace SosCafe.Admin
             decimal percentageFees;
             switch (paymentGatewayName)
             {
+                case "gift_card":
+                    percentageFees = voucherGross * 0.02M;
+                    break;
                 case "shopify_payments":
                     percentageFees = voucherGross * 0.02M;
                     break;
                 case "poli_internet_banking":
-                    percentageFees = voucherGross * 0.01M;
+                    percentageFees = 0;
                     break;
                 default:
                     percentageFees = voucherGross * 0.034M;
@@ -170,6 +180,9 @@ namespace SosCafe.Admin
             decimal fixedFees;
             switch (paymentGatewayName)
             {
+                case "gift_card":
+                    fixedFees = (0.3M / numberLineItemsInOrder);
+                    break;
                 case "shopify_payments":
                     fixedFees = (0.3M / numberLineItemsInOrder);
                     break;
