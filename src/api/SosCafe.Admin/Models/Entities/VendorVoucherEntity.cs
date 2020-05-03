@@ -50,8 +50,6 @@ namespace SosCafe.Admin.Entities
 
         public int VoucherQuantity { get; set; }
 
-        public bool VoucherIsDonation { get; set; }
-
         public string VoucherId { get; set; }
 
         public decimal VoucherGross { get; set; }

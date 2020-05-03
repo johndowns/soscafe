@@ -276,10 +276,10 @@ namespace SosCafe.Admin
                 CustomerRegion = entity.CustomerRegion,
                 CustomerEmailAddress = entity.CustomerEmailAddress,
                 CustomerAcceptsMarketing = entity.CustomerAcceptsMarketing,
-                VoucherId = entity.VoucherId,
+                VoucherId = GetVoucherIdForDisplay(entity),
                 VoucherDescription = entity.VoucherDescription,
                 VoucherQuantity = entity.VoucherQuantity,
-                VoucherIsDonation = entity.VoucherIsDonation,
+                VoucherIsDonation = IsVoucherDonation(entity),
                 VoucherGross = entity.VoucherGross,
                 VoucherFees = entity.VoucherFees,
                 VoucherNet = entity.VoucherNet,
@@ -289,6 +289,34 @@ namespace SosCafe.Admin
 
             // Return the voucher list.
             return new OkObjectResult(mappedResults);
+        }
+
+        private static bool IsVoucherDonation(VendorVoucherEntity voucher) => 
+            string.Equals(voucher.VoucherType, "Donation", StringComparison.InvariantCultureIgnoreCase);
+
+        private static string GetVoucherIdForDisplay(VendorVoucherEntity voucher)
+        {
+            if (voucher.IsRefunded)
+            {
+                return $"** REFUNDED ** {voucher.VoucherId}";
+            }
+
+            if (IsVoucherDonation(voucher))
+            {
+                return $"** DONATION ** {voucher.VoucherId}";
+            }
+
+            if (string.IsNullOrEmpty(voucher.VoucherId))
+            {
+                return $"ORIGINAL-{voucher.OrderRef}";
+            }
+
+            if (long.TryParse(voucher.VoucherId, out _))
+            {
+                return $"ORIGINAL-{voucher.VoucherId}";
+            }
+
+            return voucher.VoucherId;
         }
 
         [FunctionName("ExportVendorVouchers")]
@@ -322,10 +350,10 @@ namespace SosCafe.Admin
                 CustomerRegion = entity.CustomerRegion,
                 CustomerEmailAddress = entity.CustomerEmailAddress,
                 CustomerAcceptsMarketing = entity.CustomerAcceptsMarketing.ToString(),
-                VoucherId = entity.VoucherId,
+                VoucherId = GetVoucherIdForDisplay(entity),
                 VoucherDescription = entity.VoucherDescription,
                 VoucherQuantity = entity.VoucherQuantity,
-                VoucherIsDonation = entity.VoucherIsDonation.ToString(),
+                VoucherIsDonation = IsVoucherDonation(entity).ToString(),
                 VoucherGross = entity.VoucherGross.ToString(),
                 VoucherFees = entity.VoucherFees.ToString(),
                 VoucherNet = entity.VoucherNet.ToString(),
