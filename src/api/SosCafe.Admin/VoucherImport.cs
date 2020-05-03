@@ -154,7 +154,7 @@ namespace SosCafe.Admin
                     entity.VoucherGross = decimal.Round(lineItem.Price.Value * lineItem.Quantity.Value, 2);
                     entity.VoucherFees = CalculateFees(order.LineItems.Count(), order.Gateway, entity.VoucherGross);
                     entity.VoucherNet = entity.VoucherGross - entity.VoucherFees;
-                }                
+                }
 
                 entities.Add(entity);
             }
