@@ -271,7 +271,7 @@ namespace SosCafe.Admin
                 LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
                 OrderRef = entity.OrderRef,
-                OrderDate = entity.OrderDate,
+                OrderDate = GetNewZealandTimeFromUtc(entity.OrderDate),
                 CustomerName = entity.CustomerName,
                 CustomerRegion = entity.CustomerRegion,
                 CustomerEmailAddress = entity.CustomerAcceptsMarketing ? entity.CustomerEmailAddress : string.Empty,
@@ -350,7 +350,7 @@ namespace SosCafe.Admin
                 LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
                 OrderRef = entity.OrderRef,
-                OrderDate = entity.OrderDate,
+                OrderDate = GetNewZealandTimeFromUtc(entity.OrderDate),
                 CustomerName = entity.CustomerName,
                 CustomerRegion = entity.CustomerRegion,
                 CustomerEmailAddress = entity.CustomerAcceptsMarketing ? entity.CustomerEmailAddress : string.Empty,
@@ -553,6 +553,12 @@ namespace SosCafe.Admin
             } while (token != null);
 
             return allEntitiesForVendor;
+        }
+
+        private static DateTime GetNewZealandTimeFromUtc(DateTime dateTimeUtc)
+        {
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
         }
     }
 }
