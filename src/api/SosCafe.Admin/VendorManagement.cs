@@ -296,6 +296,11 @@ namespace SosCafe.Admin
 
         private static string GetVoucherIdForDisplay(VendorVoucherEntity voucher)
         {
+            if (voucher.IsRefunded && IsVoucherDonation(voucher))
+            {
+                return $"** DONATION ** REFUNDED ** {voucher.VoucherId}";
+            }
+
             if (voucher.IsRefunded)
             {
                 return $"** REFUNDED ** {voucher.VoucherId}";
