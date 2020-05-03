@@ -14,6 +14,9 @@
     <RepositoryUrl>https://github.com/nozzlegear/shopifysharp</RepositoryUrl>
     <PackageTags>shopify,ecommerce</PackageTags>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <NoWarn>693</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="microsoft.extensions.primitives" Version="1.1.0" />
     <PackageReference Include="newtonsoft.json" Version="10.0.1" />

@@ -251,7 +251,7 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("ShopifyVouchers", Connection = "SosCafeStorage")] CloudTable shopifyVouchersTable,
             [Table("VendorVoucherRedemptions", Connection = "SosCafeStorage")] CloudTable vendorVoucherRedemptionsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
@@ -265,21 +265,21 @@ namespace SosCafe.Admin
             }
 
             // Get the vouchers and map the results to a response model.
-            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable, vendorVoucherRedemptionsTable);
+            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, shopifyVouchersTable, vendorVoucherRedemptionsTable);
             var mappedResults = allVouchers.Select(entity => new VendorVoucherApiModel
             {
                 LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
                 OrderRef = entity.OrderRef,
-                OrderDate = entity.OrderDate,
+                OrderDate = GetNewZealandTimeFromUtc(entity.OrderDate),
                 CustomerName = entity.CustomerName,
                 CustomerRegion = entity.CustomerRegion,
-                CustomerEmailAddress = entity.CustomerEmailAddress,
+                CustomerEmailAddress = entity.CustomerAcceptsMarketing ? entity.CustomerEmailAddress : string.Empty,
                 CustomerAcceptsMarketing = entity.CustomerAcceptsMarketing,
-                VoucherId = entity.VoucherId,
+                VoucherId = GetVoucherIdForDisplay(entity),
                 VoucherDescription = entity.VoucherDescription,
                 VoucherQuantity = entity.VoucherQuantity,
-                VoucherIsDonation = entity.VoucherIsDonation,
+                VoucherIsDonation = IsVoucherDonation(entity),
                 VoucherGross = entity.VoucherGross,
                 VoucherFees = entity.VoucherFees,
                 VoucherNet = entity.VoucherNet,
@@ -296,7 +296,7 @@ namespace SosCafe.Admin
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers/csv")] HttpRequest req,
             ClaimsPrincipal claimsPrincipal,
             string vendorId,
-            [Table("VendorVouchers", Connection = "SosCafeStorage")] CloudTable vendorVouchersTable,
+            [Table("ShopifyVouchers", Connection = "SosCafeStorage")] CloudTable shopifyVouchersTable,
             [Table("VendorVoucherRedemptions", Connection = "SosCafeStorage")] CloudTable vendorVoucherRedemptionsTable,
             [Table("VendorUserAssignments", Connection = "SosCafeStorage")] CloudTable vendorUserAssignmentsTable,
             ILogger log)
@@ -310,22 +310,22 @@ namespace SosCafe.Admin
             }
 
             // Get the vouchers and map the results to a response model.
-            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, vendorVouchersTable, vendorVoucherRedemptionsTable);
+            var (allVouchers, allVoucherRedemptions) = await GetVouchersForVendorAsync(vendorId, shopifyVouchersTable, vendorVoucherRedemptionsTable);
             var mappedResults = allVouchers.Select(entity => new VendorVoucherCsv
             {
                 VendorId = entity.VendorId,
                 LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
                 OrderRef = entity.OrderRef,
-                OrderDate = entity.OrderDate,
+                OrderDate = GetNewZealandTimeFromUtc(entity.OrderDate),
                 CustomerName = entity.CustomerName,
                 CustomerRegion = entity.CustomerRegion,
-                CustomerEmailAddress = entity.CustomerEmailAddress,
+                CustomerEmailAddress = entity.CustomerAcceptsMarketing ? entity.CustomerEmailAddress : string.Empty,
                 CustomerAcceptsMarketing = entity.CustomerAcceptsMarketing.ToString(),
-                VoucherId = entity.VoucherId,
+                VoucherId = GetVoucherIdForDisplay(entity),
                 VoucherDescription = entity.VoucherDescription,
                 VoucherQuantity = entity.VoucherQuantity,
-                VoucherIsDonation = entity.VoucherIsDonation.ToString(),
+                VoucherIsDonation = IsVoucherDonation(entity).ToString(),
                 VoucherGross = entity.VoucherGross.ToString(),
                 VoucherFees = entity.VoucherFees.ToString(),
                 VoucherNet = entity.VoucherNet.ToString(),
@@ -496,9 +496,9 @@ namespace SosCafe.Admin
             return allPaymentsForVendor;
         }
 
-        private static async Task<(List<VendorVoucherEntity>, List<VendorVoucherRedemptionEntity>)> GetVouchersForVendorAsync(string vendorId, CloudTable vendorVouchersTable, CloudTable vendorVoucherRedemptionsTable)
+        private static async Task<(List<VendorVoucherEntity>, List<VendorVoucherRedemptionEntity>)> GetVouchersForVendorAsync(string vendorId, CloudTable shopifyVouchersTable, CloudTable vendorVoucherRedemptionsTable)
         {
-            var voucherEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherEntity>(vendorId, vendorVouchersTable);
+            var voucherEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherEntity>(vendorId, shopifyVouchersTable);
             var voucherRedemptionEntitiesTask = GetAllEntitiesForVendorAsync<VendorVoucherRedemptionEntity>(vendorId, vendorVoucherRedemptionsTable);
 
             await Task.WhenAll(voucherEntitiesTask, voucherRedemptionEntitiesTask);
@@ -520,6 +520,46 @@ namespace SosCafe.Admin
             } while (token != null);
 
             return allEntitiesForVendor;
+        }
+
+        private static DateTime GetNewZealandTimeFromUtc(DateTime dateTimeUtc)
+        {
+            TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
+            var dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc); // HACK: this is incorrect, but I'm working around the way the front-end currently handles this
+        }
+
+        private static bool IsVoucherDonation(VendorVoucherEntity voucher) =>
+            string.Equals(voucher.VoucherType, "Donation", StringComparison.InvariantCultureIgnoreCase);
+
+        private static string GetVoucherIdForDisplay(VendorVoucherEntity voucher)
+        {
+            if (voucher.IsRefunded && IsVoucherDonation(voucher))
+            {
+                return $"** DONATION ** REFUNDED ** {voucher.VoucherId}";
+            }
+
+            if (voucher.IsRefunded)
+            {
+                return $"** REFUNDED ** {voucher.VoucherId}";
+            }
+
+            if (IsVoucherDonation(voucher))
+            {
+                return $"** DONATION ** {voucher.VoucherId}";
+            }
+
+            if (string.IsNullOrEmpty(voucher.VoucherId))
+            {
+                return $"ORIGINAL-{voucher.OrderRef}";
+            }
+
+            if (long.TryParse(voucher.VoucherId, out _))
+            {
+                return $"ORIGINAL-{voucher.VoucherId}";
+            }
+
+            return voucher.VoucherId;
         }
     }
 }
