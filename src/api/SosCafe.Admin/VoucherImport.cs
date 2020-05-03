@@ -141,16 +141,20 @@ namespace SosCafe.Admin
                 entity.IsRefunded = order.Refunds.Any(r => r.RefundLineItems.Any(rli => rli.LineItemId == lineItem.Id));
 
                 // We calculate the fees separately using specific logic.
-                entity.VoucherGross = decimal.Round(lineItem.Price.Value * lineItem.Quantity.Value, 2);
-                if (lineItem.GiftCard.HasValue && lineItem.GiftCard.Value == true)
+                // Gift card purchases and refunds are treated as if they are zero revenue.
+                if ((lineItem.GiftCard.HasValue && lineItem.GiftCard.Value == true) ||
+                    entity.IsRefunded)
                 {
+                    entity.VoucherGross = 0;
                     entity.VoucherFees = 0;
+                    entity.VoucherNet = 0;
                 }
                 else
                 {
+                    entity.VoucherGross = decimal.Round(lineItem.Price.Value * lineItem.Quantity.Value, 2);
                     entity.VoucherFees = CalculateFees(order.LineItems.Count(), order.Gateway, entity.VoucherGross);
+                    entity.VoucherNet = entity.VoucherGross - entity.VoucherFees;
                 }
-                entity.VoucherNet = entity.VoucherGross - entity.VoucherFees;
 
                 entities.Add(entity);
             }
