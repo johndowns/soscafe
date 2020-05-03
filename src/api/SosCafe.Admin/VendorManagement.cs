@@ -291,39 +291,6 @@ namespace SosCafe.Admin
             return new OkObjectResult(mappedResults);
         }
 
-        private static bool IsVoucherDonation(VendorVoucherEntity voucher) => 
-            string.Equals(voucher.VoucherType, "Donation", StringComparison.InvariantCultureIgnoreCase);
-
-        private static string GetVoucherIdForDisplay(VendorVoucherEntity voucher)
-        {
-            if (voucher.IsRefunded && IsVoucherDonation(voucher))
-            {
-                return $"** DONATION ** REFUNDED ** {voucher.VoucherId}";
-            }
-
-            if (voucher.IsRefunded)
-            {
-                return $"** REFUNDED ** {voucher.VoucherId}";
-            }
-
-            if (IsVoucherDonation(voucher))
-            {
-                return $"** DONATION ** {voucher.VoucherId}";
-            }
-
-            if (string.IsNullOrEmpty(voucher.VoucherId))
-            {
-                return $"ORIGINAL-{voucher.OrderRef}";
-            }
-
-            if (long.TryParse(voucher.VoucherId, out _))
-            {
-                return $"ORIGINAL-{voucher.VoucherId}";
-            }
-
-            return voucher.VoucherId;
-        }
-
         [FunctionName("ExportVendorVouchers")]
         public static async Task<IActionResult> ExportVendorVouchers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "vendors/{vendorId}/vouchers/csv")] HttpRequest req,
@@ -558,7 +525,41 @@ namespace SosCafe.Admin
         private static DateTime GetNewZealandTimeFromUtc(DateTime dateTimeUtc)
         {
             TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
-            return TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
+            var dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc); // HACK: this is incorrect, but I'm working around the way the front-end currently handles this
+        }
+
+        private static bool IsVoucherDonation(VendorVoucherEntity voucher) =>
+            string.Equals(voucher.VoucherType, "Donation", StringComparison.InvariantCultureIgnoreCase);
+
+        private static string GetVoucherIdForDisplay(VendorVoucherEntity voucher)
+        {
+            if (voucher.IsRefunded && IsVoucherDonation(voucher))
+            {
+                return $"** DONATION ** REFUNDED ** {voucher.VoucherId}";
+            }
+
+            if (voucher.IsRefunded)
+            {
+                return $"** REFUNDED ** {voucher.VoucherId}";
+            }
+
+            if (IsVoucherDonation(voucher))
+            {
+                return $"** DONATION ** {voucher.VoucherId}";
+            }
+
+            if (string.IsNullOrEmpty(voucher.VoucherId))
+            {
+                return $"ORIGINAL-{voucher.OrderRef}";
+            }
+
+            if (long.TryParse(voucher.VoucherId, out _))
+            {
+                return $"ORIGINAL-{voucher.VoucherId}";
+            }
+
+            return voucher.VoucherId;
         }
     }
 }
