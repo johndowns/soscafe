@@ -8,8 +8,10 @@
             <mat-card-subtitle>Please search below for the business you want to manage</mat-card-subtitle>
           </mat-card-header>
         </div>
-        <div fxFlex.gt-sm="50%" style="margin: 24px;">
-          <a mat-stroked-button (click)="download()" style="float: right;"><mat-icon>save_alt</mat-icon> Export all businesses</a>
+        <div fxFlex.gt-sm="50%" fxLayoutAlign="end center" style="margin: 24px;">
+          <a mat-stroked-button (click)="downloadVoucherList()"><mat-icon>save_alt</mat-icon> Export all vouchers</a>
+          &nbsp;
+          <a mat-stroked-button (click)="downloadBusinessList()"><mat-icon>save_alt</mat-icon> Export all businesses</a>
         </div>
       </div>
       <mat-card-content>
