@@ -171,7 +171,7 @@ namespace SosCafe.Admin
                 }
 
                 // Update vendor entity with new email address.
-                vendorDetailsEntity.BusinessName = vendorDetailsApiModel.BusinessName;
+                vendorDetailsEntity.EmailAddress = vendorDetailsApiModel.EmailAddress;
             }
 
             // Detect if the business name has changed.
