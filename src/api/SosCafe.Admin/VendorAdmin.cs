@@ -154,8 +154,8 @@ namespace SosCafe.Admin
                 var vendorUserAssignmentEntity = new VendorUserAssignmentEntity
                 {
                     VendorShopifyId = vendorId,
-                    VendorName = vendorDetailsEntity.BusinessName,
-                    UserId = vendorDetailsEntity.EmailAddress.Trim()
+                    VendorName = vendorDetailsApiModel.BusinessName,
+                    UserId = vendorDetailsApiModel.EmailAddress.Trim()
                 };
 
                 // Upsert vendor user assignment entity.
