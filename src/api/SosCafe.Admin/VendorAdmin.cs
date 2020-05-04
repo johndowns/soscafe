@@ -365,7 +365,7 @@ namespace SosCafe.Admin
                 OrderRef = entity.OrderRef,
                 CustomerName = entity.CustomerName,
                 CustomerEmailAddress = entity.CustomerEmailAddress,
-                OrderDate = entity.OrderDate,
+                OrderDate = VendorManagement.GetNewZealandTimeFromUtc(entity.OrderDate),
                 LineItemId = entity.LineItemId,
                 VoucherId = VendorManagement.GetVoucherIdForDisplay(entity),
                 PaymentGateway = entity.Gateway,

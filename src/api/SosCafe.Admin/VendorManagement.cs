@@ -522,7 +522,7 @@ namespace SosCafe.Admin
             return allEntitiesForVendor;
         }
 
-        private static DateTime GetNewZealandTimeFromUtc(DateTime dateTimeUtc)
+        internal static DateTime GetNewZealandTimeFromUtc(DateTime dateTimeUtc)
         {
             TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
             var dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
