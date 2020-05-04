@@ -529,10 +529,10 @@ namespace SosCafe.Admin
             return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc); // HACK: this is incorrect, but I'm working around the way the front-end currently handles this
         }
 
-        private static bool IsVoucherDonation(VendorVoucherEntity voucher) =>
+        internal static bool IsVoucherDonation(VendorVoucherEntity voucher) =>
             string.Equals(voucher.VoucherType, "Donation", StringComparison.InvariantCultureIgnoreCase);
 
-        private static string GetVoucherIdForDisplay(VendorVoucherEntity voucher)
+        internal static string GetVoucherIdForDisplay(VendorVoucherEntity voucher)
         {
             if (voucher.IsRefunded && IsVoucherDonation(voucher))
             {

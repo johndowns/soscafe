@@ -301,6 +301,53 @@ namespace SosCafe.Admin
             };
         }
 
+        [FunctionName("AdminExportVoucherList")]
+        public static async Task<IActionResult> AdminExportVoucherList(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "internal/vouchers/csv")] HttpRequest req,
+            ClaimsPrincipal claimsPrincipal,
+            [Table("ShopifyVouchers", Connection = "SosCafeStorage")] CloudTable shopifyVouchersTable,
+            ILogger log)
+        {
+            // Check the authorisation.
+            var isAuthorised = UserManagement.IsUserAuthorisedForAdmin(claimsPrincipal);
+            if (!isAuthorised)
+            {
+                log.LogInformation("Received unauthorised admin request. Denying request.");
+                return new NotFoundResult();
+            }
+
+            // Read all records from table storage.
+            var allVoucherEntities = await GetAllVouchers(shopifyVouchersTable);
+
+            // Transform into VoucherDetailsCsv objects.
+            var allVoucherDetailsCsv = allVoucherEntities.Select(entity => new AdminVendorVoucherCsv
+            {
+                VendorId = entity.VendorId,
+                OrderId = entity.OrderId,
+                OrderRef = entity.OrderRef,
+                CustomerName = entity.CustomerName,
+                CustomerEmailAddress = entity.CustomerEmailAddress,
+                OrderDate = entity.OrderDate,
+                LineItemId = entity.LineItemId,
+                VoucherId = VendorManagement.GetVoucherIdForDisplay(entity),
+                PaymentGateway = entity.Gateway,
+                VoucherQuantity = entity.VoucherQuantity,
+                VoucherIsDonation = VendorManagement.IsVoucherDonation(entity).ToString(),
+                VoucherGross = entity.VoucherGross.ToString(),
+                VoucherFees = entity.VoucherFees.ToString(),
+                VoucherNet = entity.VoucherNet.ToString(),
+                IsRefunded = entity.IsRefunded.ToString()
+            })
+                .OrderByDescending(d => d.OrderDate);
+
+            // Serialize to CSV.
+            var fileBytes = CsvCreator.CreateCsvFile(allVoucherDetailsCsv);
+            return new FileContentResult(fileBytes, "text/csv")
+            {
+                FileDownloadName = "SOSCafe-AllVouchers.csv"
+            };
+        }
+
         private static async Task<List<VendorDetailsEntity>> GetAllVendors(CloudTable vendorsTable)
         {
             TableContinuationToken token = null;
@@ -313,6 +360,20 @@ namespace SosCafe.Admin
             } while (token != null);
 
             return allVendorDetails;
+        }
+
+        private static async Task<List<VendorVoucherEntity>> GetAllVouchers(CloudTable vouchersTable)
+        {
+            TableContinuationToken token = null;
+            var allVoucherDetails = new List<VendorVoucherEntity>();
+            do
+            {
+                var queryResult = await vouchersTable.ExecuteQuerySegmentedAsync(new TableQuery<VendorVoucherEntity>(), token);
+                allVoucherDetails.AddRange(queryResult.Results);
+                token = queryResult.ContinuationToken;
+            } while (token != null);
+
+            return allVoucherDetails;
         }
 
         private static string CombineTableFilters(List<string> filters)
