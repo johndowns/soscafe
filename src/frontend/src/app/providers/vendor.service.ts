@@ -173,4 +173,16 @@ export class VendorService {
     );
   }
 
+  getVoucherListAdmin() {
+    return this.http.get(
+      `${this.vendorsBaseUrl}/internal/vouchers/csv`,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem('access_token')
+        }),
+        responseType: 'blob'
+      }
+    );
+  }
 }
