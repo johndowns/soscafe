@@ -96,11 +96,21 @@ export class AdminBusinessListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  download() {
+  downloadBusinessList() {
     this.vendorService
       .getVendorListAdmin()
       .subscribe((blob) => {
         saveAs(blob, 'businessesListAdmin.csv', {
+          type: 'text/csv'
+       });
+      });
+  }
+
+  downloadVoucherList() {
+    this.vendorService
+      .getVoucherListAdmin()
+      .subscribe((blob) => {
+        saveAs(blob, 'vouchersListAdmin.csv', {
           type: 'text/csv'
        });
       });
