@@ -97,9 +97,9 @@ namespace SosCafe.Admin.Models
             // Upsert vendor user assignment entity.
             var upsertVendorUserAssignmentEntityOperation = TableOperation.InsertOrReplace(vendorUserAssignmentEntity);
             var upsertVendorUserAssignmentEntityOperationResult = await vendorUserAssignmentsTable.ExecuteAsync(upsertVendorUserAssignmentEntityOperation);
-            if (upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode < 200 || upsertVendorDetailsEntityOperationResult.HttpStatusCode > 299)
+            if (upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode < 200 || upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode > 299)
             {
-                log.LogError("Failed to upsert entity into VendorUserAssignments table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorDetailsEntityOperationResult.HttpStatusCode, upsertVendorDetailsEntityOperationResult.Result);
+                log.LogError("Failed to upsert entity into VendorUserAssignments table. Status code={UpsertStatusCode}, Result={InsertResult}", upsertVendorUserAssignmentEntityOperationResult.HttpStatusCode, upsertVendorUserAssignmentEntityOperationResult.Result);
             }
             else
             {

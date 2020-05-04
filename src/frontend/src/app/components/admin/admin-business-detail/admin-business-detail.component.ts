@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
+// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { VendorService } from 'src/app/providers';
 import { VendorDetail, UpdateVendorDetails } from 'src/app/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -23,9 +24,11 @@ export class AdminBusinessDetailComponent implements OnInit {
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
+  private registeredDate: string;
+
   loggedIn = false;
   userName = '';
-  userEmail= '';
+  userEmail = '';
   isAdmin;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
@@ -64,11 +67,11 @@ export class AdminBusinessDetailComponent implements OnInit {
     private errorService: ErrorHandlerService,
     private route: ActivatedRoute,
     private router: Router,
-    private constantService: ConstantService
+    private constantService: ConstantService,
   ) {}
 
   checkAccount() {
-    if(!_.get(this.constantService,'isAdmin',false)){
+    if (!_.get(this.constantService, 'isAdmin', false)){
       this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
     }
   }
@@ -80,6 +83,8 @@ export class AdminBusinessDetailComponent implements OnInit {
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendorAdmin(this.vendorId).subscribe(
       (res) => {
+        console.log(res);
+        this.registeredDate = res.registeredDate;
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
@@ -146,9 +151,11 @@ export class AdminBusinessDetailComponent implements OnInit {
     this.workInProgress = true;
     const updateVendorDetails: UpdateVendorDetails = {
       ...vendorDetail,
+      registeredDate: this.registeredDate,
       dateAcceptedTerms: new Date().toISOString(),
     };
 
+    console.log(updateVendorDetails);
     this.vendorService
       .updateVendorAdmin(this.vendorId, updateVendorDetails)
       .subscribe(
@@ -167,7 +174,7 @@ export class AdminBusinessDetailComponent implements OnInit {
   }
 
   onSubmitConfirmation(isSucess: boolean) {
-    window.scroll(0,0);
+    window.scroll(0, 0);
     const message = isSucess ? 'Your details have been updated.' : 'Failed to update.';
     this.snackBar.open(message, 'OK', {
       duration: 3000,
