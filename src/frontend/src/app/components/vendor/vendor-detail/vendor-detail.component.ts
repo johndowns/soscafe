@@ -21,6 +21,7 @@ export class VendorDetailComponent implements OnInit {
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
+  private registeredDate: string;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
 
@@ -59,18 +60,18 @@ export class VendorDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.workInProgress = true
+    this.workInProgress = true;
 
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendor(this.vendorId).subscribe(
       (res) => {
-        console.log(res);
         this.clickAndCollectUrl = res.clickAndCollectUrl;
         this.isClickAndCollect = res.isClickAndCollect;
         this.level1Closed = res.level1Closed;
         this.level2Closed = res.level2Closed;
         this.level3Closed = res.level3Closed;
         this.hasAgreedToTerms = res.hasAgreedToTerms;
+        this.registeredDate = res.registeredDate;
 
         this.vendorForm.patchValue({
           id: res.id,
@@ -135,6 +136,7 @@ export class VendorDetailComponent implements OnInit {
     this.workInProgress = true;
     const updateVendorDetails: UpdateVendorDetails = {
       ...vendorDetail,
+      registeredDate: this.registeredDate,
       dateAcceptedTerms: new Date().toISOString(),
     };
 
@@ -156,7 +158,7 @@ export class VendorDetailComponent implements OnInit {
   }
 
   onSubmitConfirmation(isSucess: boolean) {
-    window.scroll(0,0);
+    window.scroll(0, 0);
     const message = isSucess ? 'Your details have been updated.' : 'Failed to update.';
     this.snackBar.open(message, 'OK', {
       duration: 3000,

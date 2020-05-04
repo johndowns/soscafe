@@ -9,30 +9,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from 'src/app/services/error-handler/error-handler.service';
 import { ConstantService } from 'src/app/services/constant.service';
 import * as _ from 'lodash';
-// import * as _moment from 'moment';
-// import { default as _rollupMoment } from 'moment';
-//
-// const moment = _rollupMoment || _moment;
-//
-// export const MY_FORMATS = {
-//   parse: {
-//     dateInput: 'LL',
-//   },
-//   display: {
-//     dateInput: 'LL',
-//     monthYearLabel: 'MMM YYYY',
-//     dateA11yLabel: 'LL',
-//     monthYearA11yLabel: 'MMMM YYYY',
-//   },
-// };
 
 @Component({
   selector: 'app-admin-business-detail',
   templateUrl: './admin-business-detail.component.html',
-  // providers: [
-  //   {provide: MAT_DATE_LOCALE, useValue: 'en-nz'},
-  //   {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
-  // ],
 })
 export class AdminBusinessDetailComponent implements OnInit {
   public hasAgreedToTerms: boolean;
@@ -44,9 +24,11 @@ export class AdminBusinessDetailComponent implements OnInit {
   public bankAccountNumber: FormControl;
   public workInProgress = false;
   private vendorId: string;
+  private registeredDate: string;
+
   loggedIn = false;
   userName = '';
-  userEmail= '';
+  userEmail = '';
   isAdmin;
 
   BankAccountNumberRegExPattern = '[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{7}[- ]?[0-9]{2,3}';
@@ -86,23 +68,23 @@ export class AdminBusinessDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private constantService: ConstantService,
-    // private _adapter: DateAdapter<any>,
   ) {}
 
   checkAccount() {
-    if(!_.get(this.constantService,'isAdmin',false)){
+    if (!_.get(this.constantService, 'isAdmin', false)){
       this.router.navigate(['/error?error=404%20Not%20Found&si=true']);
     }
   }
 
   ngOnInit(): void {
-    this.checkAccount
+    this.checkAccount();
 
     this.workInProgress = true;
     this.vendorId = this.route.snapshot.params.id;
     this.vendorService.getVendorAdmin(this.vendorId).subscribe(
       (res) => {
         console.log(res);
+        this.registeredDate = res.registeredDate;
         this.vendorForm.patchValue({
           id: res.id,
           businessName: res.businessName,
@@ -134,7 +116,6 @@ export class AdminBusinessDetailComponent implements OnInit {
         this.level2Closed = res.level2Closed;
         this.level3Closed = res.level3Closed;
         this.hasAgreedToTerms = res.hasAgreedToTerms;
-        // this._adapter.setLocale('nz');
       },
       (err) => {
         console.log('LOG HTTP Error', err);
@@ -170,9 +151,11 @@ export class AdminBusinessDetailComponent implements OnInit {
     this.workInProgress = true;
     const updateVendorDetails: UpdateVendorDetails = {
       ...vendorDetail,
+      registeredDate: this.registeredDate,
       dateAcceptedTerms: new Date().toISOString(),
     };
 
+    console.log(updateVendorDetails);
     this.vendorService
       .updateVendorAdmin(this.vendorId, updateVendorDetails)
       .subscribe(
@@ -191,7 +174,7 @@ export class AdminBusinessDetailComponent implements OnInit {
   }
 
   onSubmitConfirmation(isSucess: boolean) {
-    window.scroll(0,0);
+    window.scroll(0, 0);
     const message = isSucess ? 'Your details have been updated.' : 'Failed to update.';
     this.snackBar.open(message, 'OK', {
       duration: 3000,
