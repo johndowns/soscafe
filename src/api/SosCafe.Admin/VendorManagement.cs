@@ -271,7 +271,7 @@ namespace SosCafe.Admin
                 LineItemId = entity.LineItemId,
                 OrderId = entity.OrderId,
                 OrderRef = entity.OrderRef,
-                OrderDate = GetNewZealandTimeFromUtc(entity.OrderDate),
+                OrderDate = entity.OrderDate,
                 CustomerName = entity.CustomerName,
                 CustomerRegion = entity.CustomerRegion,
                 CustomerEmailAddress = entity.CustomerAcceptsMarketing ? entity.CustomerEmailAddress : string.Empty,
@@ -526,7 +526,7 @@ namespace SosCafe.Admin
         {
             TimeZoneInfo timeZone = TimeZoneInfo.FindSystemTimeZoneById("New Zealand Standard Time");
             var dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTimeUtc, timeZone);
-            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc); // HACK: this is incorrect, but I'm working around the way the front-end currently handles this
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Local);
         }
 
         internal static bool IsVoucherDonation(VendorVoucherEntity voucher) =>
