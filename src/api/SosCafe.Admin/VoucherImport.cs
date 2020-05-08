@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -122,25 +122,26 @@ namespace SosCafe.Admin
                 var entity = new VendorVoucherEntity
                 {
                     CustomerAcceptsMarketing = order.BuyerAcceptsMarketing ?? false,
-                    CustomerEmailAddress = order.Customer.Email,
-                    CustomerName = $"{order.Customer.FirstName} {order.Customer.LastName}",
-                    CustomerRegion = order.Customer.DefaultAddress.City,
+                    CustomerEmailAddress = order.Customer?.Email ?? string.Empty,
+                    CustomerName = $"{order.Customer?.FirstName ?? string.Empty} {order.Customer?.LastName ?? string.Empty}",
+                    CustomerRegion = order.Customer?.DefaultAddress?.City ?? string.Empty,
                     LineItemId = lineItem.Id.Value.ToString(),
-                    OrderDate = order.CreatedAt.Value.UtcDateTime,
-                    OrderId = order.Id.Value.ToString(),
+                    OrderDate = order.CreatedAt?.UtcDateTime ?? new DateTime(2000, 1, 1),
+                    OrderId = order.Id?.ToString() ?? string.Empty,
                     OrderRef = order.Name,
                     Gateway = order.Gateway,
-                    VendorId = lineItem.ProductId.ToString(),
+                    VendorId = lineItem.ProductId?.ToString() ?? string.Empty,
                     VoucherDescription = lineItem.VariantTitle,
-                    VoucherId = lineItem.Properties.SingleOrDefault(p => string.Equals(p.Name.ToString(), "Voucher id", StringComparison.InvariantCultureIgnoreCase))?.Value.ToString() ?? string.Empty,
-                    VoucherQuantity = lineItem.Quantity.Value,
-                    VoucherType = lineItem.Properties.SingleOrDefault(p => string.Equals(p.Name.ToString(), "Type", StringComparison.InvariantCultureIgnoreCase))?.Value.ToString(),
+                    VoucherQuantity = lineItem.Quantity ?? -1
                 };
 
-                // We determine if the voucher has been refunded by seeing if there are any line items matching this line item ID within the order's refunds collection.
-                entity.IsRefunded = order.Refunds.Any(r => r.RefundLineItems.Any(rli => rli.LineItemId == lineItem.Id));
+                entity.VoucherType = lineItem.Properties.SingleOrDefault(p => string.Equals(p.Name.ToString(), "Type", StringComparison.InvariantCultureIgnoreCase))?.Value.ToString();
+                entity.VoucherId = lineItem.Properties.SingleOrDefault(p => string.Equals(p.Name.ToString(), "Voucher id", StringComparison.InvariantCultureIgnoreCase))?.Value.ToString() ?? string.Empty;
 
-                // We calculate the fees separately using specific logic.
+                // We determine if the voucher has been refunded by seeing if there are any line items matching this line item ID within the order's refunds collection.
+                entity.IsRefunded = order.Refunds.Any(r => r.RefundLineItems.Any(rli => rli.LineItemId == lineItem.Id));
+
+                // We calculate the fees separately using specific logic.
                 // Gift card purchases and refunds are treated as if they are zero revenue.
                 if ((lineItem.GiftCard.HasValue && lineItem.GiftCard.Value == true) ||
                     entity.IsRefunded)
