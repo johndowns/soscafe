@@ -16,8 +16,6 @@ namespace SosCafe.Admin.Models.Api
 
         public string PhoneNumber { get; set; }
 
-        public string BankAccountNumber { get; set; }
-
         public DateTime? DateAcceptedTerms { get; set; }
 
         public bool IsClickAndCollect { get; set; }

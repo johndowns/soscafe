@@ -132,15 +132,10 @@ namespace SosCafe.Admin
             {
                 return new BadRequestErrorMessageResult("The terms must be accepted in order to update the vendor.");
             }
-            else if (!BankAccountRegex.IsMatch(vendorDetailsApiModel.BankAccountNumber))
-            {
-                return new BadRequestErrorMessageResult("The bank account number is invalid.");
-            }
 
             // Update entity.
             vendorDetailsEntity.ContactName = vendorDetailsApiModel.ContactName;
             vendorDetailsEntity.PhoneNumber = vendorDetailsApiModel.PhoneNumber;
-            vendorDetailsEntity.BankAccountNumber = vendorDetailsApiModel.BankAccountNumber;
             vendorDetailsEntity.IsClickAndCollect = vendorDetailsApiModel.IsClickAndCollect;
             vendorDetailsEntity.Level1Closed = vendorDetailsApiModel.Level1Closed;
             vendorDetailsEntity.Level1Delivery = vendorDetailsApiModel.Level1Delivery;

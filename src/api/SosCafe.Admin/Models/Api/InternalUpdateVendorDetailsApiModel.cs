@@ -4,6 +4,8 @@
     {
         public string InternalTag { get; set; }
 
+        public string BankAccountNumber { get; set; }
+
         public bool IsHidden { get; set; }
     }
 }
