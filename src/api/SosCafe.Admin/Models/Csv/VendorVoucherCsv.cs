@@ -18,6 +18,7 @@ namespace SosCafe.Admin.Csv
         public string OrderRef { get; set; }
 
         [Name("Order Date")]
+        [Format("o")]
         public DateTime OrderDate { get; set; }
 
         [Name("Customer Name")]
@@ -54,6 +55,7 @@ namespace SosCafe.Admin.Csv
         public string VoucherNet { get; set; }
 
         [Name("Redemption Date")]
+        [Format("o")]
         public DateTime? RedemptionDate { get; set; }
     }
 }
