@@ -12,6 +12,7 @@ namespace SosCafe.Admin.Csv
         public string PaymentId { get; set; }
 
         [Name("Date")]
+        [Format("o")]
         public DateTime PaymentDate { get; set; }
 
         [Name("Bank account")]

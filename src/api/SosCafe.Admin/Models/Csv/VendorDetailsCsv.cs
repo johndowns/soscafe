@@ -7,6 +7,7 @@ namespace SosCafe.Admin.Csv
     {
         [Name("Registered")]
         [Index(0)]
+        [Format("o")]
         public DateTime RegisteredDate { get; set; }
 
         [Name("Business Name")]
@@ -35,6 +36,7 @@ namespace SosCafe.Admin.Csv
 
         [Name("Date Accepted Terms")]
         [Index(8)]
+        [Format("o")]
         public DateTime? DateAcceptedTerms { get; set; }
 
         [Name("Click and Collect")]

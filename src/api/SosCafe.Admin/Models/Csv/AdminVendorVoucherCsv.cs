@@ -27,6 +27,7 @@ namespace SosCafe.Admin.Csv
 
         [Name("Order date & time")]
         [Index(5)]
+        [Format("o")]
         public DateTime OrderDate { get; set; }
 
         [Name("Line item ID	")]
