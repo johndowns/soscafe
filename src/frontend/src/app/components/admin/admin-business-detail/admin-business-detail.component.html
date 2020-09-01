@@ -54,7 +54,7 @@
             <br/>
         </mat-card-content>
       </mat-card>
-      <mat-card>
+      <!-- <mat-card style="display: hidden !important;">
         <mat-card-header>
           <mat-card-title>Click & Collect/ Delivery</mat-card-title>
         </mat-card-header>
@@ -65,7 +65,7 @@
               <h4>Level 3</h4>
               <p><mat-checkbox formControlName="level3Closed" (change)="level3StatusChange($event)">Closed</mat-checkbox></p>
               <ng-container *ngIf="!level3Closed">
-                <p><mat-checkbox formControlName="level3Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level3Delivery" selected>Open for Delivery</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level3ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level3Open">Fully Open</mat-checkbox></p>
               </ng-container>
@@ -74,7 +74,7 @@
               <h4>Level 2</h4>
               <p><mat-checkbox formControlName="level2Closed" (change)="level2StatusChange($event)">Closed</mat-checkbox></p>
               <ng-container *ngIf="!level2Closed">
-                <p><mat-checkbox formControlName="level2Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level2Delivery" selected>Open for Delivery</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level2ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level2Open">Fully Open</mat-checkbox></p>
               </ng-container>
@@ -83,7 +83,7 @@
               <h4>Level 1</h4>
               <p><mat-checkbox formControlName="level1Closed" (change)="level1StatusChange($event)">Closed</mat-checkbox></p>
               <ng-container *ngIf="!level1Closed">
-                <p><mat-checkbox formControlName="level1Delivery">Open for Delivery</mat-checkbox></p>
+                <p><mat-checkbox formControlName="level1Delivery" selected>Open for Delivery</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level1ClickAndCollect">Open for Click & Collect</mat-checkbox></p>
                 <p><mat-checkbox formControlName="level1Open">Fully Open</mat-checkbox></p>
               </ng-container>
@@ -100,7 +100,7 @@
             </mat-form-field>
           </ng-container>
         </mat-card-content>
-      </mat-card>
+      </mat-card> -->
       <mat-card>
         <mat-card-content>
           <div class="button-row">
