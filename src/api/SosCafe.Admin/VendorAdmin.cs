@@ -371,9 +371,9 @@ namespace SosCafe.Admin
                 PaymentGateway = entity.Gateway,
                 VoucherQuantity = entity.VoucherQuantity,
                 VoucherIsDonation = VendorManagement.IsVoucherDonation(entity).ToString(),
-                VoucherGross = entity.VoucherGross.ToString(),
+                VoucherGross = ((decimal)entity.VoucherGross *  (decimal)1.005).ToString(),
                 VoucherFees = entity.VoucherFees.ToString(),
-                VoucherNet = entity.VoucherNet.ToString(),
+                VoucherNet = ((decimal)entity.VoucherNet * (decimal)1.005).ToString(),
                 IsRefunded = entity.IsRefunded.ToString()
             })
                 .OrderByDescending(d => d.OrderDate);
