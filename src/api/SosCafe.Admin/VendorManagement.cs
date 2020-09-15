@@ -223,7 +223,7 @@ namespace SosCafe.Admin
 
             // Get the payments and map the results to a response model.
             var allPaymentsForVendor = await GetPaymentsForVendorAsync(vendorId, vendorPaymentsTable);
-            var mappedResults = allPaymentsForVendor.Select(entity => new VendorPaymentCsv
+            var mappedResults = allPaymentsForVendor.Select(entity => new VendorPaymentExportCsv
             {
                 VendorId = entity.VendorId,
                 PaymentId = entity.PaymentId,
