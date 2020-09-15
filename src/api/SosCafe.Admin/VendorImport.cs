@@ -110,14 +110,14 @@ namespace SosCafe.Admin.Models
         [FunctionName("VendorPaymentsImport")]
         public static void VendorPaymentsImport(
             [BlobTrigger("vendorpaymentsimport/{name}", Connection = "SosCafeStorage")] Stream myBlob, string name,
-            [Queue("importvendorpayment"), StorageAccount("SosCafeStorage")] ICollector<VendorPaymentCsv> outputQueueMessages,
+            [Queue("importvendorpayment"), StorageAccount("SosCafeStorage")] ICollector<VendorPaymentImportCsv> outputQueueMessages,
             ILogger log)
         {
             // Read the blob contents (in CSV format), shred into strongly typed model objects,
             // and add to a queue for processing.
             log.LogInformation("Processing file {FileName}, length {FileLength}.", name, myBlob.Length);
 
-            var records = GetRecordsFromCsv<VendorPaymentCsv>(myBlob);
+            var records = GetRecordsFromCsv<VendorPaymentImportCsv>(myBlob);
             log.LogInformation("Found {RecordCount} records.", records.Count);
 
             records.ForEach(vvCsv => outputQueueMessages.Add(vvCsv));
@@ -125,7 +125,7 @@ namespace SosCafe.Admin.Models
 
         [FunctionName("ProcessImportedVendorPayment")]
         public static async Task ProcessImportedVendorPayment(
-            [QueueTrigger("importvendorpayment", Connection = "SosCafeStorage")] VendorPaymentCsv vendorPaymentToImport,
+            [QueueTrigger("importvendorpayment", Connection = "SosCafeStorage")] VendorPaymentImportCsv vendorPaymentToImport,
             [Table("VendorPayments", Connection = "SosCafeStorage")] CloudTable vendorPaymentsTable,
             ILogger log)
         {
